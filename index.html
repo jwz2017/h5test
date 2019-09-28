@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- 手机1：1比例 -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="no">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <title>h5Test</title>
+  <script src="classes/createjs.min.js"></script>
+  <script src="classes/easing.js"></script>
+  <script src="classes/gframe.js"></script>
+  <script src="classes/mc.js"></script>
+  <script src="classes/utils.js"></script>
+  <script src="lib.js"></script>
+  <script src="ma.js"></script>
+  <script src="include/0sprite.js"></script>
+  <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
+</head>
+
+<body style="background-color:#584f1a">
+  <div id="game" style="position:absolute;">
+    <h3 id="fps" style="color: #ff0000 ;display: none">fps:<span id="fpsText">000</span></h3>
+    <!-- canvas width,height (750,1206) -->
+    <canvas id="canvas" width="750" height="980" style="background-color:#7c7a7a;display: none">
+    </canvas>
+  </div>
+</body>
+
+</html>
