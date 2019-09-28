@@ -48,7 +48,7 @@ class Main extends GFrame {
         stageScale = stageWidth /width;
 
         // stage.canvas.style.width = width * stageScale + 'px';
-        gameDiv.style.transformOrigin='0 0';
+        gameDiv.style.transformOrigin='0 0'; 
         gameDiv.style.transform='scale('+stageScale+ ')';
 
     }
