@@ -39,15 +39,18 @@ class Main extends GFrame {
             stageHeight = document.documentElement.clientHeight,
             width = stage.canvas.width,
             height = stage.canvas.height;
+            let gameDiv = document.getElementById("game");
         //高度自适应
-        let gameDiv = document.getElementById("game");
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+        // stageScale = stageHeight / height;
+        // gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
         //宽带自适应
-        // stageScale = stageWidth /width;
+        stageScale = stageWidth /width;
 
-        stage.canvas.style.width = width * stageScale + 'px';
+        // stage.canvas.style.width = width * stageScale + 'px';
+        gameDiv.style.transformOrigin='0 0';
+        gameDiv.style.transform='scale('+stageScale+ ')';
+
     }
 
     initScreen() {
