@@ -46,7 +46,7 @@ class Main extends GFrame {
 
         //宽带自适应
         stageScale = stageWidth /width;
-        
+
 
         // stage.canvas.style.width = width * stageScale + 'px';
         gameDiv.style.transformOrigin='0 0'; 

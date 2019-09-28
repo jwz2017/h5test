@@ -40,7 +40,9 @@ class GFrame {
     this.initScreen();
     this._switchSystemState(GFrame.state.STATE_TITLE);
     if (this.fpsDom) {
-      let fps = new createjs.DOMElement(this.fpsDom);
+       let fps = new createjs.DOMElement(this.fpsDom);
+       stage.addChild(fps);
+       fps.y=20;
       this.fpsDom.style.display = "block";
     }
   }
