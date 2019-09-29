@@ -18,7 +18,7 @@ class Main extends GFrame {
         model = new createjs.EventDispatcher();
 
         /*********自适应*********** */
-        this.adapt();
+        // this.adapt();
 
         /*********预加载手动********** */
         // this.preload([{
