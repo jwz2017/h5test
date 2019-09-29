@@ -42,7 +42,7 @@ class GFrame {
     if (this.fpsDom) {
        let fps = new createjs.DOMElement(this.fpsDom);
        stage.addChild(fps);
-       fps.y=20;
+       fps.y=10;
       this.fpsDom.style.display = "block";
     }
   }
