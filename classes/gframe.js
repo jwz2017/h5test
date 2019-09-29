@@ -39,12 +39,13 @@ class GFrame {
   init() {
     this.initScreen();
     this._switchSystemState(GFrame.state.STATE_TITLE);
-    if (this.fpsDom) {
-       let fps = new createjs.DOMElement(this.fpsDom);
-       stage.addChild(fps);
-       fps.y=10;
-      this.fpsDom.style.display = "block";
-    }
+    // if (this.fpsDom) {
+    //    let fps = new createjs.DOMElement(this.fpsDom);
+    //    stage.addChild(fps);
+    //    fps.y=10;
+    //   this.fpsDom.style.display = "block";
+    // }
+    FPS.startFPS2(stage);
   }
   /**初始化屏幕元素
    * 
@@ -82,7 +83,7 @@ class GFrame {
       if (!e.paused || this._currentSystemState != GFrame.state.STATE_GAME_PLAY) {
         this._systemFunction();
       }
-      if (fpsid) this.fpsTextDom.innerHTML = Math.floor(createjs.Ticker.getMeasuredFPS()); //fps....
+      // if (fpsid) this.fpsTextDom.innerHTML = Math.floor(createjs.Ticker.getMeasuredFPS()); //fps....
       stage.update(); //创建全局舞台刷新
     });
   }
