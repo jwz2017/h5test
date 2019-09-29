@@ -72,8 +72,12 @@ class GFrame {
     //createjs.MotionGuidePlugin.install(); //使用引导层必须
     // createjs.FlashAudioPlugin.swfPath = "plugin/FlashAudioPlugin";//安装flash插件
     // createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);//安装flash插件
-    createjs.Ticker.framerate = 65; //设置帧频
-    createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+    
+    // createjs.Ticker.framerate = 65; //设置帧频
+    // createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+    
     createjs.Ticker.on("tick", (e) => {
       if (!e.paused || this._currentSystemState != GFrame.state.STATE_GAME_PLAY) {
         this._systemFunction();
