@@ -18,7 +18,7 @@ class Main extends GFrame {
         model = new createjs.EventDispatcher();
 
         /*********自适应*********** */
-        // this.adapt();
+        this.adapt();
 
         /*********预加载手动********** */
         // this.preload([{
@@ -41,11 +41,11 @@ class Main extends GFrame {
             height = stage.canvas.height;
             let gameDiv = document.getElementById("game");
         //高度自适应
-        // stageScale = stageHeight / height;
-        // gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+        stageScale = stageHeight / height;
+        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
         //宽带自适应
-        stageScale = stageWidth /width;
+        // stageScale = stageWidth /width;
 
 
         // stage.canvas.style.width = width * stageScale + 'px';
