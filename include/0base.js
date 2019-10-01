@@ -43,6 +43,7 @@ class Main extends GFrame {
         //高度自适应
         stageScale = stageHeight / height;
         gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+        
 
         //宽带自适应
         // stageScale = stageWidth /width;
