@@ -1,4 +1,4 @@
-var stage, queue,lib,model,stageScale = 1;
+var stage, queue, lib, model, stageScale = 1;
 class GFrame {
   constructor(canvasId) {
     this._waitCount = 0;
@@ -14,24 +14,27 @@ class GFrame {
   /**自适应
    * 
    */
-  adapt() {
+  adapt(h = true) {
     let stageWidth = document.documentElement.clientWidth,
-        stageHeight = document.documentElement.clientHeight,
-        width = stage.canvas.width,
-        height = stage.canvas.height,
-        gameDiv = document.getElementById("game");
-    //高度自适应
-    stageScale = stageHeight / height;
-    gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-
-    //宽带自适应
-    // stageScale = stageWidth /width;
+      stageHeight = document.documentElement.clientHeight,
+      width = stage.canvas.width,
+      height = stage.canvas.height,
+      gameDiv = document.getElementById("game");
+    
+    if (h) {
+      //高度自适应
+      stageScale = stageHeight / height;
+      gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+    } else {
+      //宽带自适应
+      stageScale = stageWidth / width;
+    }
 
     // stage.canvas.style.width = width * stageScale + 'px';
-    gameDiv.style.transformOrigin='0 0'; 
-    gameDiv.style.transform='scale('+stageScale+ ')';
+    gameDiv.style.transformOrigin = '0 0';
+    gameDiv.style.transform = 'scale(' + stageScale + ')';
 
-}
+  }
   /**预加载
    * 
    */
@@ -87,12 +90,12 @@ class GFrame {
     //createjs.MotionGuidePlugin.install(); //使用引导层必须
     // createjs.FlashAudioPlugin.swfPath = "plugin/FlashAudioPlugin";//安装flash插件
     // createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);//安装flash插件
-    
+
     // createjs.Ticker.framerate = 65; //设置帧频
     // createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
-    
+
     createjs.Ticker.on("tick", (e) => {
       if (!e.paused || this._currentSystemState != GFrame.state.STATE_GAME_PLAY) {
         this._systemFunction();

@@ -14,7 +14,7 @@ class Main extends GFrame {
         super(canvasId);
         
         /*********自适应*********** */
-        // this.adapt();
+        this.adapt(false);
 
         /*********预加载手动********** */
         // this.preload([{
