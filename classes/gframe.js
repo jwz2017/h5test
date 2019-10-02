@@ -1,16 +1,37 @@
-var stage, queue;
+var stage, queue,lib,model,stageScale = 1;
 class GFrame {
-  constructor(canvasId, fpsid = null) {
-    if (fpsid) {
-      this.fpsDom = document.getElementById(fpsid);
-      this.fpsTextDom = document.getElementById('fpsText');
-    }
+  constructor(canvasId) {
     this._waitCount = 0;
     this._waitTime = 40;
     this._systemFunction = function () {};
-    this._setupStage(canvasId, fpsid);
 
+    /*********接收animate影片剪辑播放过程发出的事件。***/
+    model = new createjs.EventDispatcher();
+
+    this._setupStage(canvasId);
   }
+
+  /**自适应
+   * 
+   */
+  adapt() {
+    let stageWidth = document.documentElement.clientWidth,
+        stageHeight = document.documentElement.clientHeight,
+        width = stage.canvas.width,
+        height = stage.canvas.height,
+        gameDiv = document.getElementById("game");
+    //高度自适应
+    stageScale = stageHeight / height;
+    gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+
+    //宽带自适应
+    // stageScale = stageWidth /width;
+
+    // stage.canvas.style.width = width * stageScale + 'px';
+    gameDiv.style.transformOrigin='0 0'; 
+    gameDiv.style.transform='scale('+stageScale+ ')';
+
+}
   /**预加载
    * 
    */
@@ -39,13 +60,6 @@ class GFrame {
   init() {
     this.initScreen();
     this._switchSystemState(GFrame.state.STATE_TITLE);
-    // if (this.fpsDom) {
-    //    let fps = new createjs.DOMElement(this.fpsDom);
-    //    stage.addChild(fps);
-    //    fps.y=10;
-    //   this.fpsDom.style.display = "block";
-    // }
-    FPS.startFPS2(stage);
   }
   /**初始化屏幕元素
    * 
@@ -66,7 +80,7 @@ class GFrame {
   /**建立舞台
    * 
    */
-  _setupStage(canvasId, fpsid) {
+  _setupStage(canvasId) {
     stage = new createjs.Stage(canvasId);
     stage.canvas.style.display = "block"; //显示canvas
     stage.enableMouseOver(); //开启鼠标经过事件
@@ -83,7 +97,6 @@ class GFrame {
       if (!e.paused || this._currentSystemState != GFrame.state.STATE_GAME_PLAY) {
         this._systemFunction();
       }
-      // if (fpsid) this.fpsTextDom.innerHTML = Math.floor(createjs.Ticker.getMeasuredFPS()); //fps....
       stage.update(); //创建全局舞台刷新
     });
   }

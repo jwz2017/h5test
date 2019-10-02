@@ -1,5 +1,3 @@
-var stageScale = 1,
-    lib, model;
 const SCORE = "score",
     LEVEL = "level",
     LIVES = "lives",
@@ -7,18 +5,16 @@ const SCORE = "score",
 window.onload = function () {
     "use strict";
     /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps' fps是与dom*****/
-    new Main('canvas', 'fps');
+    new Main('canvas');
     //添加代码
 
 }
 class Main extends GFrame {
-    constructor(canvasId, fpsid) {
-        super(canvasId, fpsid);
-        /*********接收animate影片剪辑播放过程发出的事件。***/
-        model = new createjs.EventDispatcher();
-
+    constructor(canvasId) {
+        super(canvasId);
+        
         /*********自适应*********** */
-        this.adapt();
+        // this.adapt();
 
         /*********预加载手动********** */
         // this.preload([{
@@ -33,27 +29,10 @@ class Main extends GFrame {
 
         /*********不加载，直接初始化*************** */
         this.init();
+
+        FPS.startFPS(stage);
     }
-    adapt() {
-        let stageWidth = document.documentElement.clientWidth,
-            stageHeight = document.documentElement.clientHeight,
-            width = stage.canvas.width,
-            height = stage.canvas.height;
-            let gameDiv = document.getElementById("game");
-        //高度自适应
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-
-
-        //宽带自适应
-        // stageScale = stageWidth /width;
-
-
-        // stage.canvas.style.width = width * stageScale + 'px';
-        gameDiv.style.transformOrigin='0 0'; 
-        gameDiv.style.transform='scale('+stageScale+ ')';
-
-    }
+    
 
     initScreen() {
         let width = stage.canvas.width,
