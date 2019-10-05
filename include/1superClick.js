@@ -1,25 +1,21 @@
-var stageScale = 1,
-    lib, model;
+var lib;
 const SCORE = "score",
     LEVEL = "level",
     LIVES = "lives",
-    PAUSE = "pause";
     CLICKS = "clicks",
     NEEDED = "needed",
-    ACHIEVE = "achieve",
+    ACHIEVE = "achieve";
 window.onload = function () {
     "use strict";
-    /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps' fps是与dom*****/
-    new Main('canvas', 'fps');
+    /*************初始化 整个游戏入口*****/
+    new Main('canvas');
     //添加代码
 
 }
 class Main extends GFrame {
-    constructor(canvasId, fpsid) {
-        super(canvasId, fpsid);
-        /*********接收animate影片剪辑播放过程发出的事件。***/
-        model = new createjs.EventDispatcher();
-
+    constructor(canvasId) {
+        super(canvasId);
+        
         /*********自适应*********** */
         this.adapt();
 
@@ -36,22 +32,10 @@ class Main extends GFrame {
 
         /*********不加载，直接初始化*************** */
         // this.init();
-    }
-    adapt() {
-        let stageWidth = document.documentElement.clientWidth,
-            stageHeight = document.documentElement.clientHeight,
-            width = stage.canvas.width,
-            height = stage.canvas.height;
-        //高度自适应
-        let gameDiv = document.getElementById("game");
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
-        //宽带自适应
-        // stageScale = stageWidth /width;
-
-        stage.canvas.style.width = width * stageScale + 'px';
+        FPS.startFPS(stage);
     }
+    
 
     initScreen() {
         let width = stage.canvas.width,
@@ -75,16 +59,16 @@ class Main extends GFrame {
         this.gameOverScreen.createDisplayText('结束界面', width / 2, 200);
         this.gameOverScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'gameover', 200, 40);
 
-        GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
+        GFrame.style.SCORE_BUFF = 74; //分数版元素间隔大小
+        GFrame.style.SCORE_TEXT_SIZE=18;
 
         this.scoreBoard = new ScoreBoard();
         this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, new SideBysideScore(SCORE, '0'));
-        this.scoreBoard.creatTextElement(LEVEL, new SideBysideScore(LEVEL, '0'));
-        this.scoreBoard.creatTextElement(CLICKS, new SideBysideScore(CLICKS, '0'));
-        this.scoreBoard.creatTextElement(NEEDED, new SideBysideScore(NEEDED, '0'));
-        this.scoreBoard.creatTextElement(ACHIEVE, new SideBysideScore(ACHIEVE, '0'));
-        this.scoreBoard.creatTextElement(PAUSE, new SideBysideScore(PAUSE, 'press space to pause'), 200, 30);
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(CLICKS, '0');
+        this.scoreBoard.creatTextElement(NEEDED, '0');
+        this.scoreBoard.creatTextElement(ACHIEVE, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
         // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();
@@ -97,7 +81,6 @@ class Main extends GFrame {
         lives = 5,
         score = 0;
     //游戏变量;
-    //园属性变量
     let radius = 8,
         maxScore = 50,
         maxscale,
@@ -116,7 +99,6 @@ class Main extends GFrame {
     class MyGame extends Game {
         constructor() {
             super();
-            
         }
         /**建立游戏元素
          * 在构造函数里建立
@@ -159,61 +141,12 @@ class Main extends GFrame {
             stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, CLICKS, clicks));
             stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, ACHIEVE, achieve));
             stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, NEEDED, needed));
-
         }
         /**levelinscreen等待结束时执行
          * 
          */
         waitComplete() {
-            document.onkeyup = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        this.leftKeyDown = false;
-                        break;
-                    case 68:
-                        this.rightKeyDown = false;
-                        break;
-                    case 87:
-                        this.upKeyDown = false;
-                        break;
-                    case 83:
-                        this.downKeyDown = false;
-                        break;
-                    case 32:
-                        createjs.Ticker.paused = !createjs.Ticker.paused;
-                        break;
-                    default:
-                }
-            };
-            document.onkeydown = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        if (!this.leftKeyDown) {
-                            this.leftKeyDown = true;
-
-                        }
-                        break;
-                    case 68:
-                        if (!this.rightKeyDown) {
-                            this.rightKeyDown = true;
-
-                        }
-                        break;
-                    case 87:
-                        if (!this.upKeyDown) {
-                            this.upKeyDown = true;
-
-                        }
-                        break;
-                    case 83:
-                        if (!this.downKeyDown) {
-                            this.downKeyDown = true;
-
-                        }
-                        break;
-                    default:
-                }
-            };
+            // this.onkey();
 
         }
         runGame() {
@@ -222,7 +155,7 @@ class Main extends GFrame {
             this._checkBall();
             this._checkOver();
             this._checkLevelUp();
-
+            
         }
         _creatElement() {
             if (balls.length < maxOnScreen && numCreated < numCircles) {
@@ -307,6 +240,57 @@ class Main extends GFrame {
         remove() {
             stage.removeChild(this);
             
+        }
+        onkey(){
+            document.onkeyup = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        this.leftKeyDown = false;
+                        break;
+                    case 68:
+                        this.rightKeyDown = false;
+                        break;
+                    case 87:
+                        this.upKeyDown = false;
+                        break;
+                    case 83:
+                        this.downKeyDown = false;
+                        break;
+                    case 32:
+                        createjs.Ticker.paused = !createjs.Ticker.paused;
+                        break;
+                    default:
+                }
+            };
+            document.onkeydown = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        if (!this.leftKeyDown) {
+                            this.leftKeyDown = true;
+
+                        }
+                        break;
+                    case 68:
+                        if (!this.rightKeyDown) {
+                            this.rightKeyDown = true;
+
+                        }
+                        break;
+                    case 87:
+                        if (!this.upKeyDown) {
+                            this.upKeyDown = true;
+
+                        }
+                        break;
+                    case 83:
+                        if (!this.downKeyDown) {
+                            this.downKeyDown = true;
+
+                        }
+                        break;
+                    default:
+                }
+            };
         }
     }
     window.MyGame = MyGame;

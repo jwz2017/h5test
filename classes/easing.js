@@ -1,6 +1,6 @@
 var easing = {};
 easing.back = {
-  /**2种用法，可以用在距离上，也可用在速度上。
+  /**可以用在距离上，也可用在速度上。
    * Easing equation function for a back (overshooting cubic easing: (s+1)*t^3 - s*t^2)
    * easing in: accelerating from zero velocity.
    * @param {number} t  Current time (in frames or seconds).当前时间点

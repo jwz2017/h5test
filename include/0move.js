@@ -1,22 +1,19 @@
-var stageScale = 1,
-    lib, model;
+var lib;
 const SCORE = "score",
     LEVEL = "level",
     LIVES = "lives",
     PAUSE = "pause";
 window.onload = function () {
     "use strict";
-    /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps'*****/
-    new Main('canvas', 'fps');
+    /*************初始化 整个游戏入口*****/
+    new Main('canvas');
     //添加代码
 
 }
 class Main extends GFrame {
-    constructor(canvasId, fpsid) {
-        super(canvasId, fpsid);
-        /*********接收animate影片剪辑播放过程发出的事件。***/
-        model = new createjs.EventDispatcher();
-
+    constructor(canvasId) {
+        super(canvasId);
+        
         /*********自适应*********** */
         this.adapt();
 
@@ -33,22 +30,10 @@ class Main extends GFrame {
 
         /*********不加载，直接初始化*************** */
         // this.init();
-    }
-    adapt() {
-        let stageWidth = document.documentElement.clientWidth,
-            stageHeight = document.documentElement.clientHeight,
-            width = stage.canvas.width,
-            height = stage.canvas.height;
-        //高度自适应
-        let gameDiv = document.getElementById("game");
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
-        //宽带自适应
-        // stageScale = stageWidth /width;
-
-        stage.canvas.style.width = width * stageScale + 'px';
+        FPS.startFPS(stage);
     }
+    
 
     initScreen() {
         let width = stage.canvas.width,
@@ -76,10 +61,9 @@ class Main extends GFrame {
 
         this.scoreBoard = new ScoreBoard();
         this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, new SideBysideScore(SCORE, '0'));
-        this.scoreBoard.creatTextElement(LEVEL, new SideBysideScore(LEVEL, '0'));
-        this.scoreBoard.creatTextElement(LIVES, new SideBysideScore(LIVES, '0'));
-        this.scoreBoard.creatTextElement(PAUSE, new SideBysideScore(PAUSE, 'press space to pause'), 200, 30);
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(LIVES, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
         // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();
@@ -92,7 +76,8 @@ class Main extends GFrame {
         lives = 5,
         score = 0;
     //游戏变量;
-
+    var butterfly,
+    btn;
     class MyGame extends Game {
         constructor() {
             super();
@@ -121,27 +106,28 @@ class Main extends GFrame {
          * 
          */
         waitComplete() {
-            this.butterfly = new lib.Butterfly();
-            this.butterfly.t=0;
-            stage.addChild(this.butterfly);
-            mc.style.fontSize = 14;
-            this.btn = new PushButton(stage, "button", ()=>{
-                
-            }, 50, 35);
+            // this.onkey();
+            butterfly=new lib.Butterfly();
+            butterfly.t=0;
+            stage.addChild(butterfly);
+
+            mc.style.fontSize=14;
+            btn=new PushButton(stage,"button",()=>{
+
+            },50,35);
 
             /**
              * 交换元素图层
              */
-            // stage.swapChildren(this.butterfly, this.btn); 
+            stage.swapChildren(butterfly,btn);
 
             /**
              * 鼠标事件以及e.current和currentTarget
              */
             stage.addEventListener('stagemousedown', (e) => {
-                this.butterfly.y=0;
-                this.butterfly.t=0;
-                this.butterfly.x = stage.mouseX;
-                this.butterfly.y = stage.mouseY;
+                butterfly.t=0;
+                butterfly.x = stage.mouseX;
+                butterfly.y = stage.mouseY;
                 console.log(e.target === stage); //stagemousedown的e.target===e.currentTarget===target.
                 //mousedown事件才有e.currentTarget==建立侦听的容器（stage）,e.target==butterfly;
             });
@@ -149,31 +135,31 @@ class Main extends GFrame {
             /**
              * 缓动
              */
-            // createjs.Tween.get(this.butterfly).wait(2000).to({
-            //     y: this.butterfly.y + 200,
-            //     alpha: 0.5
-            // }, 1000, createjs.Ease.quadOut).call(bufferflyGone, [this.butterfly], this); //this默认指向get()里的对象
-            // function bufferflyGone(img) {
-            //     stage.removeChild(img);
-            //     console.log(this);
-            // }
-
-            //运用缓动公式
-
+            /* createjs.Tween.get(butterfly).wait(2000).to({
+                y: butterfly.y + 200,
+                alpha: 0.5
+            }, 1000, createjs.Ease.quadOut).call(bufferflyGone, [butterfly], this); //this默认指向get()里的对象
+            function bufferflyGone(img) {
+                stage.removeChild(img);
+                console.log(this);
+            } */
         }
         runGame() {
-            this.butterfly.t++;
+            /**
+             * 运用缓动公式
+             */
+            butterfly.t++;
             /**第一个参数：t  计时器，
              * 第二个参数：b 原始位置，
              * 第三个参数：c 运动距离，一般为stage的宽高。
-             * 第四个参数：d 影响速度快慢.
+             * 第四个参数：d 影响速度快慢.所用时间
              * 第五个参数：s 返回量，0：没返回，defult:1.70
-             * back.easingIn:一开始就往回拉。类似加速运动，（s为0时,没拉回动作）
-             * back.easingOut:减速运动到 c 停止,再继续往前
-             * back.easingInOut:先加速再减速到 c ，s不为零时有回拉。
-             * back.easingOutIn:先减速到 c/2，再加速。（无s参数）有回拉
+             * back.easeIn:一开始就往回拉。类似加速运动，（s为0时,没拉回动作）
+             * back.easeOut:减速运动到 c 停止,再继续往前
+             * back.easeInOut:先加速再减速到 c ，s不为零时有回拉。
+             * back.easeOutIn:先减速到 c/2，再加速。（无s参数）有回拉
              */
-            // this.butterfly.y=easing.back.easeOutIn(this.butterfly.t,0,800,200);//加减速度带返回拉力。。。。。
+            // butterfly.y=easing.back.easeOutIn(butterfly.t,0,400,200,3);//加减速度带返回拉力。。。。。
 
             /**此系列没s参数
              * bounce.easeIn:向上弹。最后往上走
@@ -181,7 +167,7 @@ class Main extends GFrame {
              * bounce.easeInOut:先向上弹动，再到 c处弹动。最后往下走
              * bounce.easeOutIn:先到 c/2处弹动，再 c/2处弹动。最后到达 c 处往上走
              */
-            // this.butterfly.y=easing.bounce.easeOutIn(this.butterfly.t,0,800,200);//加减速度带弹跳。。。。。。
+            // butterfly.y=easing.bounce.easeIn(butterfly.t,0,800,200);//加减速度带弹跳。。。。。。
 
             /**
              * circ.easeIn:加速运动到 c后，，再加速回源点  返回值为NaN.
@@ -189,20 +175,70 @@ class Main extends GFrame {
              * circ.easeInOut:加速到  c/2.再减速到 c，再加速回源点  返回值为NaN.
              * circ.easeOutIn:减速到 c/2.再加速到c 再加速回源点  返回值为NaN.
              */
-            // this.butterfly.y=easing.circ.easeOutIn(this.butterfly.t,0,800,200);//单纯的加减速度,到目标返回原地后值为 NaN。。。。。。。
-            
+            // butterfly.y=easing.circ.easeIn(butterfly.t,0,800,200);//单纯的加减速度,到目标返回原地后值为 NaN。。。。。。。
+
             /**
              * cubic.easeIn:加速到 c后继续
              * cubic.easeOut:减速到c后加速继续
              * cubic.easeInOut:先加速到 c/2，再减速到c。再继续向前
              * cubic.easeOutIn:先减速到 c/2，再加速到c。再继续向前
              */
-            this.butterfly.y=easing.cubic.easeOutIn(this.butterfly.t,0,800,200);//单纯的加减速度。。。*********
+            butterfly.y=easing.cubic.easeIn(butterfly.t,0,800,200);//单纯的加减速度。。。*********
             
             //后面待续。。。。。。。
             
             
-            
+        }
+        onkey(){
+            document.onkeyup = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        this.leftKeyDown = false;
+                        break;
+                    case 68:
+                        this.rightKeyDown = false;
+                        break;
+                    case 87:
+                        this.upKeyDown = false;
+                        break;
+                    case 83:
+                        this.downKeyDown = false;
+                        break;
+                    case 32:
+                        createjs.Ticker.paused = !createjs.Ticker.paused;
+                        break;
+                    default:
+                }
+            };
+            document.onkeydown = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        if (!this.leftKeyDown) {
+                            this.leftKeyDown = true;
+
+                        }
+                        break;
+                    case 68:
+                        if (!this.rightKeyDown) {
+                            this.rightKeyDown = true;
+
+                        }
+                        break;
+                    case 87:
+                        if (!this.upKeyDown) {
+                            this.upKeyDown = true;
+
+                        }
+                        break;
+                    case 83:
+                        if (!this.downKeyDown) {
+                            this.downKeyDown = true;
+
+                        }
+                        break;
+                    default:
+                }
+            };
         }
     }
     window.MyGame = MyGame;

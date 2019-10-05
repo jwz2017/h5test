@@ -4,10 +4,10 @@
   <meta charset="utf-8">
 
   <!-- 手机宽带自适应，width=750为设计宽度,不用adapt -->
-  <meta name="viewport" content="width=750,user-scalable=no"/>
+  <!-- <meta name="viewport" content="width=750,user-scalable=no"/> -->
 
-  <!-- 可设置高度自适应，居中等，需要adapt() -->
-  <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
+  <!-- 设置高度自适应，居中等，需要adapt() -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <meta name="apple-mobile-web-app-capable" content="no">
   <style>
@@ -15,23 +15,50 @@
       margin: 0;
       padding: 0;
     }
+    /* .open_btn{
+      color: #000000;
+      font-size: 50px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .input_text{
+      color: aquamarine;
+      width: 182px;
+      height: 41px;
+      background-color: #270C51;
+      border:3px solid #4E2383;
+      line-height: 41px;
+      font-size: 14px;
+      padding: 0 10px;
+    } */
   </style>
   <title>h5Test</title>
   <script src="classes/createjs.min.js"></script>
   <script src="classes/gframe.js"></script>
   <script src="classes/mc.js"></script>
   <script src="classes/FPS.js"></script>
-  <!-- <script src="classes/easing.js"></script> -->
+  <script src="classes/easing.js"></script>
+  <script src="classes/BasePeople.js"></script>
   <!-- <script src="classes/utils.js"></script> -->
-  <!-- <script src="lib.js"></script> -->
-  <!-- <script src="ma.js"></script> -->
-  <script src="include/0base.js"></script>
+  <script src="lib.js"></script>
+  <script src="ma.js"></script>
+  <script src="include/1superClick.js"></script>
   <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
 </head>
 
 <body style="background-color:#584f1a">
   <div id="game" style="position:absolute;">
-    <p id="fps" style="font-size: 30px;font-family: Arial;color: #3076c7 ;display: none"></p>
+    <p id="fps" style="font-size: 30px;font-family: Arial;color: #24044e ;display: none"></p>
+    
+    <!-- 加入dom到舞台 -->
+    <!-- <p id="testTxt" style="width:200px;color: #ff0000;display: none;cursor: pointer">CreateJS是基于HTML5开发的一套模块化的库和工具。
+    基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p> -->
+    
+    <!-- 加入dom到animate -->
+    <!-- <a id="openBtn" class="open_btn" style="display: none">打开弹窗</a>
+    <input type="text" id="inputText" class="input_text" placeholder="请输入姓名" style="display: none"> -->
+
+
     <!-- canvas width,height (750,1206) -->
     <canvas id="canvas" width="750" height="980" style="background-color:#7c7a7a;display: none;">
     </canvas>

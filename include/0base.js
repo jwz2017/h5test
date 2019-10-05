@@ -1,10 +1,10 @@
+var lib;
 const SCORE = "score",
     LEVEL = "level",
-    LIVES = "lives",
-    PAUSE = "pause";
+    LIVES = "lives";
 window.onload = function () {
     "use strict";
-    /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps' fps是与dom*****/
+    /*************初始化 整个游戏入口*****/
     new Main('canvas');
     //添加代码
 
@@ -14,7 +14,7 @@ class Main extends GFrame {
         super(canvasId);
         
         /*********自适应*********** */
-        // this.adapt(false);
+        this.adapt();
 
         /*********预加载手动********** */
         // this.preload([{
@@ -23,12 +23,12 @@ class Main extends GFrame {
         // }]);
 
         /*********animate加载******* ---------------------------------------1*/
-        // let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        // lib = comp.getLibrary();
-        // this.preload(lib.properties.manifest, comp);
+        let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
+        lib = comp.getLibrary();
+        this.preload(lib.properties.manifest, comp);
 
         /*********不加载，直接初始化*************** */
-        this.init();
+        // this.init();
 
         FPS.startFPS(stage);
     }
@@ -60,10 +60,9 @@ class Main extends GFrame {
 
         this.scoreBoard = new ScoreBoard();
         this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, new SideBysideScore(SCORE, '0'));
-        this.scoreBoard.creatTextElement(LEVEL, new SideBysideScore(LEVEL, '0'));
-        this.scoreBoard.creatTextElement(LIVES, new SideBysideScore(LIVES, '0'));
-        this.scoreBoard.creatTextElement(PAUSE, new SideBysideScore(PAUSE, 'press space to pause'), 200, 30);
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(LIVES, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
         // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();

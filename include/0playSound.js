@@ -1,22 +1,19 @@
-var stageScale = 1,
-    lib,model;
+var lib;
 const SCORE = "score",
     LEVEL = "level",
     LIVES = "lives",
     PAUSE = "pause";
 window.onload = function () {
     "use strict";
-    /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps'*****/
-    new Main('canvas', 'fps');
+    /*************初始化 整个游戏入口*****/
+    new Main('canvas');
     //添加代码
 
 }
 class Main extends GFrame {
-    constructor(canvasId, fpsid) {
-        super(canvasId, fpsid);
-        /*********接收animate影片剪辑播放过程发出的事件。***/
-        model = new createjs.EventDispatcher();
-
+    constructor(canvasId) {
+        super(canvasId);
+        
         /*********自适应*********** */
         this.adapt();
 
@@ -33,22 +30,10 @@ class Main extends GFrame {
 
         /*********不加载，直接初始化*************** */
         // this.init();
-    }
-    adapt() {
-        let stageWidth = document.documentElement.clientWidth,
-            stageHeight = document.documentElement.clientHeight,
-            width = stage.canvas.width,
-            height = stage.canvas.height;
-        //高度自适应
-        let gameDiv = document.getElementById("game");
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
-        //宽带自适应
-        // stageScale = stageWidth /width;
-
-        stage.canvas.style.width = width * stageScale + 'px';
+        FPS.startFPS(stage);
     }
+    
 
     initScreen() {
         let width = stage.canvas.width,
@@ -76,10 +61,9 @@ class Main extends GFrame {
 
         this.scoreBoard = new ScoreBoard();
         this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, new SideBysideScore(SCORE, '0'));
-        this.scoreBoard.creatTextElement(LEVEL, new SideBysideScore(LEVEL, '0'));
-        this.scoreBoard.creatTextElement(LIVES, new SideBysideScore(LIVES, '0'));
-        this.scoreBoard.creatTextElement(PAUSE, new SideBysideScore(PAUSE, 'press space to pause'), 200, 30);
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(LIVES, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
         // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();
@@ -121,11 +105,8 @@ class Main extends GFrame {
          * 
          */
         waitComplete() {
-            mc.style.fontSize = 14;
-            /**
-             * 不加载声音直接播放(不推荐).
-             */
-            createjs.Sound.registerSound('sounds/m.mp3', 'w', 1);//预加载过的声音不能再注册。。不加载直接播放可能出错。。
+            // this.onkey();
+            mc.style.fontSize=12;
 
             /**
              * 使用interrupt_any时，要再预加载lib里设置data:"1"：一个声音只能再一个通道里播放。
@@ -135,7 +116,7 @@ class Main extends GFrame {
             }, 50, 35);
 
             /**
-             * 简单实现一个通道播放一个声音
+             * 一个通道播放一个声音
              */
             var sound;//sound是AbstractSoundInstance类，是具体的声音控制
             var s=new PushButton(stage,"music",function(){
@@ -150,11 +131,63 @@ class Main extends GFrame {
                     console.log('c');
                   });
             },400,250);
+
         }
         runGame() {
             
+            
+        }
+        onkey(){
+            document.onkeyup = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        this.leftKeyDown = false;
+                        break;
+                    case 68:
+                        this.rightKeyDown = false;
+                        break;
+                    case 87:
+                        this.upKeyDown = false;
+                        break;
+                    case 83:
+                        this.downKeyDown = false;
+                        break;
+                    case 32:
+                        createjs.Ticker.paused = !createjs.Ticker.paused;
+                        break;
+                    default:
+                }
+            };
+            document.onkeydown = (e) => {
+                switch (e.keyCode) {
+                    case 65:
+                        if (!this.leftKeyDown) {
+                            this.leftKeyDown = true;
+
+                        }
+                        break;
+                    case 68:
+                        if (!this.rightKeyDown) {
+                            this.rightKeyDown = true;
+
+                        }
+                        break;
+                    case 87:
+                        if (!this.upKeyDown) {
+                            this.upKeyDown = true;
+
+                        }
+                        break;
+                    case 83:
+                        if (!this.downKeyDown) {
+                            this.downKeyDown = true;
+
+                        }
+                        break;
+                    default:
+                }
+            };
         }
     }
     window.MyGame = MyGame;
 })();
-   
