@@ -17,7 +17,7 @@ class Main extends GFrame {
         super(canvasId);
         
         /*********自适应*********** */
-        this.adapt();
+        // this.adapt();
 
         /*********预加载手动********** */
         // this.preload([{
@@ -39,13 +39,15 @@ class Main extends GFrame {
 
     initScreen() {
         let width = stage.canvas.width,
-            height = stage.canvas.height;
+            height = stage.canvas.height=document.documentElement.clientHeight;
+            console.log(document.documentElement.clientHeight);
+            
 
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
         this.titleScreen.createDisplayText('开始界面', width / 2, 200);
-        this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
+        this.titleScreen.createOkButton((width - 200) / 2, height / 2 +100, 'start', 200, 40);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
         this.instructionScreen = new BasicScreen();

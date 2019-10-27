@@ -6,7 +6,7 @@ class GFrame {
     this._systemFunction = function () {};
 
     /*********接收animate影片剪辑播放过程发出的事件。***/
-    model = new createjs.EventDispatcher();
+    // model = new createjs.EventDispatcher();
 
     this._setupStage(canvasId);
   }
