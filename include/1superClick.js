@@ -17,6 +17,7 @@ class Main extends GFrame {
         super(canvasId);
         
         /*********自适应*********** */
+        stage.canvas.height=document.documentElement.clientHeight;
         // this.adapt();
 
         /*********预加载手动********** */
@@ -39,9 +40,7 @@ class Main extends GFrame {
 
     initScreen() {
         let width = stage.canvas.width,
-            height = stage.canvas.height=document.documentElement.clientHeight;
-            console.log(document.documentElement.clientHeight);
-            
+            height = stage.canvas.height;
 
         mc.style.fontSize = 30; //按钮label字体大小
 
