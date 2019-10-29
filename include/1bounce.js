@@ -1,23 +1,20 @@
-var stageScale = 1,
-    lib, model;
+var lib;
 const SCORE = "score",
     LEVEL = "level",
-    LIVES = "lives",
-    PAUSE = "pause";
+    LIVES = "lives";
 window.onload = function () {
     "use strict";
-    /*************初始化 整个游戏入口,开启fps需要加第二个参数 'fps' fps是与dom*****/
-    new Main('canvas', 'fps');
+    /*************初始化 整个游戏入口*****/
+    new Main('canvas');
     //添加代码
 
 }
 class Main extends GFrame {
-    constructor(canvasId, fpsid) {
-        super(canvasId, fpsid);
-        /*********接收animate影片剪辑播放过程发出的事件。***/
-        model = new createjs.EventDispatcher();
-
+    constructor(canvasId) {
+        super(canvasId);
+        
         /*********自适应*********** */
+        // stage.canvas.height=document.documentElement.clientHeight;
         this.adapt();
 
         /*********预加载手动********** */
@@ -33,22 +30,10 @@ class Main extends GFrame {
 
         /*********不加载，直接初始化*************** */
         // this.init();
-    }
-    adapt() {
-        let stageWidth = document.documentElement.clientWidth,
-            stageHeight = document.documentElement.clientHeight,
-            width = stage.canvas.width,
-            height = stage.canvas.height;
-        //高度自适应
-        let gameDiv = document.getElementById("game");
-        stageScale = stageHeight / height;
-        gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
 
-        //宽带自适应
-        // stageScale = stageWidth /width;
-
-        stage.canvas.style.width = width * stageScale + 'px';
+        FPS.startFPS(stage);
     }
+    
 
     initScreen() {
         let width = stage.canvas.width,
@@ -76,10 +61,9 @@ class Main extends GFrame {
 
         this.scoreBoard = new ScoreBoard();
         this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, new SideBysideScore(SCORE, '0'));
-        this.scoreBoard.creatTextElement(LEVEL, new SideBysideScore(LEVEL, '0'));
-        this.scoreBoard.creatTextElement(LIVES, new SideBysideScore(LIVES, '0'));
-        this.scoreBoard.creatTextElement(PAUSE, new SideBysideScore(PAUSE, 'press space to pause'), 200, 30);
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(LIVES, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
         // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();
@@ -88,9 +72,9 @@ class Main extends GFrame {
 (function () {
     "use strict";
     //程序变量
-    let level = 0,
-        lives = 5,
-        score = 0;
+    let _level = 0,
+        _lives = 5,
+        _score = 0;
     //游戏变量;
     let wall,
         paddleHits = 0,
@@ -108,7 +92,6 @@ class Main extends GFrame {
     class MyGame extends Game {
         constructor() {
             super();
-            
         }
         /**建立游戏元素
          * 在构造函数里建立
@@ -122,25 +105,159 @@ class Main extends GFrame {
             this.brick = new Brick();
         }
         newGame() {
-            super.newGame();
-            score = 0;
-            level = 0;
+            this.score = 0;
+            this.lives = 5;
+            _level = 0;
             paddleHits = 0;
-            lives = 5;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, lives));
-
         }
         newLevel() {
-            level++;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, level));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + level));
-
+            this.level++;
         }
         /**levelinscreen等待结束时执行
          * 
          */
         waitComplete() {
+            this.onkey();
+             //加入显示元素
+             let w = stage.canvas.width;
+             stage.addChild(puck, wall, paddle);
+             paddle.x = w / 2 - WALL_THICKNESS - PADDLE_WIDTH / 2 + WALL_THICKNESS;
+             paddle.y = stage.canvas.height - PADDLE_HEIGHT - GFrame.style.SCOREBOARD_HEIGHT;
+             this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, _level);
+             this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, _level);
+             puck.x = w / 2;
+             puck.y = this.brick.bricks[0].y + this.brick.brickHeight * 2 + PUCK_RADIUS * 2;
+ 
+             puck.vx = puck.vy = PUCK_SPEED;
+             puck.isAlive = true;
+
+        }
+        runGame() {
+            this._updatePaddle();
+            this._updatePuck();
+            this._checkPaddle();
+            this._checkPuck();
+            this._checkBrick();
+            this._checkOver();
+            this._checkLevelUp();
+            
+        }
+        _updatePaddle() {
+            if (this.leftKeyDown) paddle.x -= PADDLE_SPEED;
+            if (this.rightKeyDown) paddle.x += PADDLE_SPEED;
+            let d = stage.canvas.width - PADDLE_WIDTH - WALL_THICKNESS;
+            if (paddle.x < WALL_THICKNESS) paddle.x = WALL_THICKNESS;
+            else if (paddle.x > d) paddle.x = d;
+        }
+        _updatePuck() {
+            puck.x += puck.vx;
+            puck.y += puck.vy;
+            let d = stage.canvas.width - WALL_THICKNESS - PUCK_RADIUS;
+            if (puck.x > d) {
+                puck.x = d;
+                puck.vx *= -1;
+            } else if (puck.x < WALL_THICKNESS + PUCK_RADIUS) {
+                puck.x = WALL_THICKNESS + PUCK_RADIUS;
+                puck.vx *= -1;
+            }
+            if (puck.y < WALL_THICKNESS + PUCK_RADIUS) {
+                puck.y = WALL_THICKNESS + PUCK_RADIUS;
+                puck.vy *= -1;
+            }
+        }
+        _checkPaddle() {
+            if (puck.vy > 0 && puck.x >= paddle.x && puck.x <= paddle.x + PADDLE_WIDTH && puck.y >= paddle.y - PUCK_RADIUS && puck.isAlive) {
+                puck.y = paddle.y - PUCK_RADIUS;
+                puck.vy *= -1;
+                let x1 = puck.x - paddle.x - PADDLE_WIDTH / 2;
+                puck.vx += x1 / PADDLE_WIDTH * 15;
+                paddleHits++;
+                combo = 0;
+                if (paddleHits == PADDLE_HITS_MAX) {
+                    this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, _level);
+                    paddleHits = 0;
+                }
+            }
+        }
+        _checkPuck() {
+            if (puck.y > paddle.y) {
+                puck.isAlive = false;
+            }
+            if (puck.y > stage.canvas.height + 200) {
+                puck.y = this.brick.bricks[0].y + this.brick.brickHeight * 2 + PUCK_RADIUS * 2;
+                puck.x = stage.canvas.width / 2;
+                puck.isAlive = true;
+                puck.vx = PUCK_SPEED;
+                combo = 0;
+                this.lives--;
+            }
+        }
+        _checkBrick() {
+            if (!puck.isAlive || this.brick.bricks.length == 0) {
+                return;
+            }
+            let brick, l = this.brick.bricks.length;
+            for (let i = l - 1; i >= 0; i--) {
+                brick = this.brick.bricks[i];
+                if (puck.y <= brick.y + brick.height + PUCK_RADIUS && puck.y >= brick.y - PUCK_RADIUS && puck.x >= brick.x - PUCK_RADIUS && puck.x <= brick.x + brick.width + PUCK_RADIUS) {
+
+                    this.score++;
+                    combo++;
+                    if (brick.freeLife) {
+                        this.lives++;
+                        createjs.Tween.get(brick.freeLife).to({
+                            alpha: 0,
+                            y: brick.freeLife.y - 100
+                        }, 1000).call(this._remove);
+                    }
+                    if (combo > 4) {
+                        this.score += (combo * 10);
+                        let combotex = new createjs.Text('combo x' + (combo * 10), '14px Times', '#ff0000');
+                        combotex.x = brick.x;
+                        combotex.y = brick.y;
+                        combotex.regX = brick.width / 2;
+                        combotex.regY = brick.height / 2;
+                        combotex.alpha = 0;
+                        stage.addChild(combotex);
+                        createjs.Tween.get(combotex).to({
+                            alpha: 1,
+                            scaleY: 2,
+                            scaleX: 2,
+                            y: combotex.y - 60
+                        }, 1000).call(this._remove);
+                    }
+                    stage.removeChild(brick);
+                    this.brick.bricks.splice(i, 1);
+                    puck.vy *= -1;
+                    return;
+                }
+            }
+        }
+        _checkOver() {
+            if (this.brick.bricks.length == 0) {
+                return;
+            }
+            if (_lives < 0 || this.brick.bricks[0].y > paddle.y) {
+                this.gameover = true;
+            }
+            if (this.gameover) {
+                this.gameover = false;
+                this.brick.clear();
+                stage.dispatchEvent(GFrame.event.GAME_OVER);
+            }
+        }
+        _checkLevelUp() {
+
+        }
+        //移除缓动元素
+        _remove() {
+            stage.removeChild(this);
+
+        }
+
+
+        
+        onkey(){
             document.onkeyup = (e) => {
                 switch (e.keyCode) {
                     case 65:
@@ -190,144 +307,28 @@ class Main extends GFrame {
                     default:
                 }
             };
-            //加入显示元素
-            let w = stage.canvas.width;
-            stage.addChild(puck, wall, paddle);
-            paddle.x = w / 2 - WALL_THICKNESS - PADDLE_WIDTH / 2 + WALL_THICKNESS;
-            paddle.y = stage.canvas.height - PADDLE_HEIGHT - GFrame.style.SCOREBOARD_HEIGHT;
-            this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, level);
-            this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, level);
-            puck.x = w / 2;
-            puck.y = this.brick.bricks[0].y + this.brick.brickHeight * 2 + PUCK_RADIUS * 2;
-
-            puck.vx = puck.vy = PUCK_SPEED;
-            puck.isAlive = true;
-
         }
-        runGame() {
-            this._updatePaddle();
-            this._updatePuck();
-            this._checkPaddle();
-            this._checkPuck();
-            this._checkBrick();
-            this._checkOver();
-            this._checkLevelUp();
+        get score() {
+            return _score;
         }
-        _updatePaddle() {
-            if (this.leftKeyDown) paddle.x -= PADDLE_SPEED;
-            if (this.rightKeyDown) paddle.x += PADDLE_SPEED;
-            let d = stage.canvas.width - PADDLE_WIDTH - WALL_THICKNESS;
-            if (paddle.x < WALL_THICKNESS) paddle.x = WALL_THICKNESS;
-            else if (paddle.x > d) paddle.x = d;
+        set score(val) {
+            _score = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, _score));
         }
-        _updatePuck() {
-            puck.x += puck.vx;
-            puck.y += puck.vy;
-            let d = stage.canvas.width - WALL_THICKNESS - PUCK_RADIUS;
-            if (puck.x > d) {
-                puck.x = d;
-                puck.vx *= -1;
-            } else if (puck.x < WALL_THICKNESS + PUCK_RADIUS) {
-                puck.x = WALL_THICKNESS + PUCK_RADIUS;
-                puck.vx *= -1;
-            }
-            if (puck.y < WALL_THICKNESS + PUCK_RADIUS) {
-                puck.y = WALL_THICKNESS + PUCK_RADIUS;
-                puck.vy *= -1;
-            }
+        get level() {
+            return _level;
         }
-        _checkPaddle() {
-            if (puck.vy > 0 && puck.x >= paddle.x && puck.x <= paddle.x + PADDLE_WIDTH && puck.y >= paddle.y - PUCK_RADIUS && puck.isAlive) {
-                puck.y = paddle.y - PUCK_RADIUS;
-                puck.vy *= -1;
-                let x1 = puck.x - paddle.x - PADDLE_WIDTH / 2;
-                puck.vx += x1 / PADDLE_WIDTH * 15;
-                paddleHits++;
-                combo = 0;
-                if (paddleHits == PADDLE_HITS_MAX) {
-                    this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, level);
-                    paddleHits = 0;
-                }
-            }
+        set level(val) {
+            _level = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + _level));
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, _level));
         }
-        _checkPuck() {
-            if (puck.y > paddle.y) {
-                puck.isAlive = false;
-            }
-            if (puck.y > stage.canvas.height + 200) {
-                puck.y = this.brick.bricks[0].y + this.brick.brickHeight * 2 + PUCK_RADIUS * 2;
-                puck.x = stage.canvas.width / 2;
-                puck.isAlive = true;
-                puck.vx = PUCK_SPEED;
-                combo = 0;
-                lives--;
-                stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, lives));
-            }
+        get lives() {
+            return _lives;
         }
-        _checkBrick() {
-            if (!puck.isAlive || this.brick.bricks.length == 0) {
-                return;
-            }
-            let brick, l = this.brick.bricks.length;
-            for (let i = l - 1; i >= 0; i--) {
-                brick = this.brick.bricks[i];
-                if (puck.y <= brick.y + brick.height + PUCK_RADIUS && puck.y >= brick.y - PUCK_RADIUS && puck.x >= brick.x - PUCK_RADIUS && puck.x <= brick.x + brick.width + PUCK_RADIUS) {
-
-                    score++;
-                    stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
-                    combo++;
-                    if (brick.freeLife) {
-                        lives++;
-                        stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, lives));
-                        createjs.Tween.get(brick.freeLife).to({
-                            alpha: 0,
-                            y: brick.freeLife.y - 100
-                        }, 1000).call(this._remove);
-                    }
-                    if (combo > 4) {
-                        score += (combo * 10);
-                        stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
-                        let combotex = new createjs.Text('combo x' + (combo * 10), '14px Times', '#ff0000');
-                        combotex.x = brick.x;
-                        combotex.y = brick.y;
-                        combotex.regX = brick.width / 2;
-                        combotex.regY = brick.height / 2;
-                        combotex.alpha = 0;
-                        stage.addChild(combotex);
-                        createjs.Tween.get(combotex).to({
-                            alpha: 1,
-                            scaleY: 2,
-                            scaleX: 2,
-                            y: combotex.y - 60
-                        }, 1000).call(this._remove);
-                    }
-                    stage.removeChild(brick);
-                    this.brick.bricks.splice(i, 1);
-                    puck.vy *= -1;
-                    return;
-                }
-            }
-        }
-        _checkOver() {
-            if (this.brick.bricks.length == 0) {
-                return;
-            }
-            if (lives < 0 || this.brick.bricks[0].y > paddle.y) {
-                this.gameover = true;
-            }
-            if (this.gameover) {
-                this.gameover = false;
-                this.brick.clear();
-                stage.dispatchEvent(GFrame.event.GAME_OVER);
-            }
-        }
-        _checkLevelUp() {
-
-        }
-        //移除缓动元素
-        _remove() {
-            stage.removeChild(this);
-
+        set lives(val) {
+            _lives = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, _lives));
         }
     }
     window.MyGame = MyGame;
@@ -342,7 +343,7 @@ class Brick {
     createBrick(xpos1, ypos1, xpos2, level) {
         this.shiftBricksDown();
         let width = xpos2 - xpos1,
-            num = level * 2 + 14,
+            num = level * 2 + 18,
             brickWidth = Math.floor(width / num * 2);
         xpos1 = Math.floor(width / 2 - brickWidth * num / 4 + xpos1);
         let xpos = xpos1,

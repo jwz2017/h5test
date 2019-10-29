@@ -14,6 +14,7 @@ class Main extends GFrame {
         super(canvasId);
         
         /*********自适应*********** */
+        // stage.canvas.height=document.documentElement.clientHeight;
         this.adapt();
 
         /*********预加载手动********** */
@@ -71,9 +72,9 @@ class Main extends GFrame {
 (function () {
     "use strict";
     //程序变量
-    let level = 0,
-        lives = 5,
-        score = 0;
+    let _level = 0,
+        _lives = 5,
+        _score = 0;
     //游戏变量;
 
     class MyGame extends Game {
@@ -87,18 +88,12 @@ class Main extends GFrame {
 
         }
         newGame() {
-            score = 0;
-            level = 0;
-            lives = 5;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, lives));
-
+            this.score = 0;
+            this.lives = 5;
+            _level = 0;
         }
         newLevel() {
-            level++;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, level));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + level));
-
+            this.level++;
         }
         /**levelinscreen等待结束时执行
          * 
@@ -111,6 +106,9 @@ class Main extends GFrame {
             
             
         }
+
+
+        
         onkey(){
             document.onkeyup = (e) => {
                 switch (e.keyCode) {
@@ -161,6 +159,28 @@ class Main extends GFrame {
                     default:
                 }
             };
+        }
+        get score() {
+            return _score;
+        }
+        set score(val) {
+            _score = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, _score));
+        }
+        get level() {
+            return _level;
+        }
+        set level(val) {
+            _level = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + _level));
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, _level));
+        }
+        get lives() {
+            return _lives;
+        }
+        set lives(val) {
+            _lives = val;
+            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, _lives));
         }
     }
     window.MyGame = MyGame;

@@ -15,26 +15,44 @@ class GFrame {
    * 
    * @param {boolean} h =true,是否高度适应
    */
-  adapt(h = true) {
+  adapt() {
     let stageWidth = document.documentElement.clientWidth,
       stageHeight = document.documentElement.clientHeight,
+      gameDiv = document.getElementById("game"),
       width = stage.canvas.width,
       height = stage.canvas.height,
-      stageScale=1,
-      gameDiv = document.getElementById("game");
-    
-    if (h) {
-      //高度自适应
-      stageScale = stageHeight / height;
-      gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-    } else {
-      //宽带自适应
-      stageScale = stageWidth / width;
-    }
+      stageScale=1;
 
-    // stage.canvas.style.width = width * stageScale + 'px';
-    gameDiv.style.transformOrigin = '0 0';
+      if(stageWidth/stageHeight > 0.665)
+{
+    stageScale = stageHeight/height;
+    gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+}
+else{
+  stageScale=stageWidth/width;
+}
+gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
+
+    // let stageWidth = document.documentElement.clientWidth,
+    //   stageHeight = document.documentElement.clientHeight,
+    //   width = stage.canvas.width,
+    //   height = stage.canvas.height,
+    //   stageScale=1,
+    //   gameDiv = document.getElementById("game");
+    
+    // if (h) {
+    //   //高度自适应
+    //   stageScale = stageHeight / height;
+    //   gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+    // } else {
+    //   //宽带自适应
+    //   stageScale = stageWidth / width;
+    // }
+
+    // // stage.canvas.style.width = width * stageScale + 'px';
+    // gameDiv.style.transformOrigin = '0 0';
+    // gameDiv.style.transform = 'scale(' + stageScale + ')';
 
   }
   /**预加载
@@ -377,30 +395,31 @@ class ScoreBoard extends createjs.Container {
   }
 }
 /***************************************游戏基类****************************** */
-class Game {
-  constructor() {
-    this.buildElement();
+  class Game {
+    constructor() {
+      this.buildElement();
+    }
+    newGame() {
+  
+    }
+    newLevel() {
+  
+    }
+    runGame() {
+  
+    }
+    /**建立游戏元素
+     * 在构造函数里建立
+     */
+    buildElement() {
+  
+    }
+    /**levelinscreen等待结束时执行
+     * 
+     */
+    waitComplete() {
+  
+    }
+    
+  
   }
-  newGame() {
-
-  }
-  newLevel() {
-
-  }
-  runGame() {
-
-  }
-  /**建立游戏元素
-   * 在构造函数里建立
-   */
-  buildElement() {
-
-  }
-  /**levelinscreen等待结束时执行
-   * 
-   */
-  waitComplete() {
-
-  }
-
-}
