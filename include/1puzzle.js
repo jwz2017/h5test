@@ -14,8 +14,8 @@ class Main extends GFrame {
         super(canvasId);
 
         /*********自适应*********** */
-        // stage.canvas.height=document.documentElement.clientHeight;
-        this.adapt();
+        stage.canvas.height=document.documentElement.clientHeight;
+        // this.adapt();
 
         /*********预加载手动********** */
         this.preload([{
