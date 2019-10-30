@@ -21,39 +21,16 @@ class GFrame {
       gameDiv = document.getElementById("game"),
       width = stage.canvas.width,
       height = stage.canvas.height,
-      stageScale=1;
+      stageScale = 1;
 
-      if(stageWidth/stageHeight > 0.665)
-{
-    stageScale = stageHeight/height;
-    gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-}
-else{
-  stageScale=stageWidth/width;
-}
-gameDiv.style.transformOrigin = '0 0';
+    if (stageWidth / stageHeight > 0.665) {
+      stageScale = stageHeight / height;
+      gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+    } else {
+      stageScale = stageWidth / width;
+    }
+    gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
-
-    // let stageWidth = document.documentElement.clientWidth,
-    //   stageHeight = document.documentElement.clientHeight,
-    //   width = stage.canvas.width,
-    //   height = stage.canvas.height,
-    //   stageScale=1,
-    //   gameDiv = document.getElementById("game");
-    
-    // if (h) {
-    //   //高度自适应
-    //   stageScale = stageHeight / height;
-    //   gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-    // } else {
-    //   //宽带自适应
-    //   stageScale = stageWidth / width;
-    // }
-
-    // // stage.canvas.style.width = width * stageScale + 'px';
-    // gameDiv.style.transformOrigin = '0 0';
-    // gameDiv.style.transform = 'scale(' + stageScale + ')';
-
   }
   /**预加载
    * 
@@ -107,14 +84,13 @@ gameDiv.style.transformOrigin = '0 0';
     stage = new createjs.Stage(canvasId);
     stage.canvas.style.display = "block"; //显示canvas
     stage.enableMouseOver(); //开启鼠标经过事件
-    createjs.Touch.enable(stage,true,false); //开启触摸
+    createjs.Touch.enable(stage, true, false); //开启触摸
     //createjs.MotionGuidePlugin.install(); //使用引导层必须
     // createjs.FlashAudioPlugin.swfPath = "plugin/FlashAudioPlugin";//安装flash插件
     // createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);//安装flash插件
 
     // createjs.Ticker.framerate = 65; //设置帧频
     // createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
 
     createjs.Ticker.on("tick", (e) => {
@@ -253,7 +229,7 @@ GFrame.style = {
   SIDE_BUFFWIDTH: 10,
   SCORE_TEXT_SIZE: 28,
   SCORE_TEXT_COLOR: "#FFFFFF",
-  SCOREBOARD_HEIGHT:60,
+  SCOREBOARD_HEIGHT: 60,
   SCORE_BUFF: 65
 };
 GFrame.event = {
@@ -360,7 +336,7 @@ class ScoreBoard extends createjs.Container {
   createBG(width, height, color) {
     let board = new createjs.Shape();
     board.graphics.beginFill(color).drawRect(0, 0, width, height);
-    board.cache(0,0,width,height);
+    board.cache(0, 0, width, height);
     this.addChildAt(board, 0);
   }
   /**创建分数元素
@@ -371,8 +347,8 @@ class ScoreBoard extends createjs.Container {
    * @param {number} ypos 分数元素y坐标
    */
   creatTextElement(key, val, xpos, ypos) {
-    let obj= new SideBysideScore(key,val);
-    this._textElements[key]=obj;
+    let obj = new SideBysideScore(key, val);
+    this._textElements[key] = obj;
     obj.x = xpos || (this.getBounds() ? this.getBounds().width + GFrame.style.SCORE_BUFF : 20);
     obj.y = ypos || 20;
     this.addChild(obj);
@@ -395,31 +371,31 @@ class ScoreBoard extends createjs.Container {
   }
 }
 /***************************************游戏基类****************************** */
-  class Game {
-    constructor() {
-      this.buildElement();
-    }
-    newGame() {
-  
-    }
-    newLevel() {
-  
-    }
-    runGame() {
-  
-    }
-    /**建立游戏元素
-     * 在构造函数里建立
-     */
-    buildElement() {
-  
-    }
-    /**levelinscreen等待结束时执行
-     * 
-     */
-    waitComplete() {
-  
-    }
-    
-  
+class Game {
+  constructor() {
+    this.buildElement();
   }
+  newGame() {
+
+  }
+  newLevel() {
+
+  }
+  runGame() {
+
+  }
+  /**建立游戏元素
+   * 在构造函数里建立
+   */
+  buildElement() {
+
+  }
+  /**levelinscreen等待结束时执行
+   * 
+   */
+  waitComplete() {
+
+  }
+
+
+}

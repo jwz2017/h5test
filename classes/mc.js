@@ -112,7 +112,7 @@ class LoaderBar extends createjs.Container {
    * @param {[number]} width 
    * @param {[number]} height 
    */
-  constructor(parent, x=0, y=0, width=400, height=40) {
+  constructor(parent, x=0, y=0, width=400, height=20) {
     super();
     if (parent) {
       parent.addChild(this);
@@ -122,18 +122,25 @@ class LoaderBar extends createjs.Container {
     this.y = y ;
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
+    //标题
+    this.titleText=new createjs.Text('loading...','30px Stylus BT','#ffffff');
+    this.titleText.textAlign="center";
+    this.titleText.x=width/2;
+    this.titleText.y=-35;
+    //数字
     this.text=new createjs.Text(this.percentLoaded+"%", '20px Microsoft YaHei', "#00ff00");
-    this.text.x=width/2-10;
+    this.text.textAlign="center";
+    this.text.x=width/2;
     this.text.y=height+10;
-    this.addChild(this.loaderBar,this.text);
+    this.addChild(this.loaderBar,this.text,this.titleText);
     this._redraw();
   }
   _redraw() {
     let t=Math.floor(this.percentLoaded*100);
     this.text.text=t+"%";
     this.loaderBar.graphics.clear();
-    this.loaderBar.graphics.beginFill('#00ff00').drawRect(0, 0, this.loaderBar.getBounds().width * this.percentLoaded, this.loaderBar.getBounds().height).endFill();
-    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#000000').drawRect(0, 0, this.loaderBar.getBounds().width, this.loaderBar.getBounds().height).endStroke();
+    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.loaderBar.getBounds().width-6) * this.percentLoaded, this.loaderBar.getBounds().height-6).endFill();
+    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.loaderBar.getBounds().width, this.loaderBar.getBounds().height).endStroke();
   }
   /**
    * 开始加载

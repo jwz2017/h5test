@@ -38,7 +38,7 @@ utils.randomColor = function () {
  * @param {object} obj 被检测对象
  * @param {number} bounce 反弹系数
  */
-utils.checkBounds=function(left,top,right,bottom,obj,bounce) {
+utils.checkBounds=function(obj,left=0,top=0,right=750,bottom=980,bounce=-0.7) {
     let o=obj.getBounds();
     if (obj.x+o.x<left) {
         obj.x=left-o.x;
@@ -56,7 +56,7 @@ utils.checkBounds=function(left,top,right,bottom,obj,bounce) {
         obj.vy*=bounce;
     }
 }
-/**旋转坐标
+/**旋转坐标(逆)
  * 
  * @param {*} xpos 
  * @param {*} ypos 
@@ -66,7 +66,7 @@ utils.checkBounds=function(left,top,right,bottom,obj,bounce) {
 utils.rotateP1=function(xpos,ypos,cos,sin) {
     return {x:cos*xpos+sin*ypos,y:cos*ypos-sin*xpos};
 }
-/**旋转回去
+/**旋转回去（顺）
  * 
  * @param {}} xpos 
  * @param {*} ypos 
