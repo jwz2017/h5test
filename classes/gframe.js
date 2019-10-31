@@ -1,9 +1,7 @@
 var stage, queue, model;
 class GFrame {
   constructor(canvasId) {
-    this._waitCount = 0;
-    this._waitTime = 40;
-    this._systemFunction = function () {};
+    this._systemFunction = this._systemWaitForClose;
 
     /*********接收animate影片剪辑播放过程发出的事件。***/
     // model = new createjs.EventDispatcher();
@@ -202,20 +200,18 @@ class GFrame {
   }
   //等级界面等待状态
   _systemWait() {
-    this._waitCount++;
-    if (this._waitCount > this._waitTime) {
-      this._waitCount = 0;
+    setTimeout(() => {
       switch (this._lastSystemState) {
         case GFrame.state.STATE_LEVEL_IN:
           stage.addChild(this.scoreBoard);
           stage.removeChild(this.levelInScreen);
           stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
           break;
-        default:
       }
       this._switchSystemState(this._nextSystemState);
-    }
+    }, 1500);
   }
+
   //按钮点击
   _okButton(e) {
     stage.removeChild(e.target);
@@ -366,6 +362,7 @@ class ScoreBoard extends createjs.Container {
     }, 800);
 
   }
+  
   update(key, val) {
     this._textElements[key].setValText(val);
   }

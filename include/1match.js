@@ -12,15 +12,36 @@ window.onload = function () {
 class Main extends GFrame {
     constructor(canvasId) {
         super(canvasId);
-
+        
         /*********自适应*********** */
         // stage.canvas.height=document.documentElement.clientHeight;
         this.adapt();
 
         /*********预加载手动********** */
         this.preload([{
-            id: "puzzle",
-            src: "assets/mam.png"
+            id: "back",
+            src: "assets/back.png"
+        },{
+            id:"card",
+            src:"assets/card.png"
+        },{
+            id:"garlic",
+            src:"assets/garlic.png"
+        },{
+            id:"onion",
+            src:"assets/onion.png"
+        },{
+            id:"pepper",
+            src:"assets/pepper.png"
+        },{
+            id:"potato",
+            src:"assets/potato.png"
+        },{
+            id:"spinach",
+            src:"assets/spinach.png"
+        },{
+            id:"tomato",
+            src:"assets/tomato.png"
         }]);
 
         /*********animate加载******* ---------------------------------------1*/
@@ -33,7 +54,7 @@ class Main extends GFrame {
 
         FPS.startFPS(stage);
     }
-
+    
 
     initScreen() {
         let width = stage.canvas.width,
@@ -65,7 +86,7 @@ class Main extends GFrame {
         this.scoreBoard.creatTextElement(LEVEL, '0');
         this.scoreBoard.creatTextElement(LIVES, '0');
         this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-        // this.scoreBoard.flicker([SCORE,LEVEL]);//闪烁分数版元素
+        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
         this.game = new MyGame();
     }
 }
@@ -76,7 +97,6 @@ class Main extends GFrame {
         _lives = 5,
         _score = 0;
     //游戏变量;
-    var puzzle;
 
     class MyGame extends Game {
         constructor() {
@@ -101,20 +121,23 @@ class Main extends GFrame {
          */
         waitComplete() {
             // this.onkey();
-            puzzle = new Puzzle(stage, "assets/mam.png");
-
-
-
+            this.a=new Card("garlic");
+            this.a.x=100;
+            this.a.y=100;
+            this.b=this.a.clone(true);
+            this.b.x=this.b.y=300;
+            stage.addChild(this.a,this.b)
+            
 
         }
         runGame() {
-
-
+            
+            
         }
 
 
-
-        onkey() {
+        
+        onkey(){
             document.onkeyup = (e) => {
                 switch (e.keyCode) {
                     case 65:
@@ -190,127 +213,30 @@ class Main extends GFrame {
     }
     window.MyGame = MyGame;
 })();
-(function () {
-    "use strict";
-    const PUZZLE_COLUMNS = 5,
-        PUZZLE_ROWS = 4,
-        PUZZLE_SIZE = 150;
-    var selectedPieces = [];
 
+class Card extends createjs.Container{
+    constructor(face,card="card",back="back"){
+        super();
+        
+        this.back=new createjs.Bitmap(queue.getResult(card));
+        this.regX=this.back.image.width/2;
+        this.regY=this.back.image.height/2;
+        this.addChild(this.back);
+        
+        this.back=new createjs.Bitmap(queue.getResult(face));
+        this.back.regX=this.back.image.width/2;
+        this.back.regY=this.back.image.height/2;
+        this.addChild(this.back);
+        this.back.x=this.regX;
+        this.back.y=70;
+        this.label=new createjs.Text(face.toUpperCase(),"20px Arial","#000");
+        this.label.textAlign="center";
+        this.label.x=this.regX;
+        this.label.y=144;
+        this.addChild(this.label);
+        this.back=new createjs.Bitmap(queue.getResult('back'));
+        this.back.name="back";
+        this.addChild(this.back);
 
-    class Puzzle {
-        constructor(stage, src) {
-            this.pieces = [];
-            this.stage = stage;
-            this.src = src;
-            this._init();
-
-        }
-        _init() {
-            this._buildPuzzle();
-            setTimeout(() => {
-                let p = [],
-                    _this = this,
-                    l, randomIndex;
-                p = p.concat(this.pieces);
-                l = p.length;
-                for (let i = 0, col = 0, row = 0; i < l; i++) {
-                    randomIndex = Math.floor(Math.random() * p.length);
-                    const piece = p[randomIndex];
-                    p.splice(randomIndex, 1);
-                    createjs.Tween.get(piece).to({
-                        x: col * PUZZLE_SIZE,
-                        y: row * PUZZLE_SIZE
-                    }, 200);
-                    piece.addEventListener('click', this.onPieceClick = function (e) {
-                        _this._onPieceClick(e);
-                    });
-                    col++;
-                    if (col === PUZZLE_COLUMNS) {
-                        col = 0;
-                        row++;
-                    }
-                }
-            }, 3000);
-        }
-
-        _buildPuzzle() {
-            let l = PUZZLE_COLUMNS * PUZZLE_ROWS;
-            for (let i = 0, col = 0, row = 0; i < l; i++) {
-                const piece = new createjs.Bitmap(this.src);
-                piece.sourceRect = new createjs.Rectangle(col * PUZZLE_SIZE, row * PUZZLE_SIZE, PUZZLE_SIZE, PUZZLE_SIZE);
-                piece.homePoint = {
-                    x: col * PUZZLE_SIZE,
-                    y: row * PUZZLE_SIZE
-                };
-                piece.x = piece.homePoint.x;
-                piece.y = piece.homePoint.y;
-                this.stage.addChild(piece);
-                this.pieces[i] = piece;
-                col++;
-                if (col === PUZZLE_COLUMNS) {
-                    col = 0;
-                    row++;
-                }
-
-            }
-        }
-        _onPieceClick(e) {
-            if (selectedPieces.length === 2) {
-                return;
-            }
-            var piece = e.target,
-                matrix = new createjs.ColorMatrix().adjustColor(15, 10, 100, 180);
-            piece.filters = [new createjs.ColorMatrixFilter(matrix)];
-            piece.cache(0, 0, PUZZLE_SIZE, PUZZLE_SIZE);
-            this.stage.setChildIndex(piece, this.stage.numChildren - 1);
-            selectedPieces.push(piece);
-            if (selectedPieces.length === 2) {
-                this._swapPieces();
-            }
-
-        }
-        _swapPieces() {
-            var piece1 = selectedPieces[0],
-                piece2 = selectedPieces[1];
-            createjs.Tween.get(piece1).wait(300).to({
-                x: piece2.x,
-                y: piece2.y
-            }, 200);
-            createjs.Tween.get(piece2).wait(300).to({
-                x: piece1.x,
-                y: piece1.y
-            }, 200).call(() => {
-                setTimeout(() => {
-                    this._evalPuzzle();
-                }, 200);
-            });
-        }
-        _evalPuzzle() {
-            var win = true;
-            selectedPieces[0].uncache();
-            selectedPieces[1].uncache();
-            for (let i = 0; i < this.pieces.length; i++) {
-                const piece = this.pieces[i];
-                if (piece.x != piece.homePoint.x || piece.y != piece.homePoint.y) {
-                    win = false;
-                    break;
-                }
-            }
-            if (win) {
-                setTimeout(() => {
-                    this.clear();
-                    this.stage.dispatchEvent(GFrame.event.GAME_OVER);
-                }, 200);
-            }
-            selectedPieces = [];
-        }
-        clear() {
-            for (let i = 0; i < this.pieces.length; i++) {
-                const piece = this.pieces[i];
-                piece.removeEventListener('click', this.onPieceClick);
-            }
-        }
     }
-    window.Puzzle = Puzzle;
-})();
+}
