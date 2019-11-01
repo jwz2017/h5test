@@ -263,7 +263,7 @@ class Card extends createjs.Container{
         // this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
         this.back=new createjs.Bitmap("assets/card.png");
         this.regX=63;
-        this.regY=this.back.image.height/2;
+        this.regY=200;
         this.addChild(this.back);
         
         // this.back=new createjs.Bitmap(queue.getResult(face));
