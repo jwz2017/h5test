@@ -115,8 +115,7 @@ class Main extends GFrame {
         }
         newLevel() {
             this.level++;
-            // faces=['garlic', 'onion', 'pepper', 'potato', 'spinach', 'tomato'];
-            faces=['garlic'];
+            faces=['garlic', 'onion', 'pepper', 'potato', 'spinach', 'tomato'];
         }
         /**levelinscreen等待结束时执行
          * 
@@ -137,9 +136,10 @@ class Main extends GFrame {
             for (let i = 0; i < faces.length; i++) {
                  face = faces[i],
                     card1=new Card(face),
-                    card2=new Card(face);
-                card1.key=card2.key=faces[i];
-                cards.push(card1,card2);
+                    // card2=new Card(face);
+                // card1.key=card2.key=faces[i];
+                // cards.push(card1,card2);
+                cards.push(card1);
             }
         }
         shuffleCards(){
