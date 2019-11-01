@@ -97,7 +97,7 @@ class Main extends GFrame {
         _lives = 5,
         _score = 0;
     //游戏变量;
-
+    var faces=[],cards=[];
     class MyGame extends Game {
         constructor() {
             super();
@@ -115,24 +115,65 @@ class Main extends GFrame {
         }
         newLevel() {
             this.level++;
+            faces=['garlic', 'onion', 'pepper', 'potato', 'spinach', 'tomato'];
         }
         /**levelinscreen等待结束时执行
          * 
          */
         waitComplete() {
             // this.onkey();
-            this.a=new Card("garlic");
-            this.a.x=100;
-            this.a.y=100;
-            this.b=this.a.clone(true);
-            this.b.x=this.b.y=300;
-            stage.addChild(this.a,this.b)
-            
+            this.buildCards();
+            this.shuffleCards();//洗牌  
+            this.deelCards();
 
         }
         runGame() {
             
             
+        }
+        buildCards(){
+            var face,card1,card2;
+            for (let i = 0; i < faces.length; i++) {
+                 face = faces[i],
+                    card1=new Card(face),
+                    card2=new Card(face);
+                card1.key=card2.key=faces[i];
+                cards.push(card1,card2);
+            }
+        }
+        shuffleCards(){
+            var card,randomIndex;
+            var l=cards.length;
+            var shuffledCards=[];
+            for (let i = 0; i < l; i++) {
+                randomIndex=Math.floor(Math.random()*cards.length);
+                shuffledCards.push(cards[randomIndex]);
+                cards.splice(randomIndex,1);
+            }
+            cards=cards.concat(shuffledCards);
+        }
+        deelCards(){
+            var xpos=100,ypos=100;
+            var count=0;
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                card.x=-200;
+                card.y=400;
+                card.rotation=Math.random()*600;
+                stage.addChild(card);
+                createjs.Tween.get(card).wait(i*100).to({
+                    x:xpos,
+                    y:ypos,
+                    rotation:0
+                },300);
+                xpos+=150;
+                count++;
+                if (count===4) {
+                    count=0;
+                    xpos=100;
+                    ypos+=220;
+                }
+            }
         }
 
 
@@ -217,8 +258,9 @@ class Main extends GFrame {
 class Card extends createjs.Container{
     constructor(face,card="card",back="back"){
         super();
-        
-        this.back=new createjs.Bitmap(queue.getResult(card));
+        this.shadow=new createjs.Shadow("#333",3,3,5);
+        this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
+        // this.back=new createjs.Bitmap("assets/card.png");
         this.regX=this.back.image.width/2;
         this.regY=this.back.image.height/2;
         this.addChild(this.back);
@@ -235,7 +277,6 @@ class Card extends createjs.Container{
         this.label.y=144;
         this.addChild(this.label);
         this.back=new createjs.Bitmap(queue.getResult('back'));
-        this.back.name="back";
         this.addChild(this.back);
 
     }

@@ -18,15 +18,15 @@ class Main extends GFrame {
         this.adapt();
 
         /*********预加载手动********** */
-        // this.preload([{
-        //     id: "butterfly",
-        //     src: "assets/butterfly.png"
-        // }]);
+        this.preload([{
+            id: "butterfly",
+            src: "assets/butterfly.png"
+        }]);
 
         /*********animate加载******* ---------------------------------------1*/
-        let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        lib = comp.getLibrary();
-        this.preload(lib.properties.manifest, comp);
+        // let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
+        // lib = comp.getLibrary();
+        // this.preload(lib.properties.manifest, comp);
 
         /*********不加载，直接初始化*************** */
         // this.init();
@@ -107,7 +107,11 @@ class Main extends GFrame {
          */
         waitComplete() {
             // this.onkey();
-            butterfly=new lib.Butterfly();
+            // butterfly=new lib.Butterfly();
+            // butterfly=new createjs.Bitmap(queue.getResult("butterfly"));//
+            butterfly=new createjs.Bitmap("assets/butterfly.png");//直接加载地址，image没有width
+            console.log(butterfly.image);
+            
             butterfly.t=0;
             stage.addChild(butterfly);
 
