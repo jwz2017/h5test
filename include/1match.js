@@ -63,7 +63,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面09', width / 2, 300);
+        this.titleScreen.createDisplayText('开始界面10', width / 2, 300);
         this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
@@ -175,7 +175,7 @@ class Main extends GFrame {
                     y: ypos,
                     rotation: 0
                 }, 300).call(()=>{
-                    card.back.shadow=new createjs.Shadow("#333",3,3,5);
+                    card.back.shadow=new createjs.Shadow("#333",4,4,6);
                 });
                 xpos += 150;
                 count++;
