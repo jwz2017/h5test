@@ -107,20 +107,7 @@ class Main extends GFrame {
          */
         waitComplete() {
             
-            for (let i = 0; i < 6; i++) {
-                const butterfly=new createjs.Bitmap("assets/butterfly.png");
-                var bb=new createjs.Container();
-                bb.addChild(butterfly);
-                bb.regX=bb.regY=50;
-                bb.x=i*100;
-                bb.y=i*100;
-                createjs.Tween.get(bb).wait(i*100).to({
-                    rotation:720
-                },1000);
-                butterfly.t=0;
-               
-                stage.addChild(bb);
-            }
+            
             // this.onkey();
             // butterfly=new lib.Butterfly();
             // butterfly=new createjs.Bitmap(queue.getResult("butterfly"));//
