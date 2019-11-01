@@ -63,7 +63,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面06', width / 2, 200);
+        this.titleScreen.createDisplayText('开始界面07', width / 2, 200);
         this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
@@ -158,15 +158,15 @@ class Main extends GFrame {
             var count=0;
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
-                card.x=i*100;
-                card.y=i*100;
+                card.x=-200;
+                card.y=400;
                 card.rotation=Math.floor(Math.random()*600);
                 stage.addChild(card);
                 createjs.Tween.get(card).wait(i*100).to({
                     x:xpos,
                     y:ypos,
                     rotation:0
-                },1000);
+                },300);
                 xpos+=150;
                 count++;
                 if (count===4) {
