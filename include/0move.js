@@ -106,6 +106,17 @@ class Main extends GFrame {
          * 
          */
         waitComplete() {
+            for (let i = 0; i < 6; i++) {
+                const butterfly=new createjs.Bitmap("assets/butterfly.png");
+                butterfly.regX=butterfly.regY=50;
+                butterfly.x=i*100;
+                butterfly.y=i*100;
+                createjs.Tween.get(butterfly).to({
+                    rotation:720
+                },1000);
+                butterfly.t=0;
+                stage.addChild(butterfly);
+            }
             // this.onkey();
             // butterfly=new lib.Butterfly();
             // butterfly=new createjs.Bitmap(queue.getResult("butterfly"));//
@@ -190,7 +201,7 @@ class Main extends GFrame {
              * cubic.easeInOut:先加速到 c/2，再减速到c。再继续向前
              * cubic.easeOutIn:先减速到 c/2，再加速到c。再继续向前
              */
-            butterfly.y=easing.cubic.easeIn(butterfly.t,0,800,200);//单纯的加减速度。。。*********
+            // butterfly.y=easing.cubic.easeIn(butterfly.t,0,800,200);//单纯的加减速度。。。*********
             
             //后面待续。。。。。。。
             
