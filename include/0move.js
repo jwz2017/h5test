@@ -111,7 +111,10 @@ class Main extends GFrame {
             // butterfly=new createjs.Bitmap(queue.getResult("butterfly"));//
             butterfly=new createjs.Bitmap("assets/butterfly.png");//直接加载地址，image没有width
             console.log(butterfly.image);
-            
+            butterfly.regX=butterfly.regY=50;
+            createjs.Tween.get(butterfly).to({
+                rotation:720
+            },1000);
             butterfly.t=0;
             stage.addChild(butterfly);
 
