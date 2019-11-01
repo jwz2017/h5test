@@ -63,7 +63,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面04', width / 2, 200);
+        this.titleScreen.createDisplayText('开始界面05', width / 2, 200);
         this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
@@ -265,19 +265,19 @@ class Card extends createjs.Container{
         this.regY=this.back.image.height/2;
         this.addChild(this.back);
         
-        // this.back=new createjs.Bitmap(queue.getResult(face));
-        // this.back.regX=this.back.image.width/2;
-        // this.back.regY=this.back.image.height/2;
-        // this.addChild(this.back);
-        // this.back.x=this.regX;
-        // this.back.y=70;
-        // this.label=new createjs.Text(face.toUpperCase(),"20px Arial","#000");
-        // this.label.textAlign="center";
-        // this.label.x=this.regX;
-        // this.label.y=144;
-        // this.addChild(this.label);
-        // this.back=new createjs.Bitmap(queue.getResult('back'));
-        // this.addChild(this.back);
+        this.back=new createjs.Bitmap(queue.getResult(face));
+        this.back.regX=this.back.image.width/2;
+        this.back.regY=this.back.image.height/2;
+        this.addChild(this.back);
+        this.back.x=this.regX;
+        this.back.y=70;
+        this.label=new createjs.Text(face.toUpperCase(),"20px Arial","#000");
+        this.label.textAlign="center";
+        this.label.x=this.regX;
+        this.label.y=144;
+        this.addChild(this.label);
+        this.back=new createjs.Bitmap(queue.getResult('back'));
+        this.addChild(this.back);
 
     }
 }
