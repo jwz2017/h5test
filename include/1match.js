@@ -63,7 +63,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面11', width / 2, 300);
+        this.titleScreen.createDisplayText('开始界面12', width / 2, 300);
         this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
@@ -306,7 +306,12 @@ class Card extends createjs.Container {
     constructor(face, card = "card", back = "back") {
         super();
         this.back = new createjs.Bitmap(queue.getResult("card")); //使用queue,不能clone   使用地址不能用image.width.要直接用数字
-        this.back.shadow=new createjs.Shadow("#333",3,3,5);
+        
+        this.back1=new createjs.Shape();
+        this.back1.graphics.beginFill("#000").drawRect(0,0,this.back.image.width,this.back.image.height);
+        this.addChild(this.back1);
+        this.back1.shadow=new createjs.Shadow("#333",3,3,5);
+
         this.regX = this.back.image.width / 2;
         this.regY = this.back.image.height / 2;
         this.addChild(this.back);
