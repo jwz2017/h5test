@@ -166,7 +166,7 @@ class Main extends GFrame {
                     // x:xpos,
                     // y:ypos,
                     rotation:700
-                },3003);
+                },1000);
                 xpos+=150;
                 count++;
                 if (count===4) {
@@ -259,7 +259,7 @@ class Main extends GFrame {
 class Card extends createjs.Container{
     constructor(face,card="card",back="back"){
         super();
-        this.shadow=new createjs.Shadow("#333",3,3,5);
+        // this.shadow=new createjs.Shadow("#333",3,3,5);
         // this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
         this.back=new createjs.Bitmap("assets/card.png");
         this.regX=63;
