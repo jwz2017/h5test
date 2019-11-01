@@ -260,25 +260,25 @@ class Card extends createjs.Container{
     constructor(face,card="card",back="back"){
         super();
         this.shadow=new createjs.Shadow("#333",3,3,5);
-        this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
-        // this.back=new createjs.Bitmap("assets/card.png");
-        this.regX=this.back.image.width/2;
+        // this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
+        this.back=new createjs.Bitmap("assets/card.png");
+        this.regX=63;
         this.regY=this.back.image.height/2;
         this.addChild(this.back);
         
-        this.back=new createjs.Bitmap(queue.getResult(face));
-        this.back.regX=this.back.image.width/2;
-        this.back.regY=this.back.image.height/2;
-        this.addChild(this.back);
-        this.back.x=this.regX;
-        this.back.y=70;
-        this.label=new createjs.Text(face.toUpperCase(),"20px Arial","#000");
-        this.label.textAlign="center";
-        this.label.x=this.regX;
-        this.label.y=144;
-        this.addChild(this.label);
-        this.back=new createjs.Bitmap(queue.getResult('back'));
-        this.addChild(this.back);
+        // this.back=new createjs.Bitmap(queue.getResult(face));
+        // this.back.regX=this.back.image.width/2;
+        // this.back.regY=this.back.image.height/2;
+        // this.addChild(this.back);
+        // this.back.x=this.regX;
+        // this.back.y=70;
+        // this.label=new createjs.Text(face.toUpperCase(),"20px Arial","#000");
+        // this.label.textAlign="center";
+        // this.label.x=this.regX;
+        // this.label.y=144;
+        // this.addChild(this.label);
+        // this.back=new createjs.Bitmap(queue.getResult('back'));
+        // this.addChild(this.back);
 
     }
 }
