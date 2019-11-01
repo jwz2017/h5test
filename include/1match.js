@@ -160,12 +160,12 @@ class Main extends GFrame {
                 const card = cards[i];
                 card.x=-200;
                 card.y=400;
-                card.rotation=Math.floor(Math.random()*600);
+                // card.rotation=Math.floor(Math.random()*600);
                 stage.addChild(card);
                 createjs.Tween.get(card).wait(i*100).to({
                     x:xpos,
                     y:ypos,
-                    rotation:360
+                    rotation:700
                 },3003);
                 xpos+=150;
                 count++;
@@ -263,7 +263,7 @@ class Card extends createjs.Container{
         // this.back=new createjs.Bitmap(queue.getResult("card"));//使用queue,不能clone   使用地址不能用image.width.要直接用数字
         this.back=new createjs.Bitmap("assets/card.png");
         this.regX=63;
-        this.regY=200;
+        this.regY=88;
         this.addChild(this.back);
         
         // this.back=new createjs.Bitmap(queue.getResult(face));
