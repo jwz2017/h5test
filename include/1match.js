@@ -63,7 +63,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面', width / 2, 200);
+        this.titleScreen.createDisplayText('开始界面3', width / 2, 200);
         this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
