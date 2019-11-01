@@ -115,7 +115,8 @@ class Main extends GFrame {
         }
         newLevel() {
             this.level++;
-            faces=['garlic', 'onion', 'pepper', 'potato', 'spinach', 'tomato'];
+            // faces=['garlic', 'onion', 'pepper', 'potato', 'spinach', 'tomato'];
+            faces=['garlic'];
         }
         /**levelinscreen等待结束时执行
          * 
