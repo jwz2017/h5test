@@ -63,19 +63,19 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面08', width / 2, 200);
+        this.titleScreen.createDisplayText('开始界面09', width / 2, 300);
         this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
         this.instructionScreen = new BasicScreen();
-        this.instructionScreen.createDisplayText('介绍界面', width / 2, 200);
+        this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
         this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
 
         this.levelInScreen = new BasicScreen();
         this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
 
         this.gameOverScreen = new BasicScreen();
-        this.gameOverScreen.createDisplayText('结束界面', width / 2, 200);
+        this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
         this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
 
         GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
@@ -175,7 +175,7 @@ class Main extends GFrame {
                     y: ypos,
                     rotation: 0
                 }, 300).call(()=>{
-                    card.shadow=new createjs.Shadow("#333",3,3,5);
+                    card.back.shadow=new createjs.Shadow("#333",3,3,5);
                 });
                 xpos += 150;
                 count++;
