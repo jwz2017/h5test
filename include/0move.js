@@ -42,7 +42,7 @@ class Main extends GFrame {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面w', width / 2, 200);
+        this.titleScreen.createDisplayText('开始界面wwq', width / 2, 200);
         this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
@@ -110,14 +110,15 @@ class Main extends GFrame {
             for (let i = 0; i < 6; i++) {
                 const butterfly=new createjs.Bitmap("assets/butterfly.png");
                 var bb=new createjs.Container();
+                bb.addChild(butterfly);
                 bb.regX=bb.regY=50;
-                butterfly.x=i*100;
-                butterfly.y=i*100;
-                createjs.Tween.get(butterfly).wait(i*100).to({
+                bb.x=i*100;
+                bb.y=i*100;
+                createjs.Tween.get(bb).wait(i*100).to({
                     rotation:720
                 },1000);
                 butterfly.t=0;
-                bb.addChild(butterfly);
+               
                 stage.addChild(bb);
             }
             // this.onkey();
