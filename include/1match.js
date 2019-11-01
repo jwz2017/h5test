@@ -158,13 +158,13 @@ class Main extends GFrame {
             var count=0;
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
-                card.x=-200;
-                card.y=400;
+                card.x=i*100;
+                card.y=i*100;
                 // card.rotation=Math.floor(Math.random()*600);
                 stage.addChild(card);
                 createjs.Tween.get(card).wait(i*100).to({
-                    x:xpos,
-                    y:ypos,
+                    // x:xpos,
+                    // y:ypos,
                     rotation:700
                 },3003);
                 xpos+=150;
