@@ -164,7 +164,7 @@ class Main extends GFrame {
                 createjs.Tween.get(card).wait(i*100).to({
                     x:xpos,
                     y:ypos,
-                    rotation:0
+                    // rotation:0
                 },300);
                 xpos+=150;
                 count++;
