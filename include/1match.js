@@ -175,8 +175,7 @@ class Main extends GFrame {
                     y: ypos,
                     rotation: 0
                 }, 300).call(()=>{
-                    card.back.shadow=new createjs.Shadow("#333",4,4,6);
-                    card.back.cache(0,0,130,180);
+                    // card.back.shadow=new createjs.Shadow("#333",4,4,6);
                 });
                 xpos += 150;
                 count++;
@@ -306,8 +305,8 @@ class Main extends GFrame {
 class Card extends createjs.Container {
     constructor(face, card = "card", back = "back") {
         super();
-        // this.shadow=new createjs.Shadow("#333",3,3,5);
         this.back = new createjs.Bitmap(queue.getResult("card")); //使用queue,不能clone   使用地址不能用image.width.要直接用数字
+        this.back.shadow=new createjs.Shadow("#333",3,3,5);
         this.regX = this.back.image.width / 2;
         this.regY = this.back.image.height / 2;
         this.addChild(this.back);
