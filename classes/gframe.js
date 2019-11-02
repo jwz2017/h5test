@@ -25,7 +25,7 @@ class GFrame {
       stageScale = 1;
 console.log(stageWidth,stageHeight,stageWidth/stageHeight);
 
-    if (stageWidth / stageHeight > 0.665) {
+    if (stageWidth / stageHeight > 0.765) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
     } else {
