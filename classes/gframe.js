@@ -23,8 +23,9 @@ class GFrame {
       width = stage.canvas.width,
       height = stage.canvas.height,
       stageScale = 1;
+console.log(stageWidth,stageHeight,stageWidth/stageHeight);
 
-    if (stageWidth / stageHeight > 10.665) {
+    if (stageWidth / stageHeight > 0.665) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
     } else {
@@ -230,7 +231,7 @@ GFrame.style = {
   SIDE_BUFFWIDTH: 10,
   SCORE_TEXT_SIZE: 28,
   SCORE_TEXT_COLOR: "#FFFFFF",
-  SCOREBOARD_HEIGHT: 60,
+  SCOREBOARD_HEIGHT: 70,
   SCORE_BUFF: 65
 };
 GFrame.event = {

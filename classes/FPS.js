@@ -7,7 +7,8 @@ FPS.startFPS = function (stage)
     let txt = new createjs.DOMElement(FPS.txt);
     FPS.txt.style.display = "block";
     stage.addChild(txt);
-    txt.x=txt.y=10;
+    txt.x=6;
+    txt.y=40;
     createjs.Ticker.addEventListener("tick", FPS.TickerFPS);
 }
 FPS.TickerFPS = function (event)

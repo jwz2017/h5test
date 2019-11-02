@@ -27,7 +27,7 @@ class Main extends GFrame {
         /*********不加载，直接初始化*************** */
         // this.init();
 
-        FPS.startFPS(stage);
+        FPS.startFPS(stage,);
     }
     
 
