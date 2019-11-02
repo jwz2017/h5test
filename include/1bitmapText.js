@@ -1,10 +1,9 @@
-
 window.onload = function () {
     "use strict";
     /*************初始化 整个游戏入口*****/
-    new Main('canvas');
+    var main=new Main('canvas');
     //添加代码
-
+    
 }
 class Main extends GFrame {
     constructor(canvasId) {
@@ -15,15 +14,15 @@ class Main extends GFrame {
         this.adapt();
 
         /*********预加载手动********** */
-        // this.preload([{
-        //     id: "butterfly",
-        //     src: "assets/butterfly.png"
-        // }]);
+        this.preload([{
+            id: "letters",
+            src: "assets/letters.png"
+        }]);
 
         /*********animate加载******* ---------------------------------------1*/
-        let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        lib = comp.getLibrary();
-        this.preload(lib.properties.manifest, comp);
+        // let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
+        // lib = comp.getLibrary();
+        // this.preload(lib.properties.manifest, comp);
 
         /*********不加载，直接初始化*************** */
         // this.init();
@@ -97,7 +96,60 @@ class Main extends GFrame {
          */
         waitComplete() {
             // this.onkey();
+            var spriteData={
+                "images": ["assets/letters.png"],
+                "frames": [
+                
+                    [2, 2, 34, 41], 
+                    [34, 176, 22, 43], 
+                    [36, 45, 26, 41], 
+                    [34, 88, 24, 41], 
+                    [2, 45, 32, 41], 
+                    [34, 131, 22, 43], 
+                    [2, 174, 30, 41], 
+                    [38, 2, 24, 41], 
+                    [2, 131, 30, 41], 
+                    [2, 88, 30, 41]
+                ],
+                "animations": {
+                    
+                        "0":[0], 
+                        "1":[1], 
+                        "2":[2], 
+                        "3":[3], 
+                        "4":[4], 
+                        "5":[5], 
+                        "6":[6], 
+                        "7":[7], 
+                        "8":[8], 
+                        "9":[9]
+                },
+                "texturepacker": [
+                        "SmartUpdateHash: $TexturePacker:SmartUpdate:30a491e7ec1f55acfc7681f12d743fa2:1/1$",
+                        "Created with TexturePacker (http://www.texturepacker.com) for EaselJS"
+                ]
+                }
 
+            this.spriteSheet=new createjs.SpriteSheet(spriteData);
+            this.bitmapText=new createjs.BitmapText(_score.toString(),this.spriteSheet);
+            stage.addChild(this.bitmapText);
+            this.bitmapText.x=this.bitmapText.y=100;
+            var _this=this;
+            setInterval(this._updataScore=function(){
+                _this.updataScore();
+            },300);
+
+        }
+        updataScore(){
+            _score++;
+            stage.removeChild(this.bitmapText);
+            this.bitmapText=new createjs.BitmapText(_score.toString(),this.spriteSheet);
+            stage.addChild(this.bitmapText);
+            this.bitmapText.letterSpacing = 6;
+            this.bitmapText.x=this.bitmapText.y=100;
+            console.log(this.bitmapText.text);
+            
+            
         }
         runGame() {
             

@@ -1,4 +1,7 @@
-var stage, queue, model;
+var stage, queue, model, lib;
+const SCORE = "score",
+  LEVEL = "level",
+  LIVES = "lives";
 class GFrame {
   constructor(canvasId) {
     this._systemFunction = this._systemWaitForClose;
@@ -6,7 +9,7 @@ class GFrame {
     /*********接收animate影片剪辑播放过程发出的事件。***/
     // model = new createjs.EventDispatcher();
 
-    this._setupStage(canvasId);
+    if(!stage) this._setupStage(canvasId);
   }
 
   /**自适应
@@ -21,14 +24,16 @@ class GFrame {
       height = stage.canvas.height,
       stageScale = 1;
 
-    if (stageWidth / stageHeight > 0.665) {
+    if (stageWidth / stageHeight > 10.665) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
     } else {
       stageScale = stageWidth / width;
     }
-    gameDiv.style.transformOrigin = '0 0';
-    gameDiv.style.transform = 'scale(' + stageScale + ')';
+    stage.canvas.style.width=stage.canvas.width*stageScale+'px';
+    stage.canvas.style.height=stage.canvas.height*stageScale+'px';
+    // gameDiv.style.transformOrigin = '0 0';
+    // gameDiv.style.transform = 'scale(' + stageScale + ')';
   }
   /**预加载
    * 
@@ -362,7 +367,7 @@ class ScoreBoard extends createjs.Container {
     }, 800);
 
   }
-  
+
   update(key, val) {
     this._textElements[key].setValText(val);
   }
