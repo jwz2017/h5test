@@ -57,7 +57,7 @@ class Main extends GFrame {
         GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
 
         this.scoreBoard = new ScoreBoard();
-        this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
+        // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
         this.scoreBoard.creatTextElement(SCORE, '0');
         this.scoreBoard.creatTextElement(LEVEL, '0');
         this.scoreBoard.creatTextElement(LIVES, '0');
