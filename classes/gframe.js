@@ -5,11 +5,10 @@ const SCORE = "score",
 class GFrame {
   constructor(canvasId) {
     this._systemFunction = this._systemWaitForClose;
-
     /*********接收animate影片剪辑播放过程发出的事件。***/
     // model = new createjs.EventDispatcher();
 
-    if(!stage) this._setupStage(canvasId);
+    this._setupStage(canvasId);
   }
 
   /**自适应
@@ -23,8 +22,7 @@ class GFrame {
       width = stage.canvas.width,
       height = stage.canvas.height,
       stageScale = 1;
-console.log(stageWidth,stageHeight,stageWidth/stageHeight);
-
+    //0.665
     if (stageWidth / stageHeight > 0.765) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
@@ -38,45 +36,57 @@ console.log(stageWidth,stageHeight,stageWidth/stageHeight);
   }
   /**预加载
    * 
+   * @param {*} array 
+   * @param {*} game 
+   * @param {*} compid 
    */
-  preload(array, comp = null) {
+  preload(game,compid) {
     queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound); //注册声音插件
-    if (comp) {
-      var b = queue.on('fileload', this.onFileLoad, this, false, comp);
-    }
-    queue.on('complete', function onComplete(e) {
-      if (b) queue.off('fileload', b);
-      this.init();
-    }, this, true);
+
     let loaderBar = new LoaderBar(stage);
     loaderBar.x = (stage.canvas.width - loaderBar.getBounds().width) / 2;
     loaderBar.y = (stage.canvas.height - loaderBar.getBounds().height) / 2;
     queue.on('progress', (e) => {
       loaderBar.startLoad(e.progress);
     });
-    queue.loadManifest(array);
+
+    if (compid instanceof Array) {
+      queue.on('complete', function onComplete(e) {
+        this.initGame(game);
+      }, this, true);
+      queue.loadManifest(compid);
+    }
+    
+    else if (typeof compid==="string") {
+      let comp= AdobeAn.getComposition(compid);
+      let b = queue.on('fileload', this.onFileLoad, this, false, comp);
+      lib = comp.getLibrary();
+      queue.on('complete', function onComplete(e) {
+        queue.off('fileload', b);
+        this.initGame(game);
+      }, this, true);
+      queue.loadManifest(lib.properties.manifest);
+    }
+    
+    
   }
 
-  /**初始化
-   * 
-   */
-  init() {
-    this.initScreen();
-    this._switchSystemState(GFrame.state.STATE_TITLE);
-  }
   /**初始化屏幕元素
    * 
    */
-  initScreen() {
-    //overried
+  initGame(game) {
+    this.game=game;
+    this.game.initScreen();
+    this._switchSystemState(GFrame.state.STATE_TITLE);
   }
+  
   /**加载完成事件
    * 
    */
   onFileLoad(evt, comp) {
     let images = comp.getImages();
-    if (evt && (evt.item.type == "image")) {
+    if (evt.item.type == "image") {
       images[evt.item.id] = evt.result;
     }
   }
@@ -141,57 +151,51 @@ console.log(stageWidth,stageHeight,stageWidth/stageHeight);
   }
   //标题状态
   _systemTitle() {
-    stage.addChild(this.titleScreen);
-    this.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    stage.addChild(this.game.titleScreen);
+    this.game.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_INSTRUCTION;
   }
   //介绍界面状态
   _systemInstruction() {
-    stage.addChild(this.instructionScreen);
-    this.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    stage.addChild(this.game.instructionScreen);
+    this.game.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_NEW_GAME;
   }
   //新游戏开始状态
   _systemNewGame() {
-    stage.addEventListener(GFrame.event.SCOREBOARD_UPDATE, (e) => {
-      this.scoreBoard.update(e.key, e.value);
-    });
-    stage.addEventListener(GFrame.event.LEVELIN_UPDATE, (e) => {
-      this.levelInScreen.setDisplayText(e.key, e.value);
-    });
     stage.addEventListener(GFrame.event.NEW_LEVEL, (e) => {
       this._switchSystemState(GFrame.state.STATE_NEW_LEVEL);
     });
     stage.addEventListener(GFrame.event.GAME_OVER, () => {
       this._switchSystemState(GFrame.state.STATE_GAME_OVER);
     });
-    stage.on(GFrame.event.WAIT_COMPLETE, this.game.waitComplete, this.game);
+    // stage.on(GFrame.event.WAIT_COMPLETE, this.game.waitComplete, this.game);
     this.game.newGame();
     this._switchSystemState(GFrame.state.STATE_NEW_LEVEL);
   }
   //设置新等级状态
   _systemNewLevel() {
-    document.onkeydown = null;
-    document.onkeyup = null;
+    // document.onkeydown = null;
+    // document.onkeyup = null;
     stage.removeAllChildren();
     this.game.newLevel();
     this._switchSystemState(GFrame.state.STATE_LEVEL_IN);
   }
   //新等级界面状态
   _systemLevelIn() {
-    stage.addChild(this.levelInScreen);
+    stage.addChild(this.game.levelInScreen);
     this._nextSystemState = GFrame.state.STATE_GAME_PLAY;
     this._switchSystemState(GFrame.state.STATE_WAIT);
   }
   //结束界面状态
   _systemGameOver() {
-    document.onkeydown = null;
-    document.onkeyup = null;
+    // document.onkeydown = null;
+    // document.onkeyup = null;
     stage.removeAllChildren();
     stage.removeAllEventListeners();
-    stage.addChild(this.gameOverScreen);
+    stage.addChild(this.game.gameOverScreen);
     this.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_TITLE;
@@ -209,9 +213,9 @@ console.log(stageWidth,stageHeight,stageWidth/stageHeight);
     setTimeout(() => {
       switch (this._lastSystemState) {
         case GFrame.state.STATE_LEVEL_IN:
-          stage.addChild(this.scoreBoard);
-          stage.removeChild(this.levelInScreen);
-          stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
+          stage.addChild(this.game.scoreBoard);
+          stage.removeChild(this.game.levelInScreen);
+          // stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
           break;
       }
       this._switchSystemState(this._nextSystemState);
@@ -239,15 +243,6 @@ GFrame.event = {
   NEW_LEVEL: "newlevel",
   WAIT_COMPLETE: "waitcomplete",
   OK_BUTTON: "okbutton",
-  SCOREBOARD_UPDATE: "scoreboardupdatetext",
-  LEVELIN_UPDATE: "levelinupdatetext",
-  DATA_UPDATE: class extends createjs.Event {
-    constructor(type, key, value, bubbles = false, cancelable) {
-      super(type, bubbles, cancelable);
-      this.key = key;
-      this.value = value;
-    }
-  }
 };
 GFrame.state = {
   STATE_WAIT_FOR_CLOSE: "statewaitforclose",
@@ -305,7 +300,7 @@ class BasicScreen extends createjs.Container {
    * @param {string} key 文本索引
    * @param {string} val 文本内容
    */
-  setDisplayText(key, val) {
+  update(key, val) {
     this._textElements[key].text = val;
   }
 }
@@ -376,7 +371,42 @@ class ScoreBoard extends createjs.Container {
 /***************************************游戏基类****************************** */
 class Game {
   constructor() {
+    this._lives=0;
+    this._score=0;
+    this._level=0;
     this.buildElement();
+  }
+  initScreen(){
+    let width = stage.canvas.width,
+            height = stage.canvas.height;
+
+        mc.style.fontSize = 30; //按钮label字体大小
+
+        this.titleScreen = new BasicScreen();
+        this.titleScreen.createDisplayText('开始界面4', width / 2, 300);
+        this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
+        // this.titleScreen=new lib.Title();//协作animate使用-------------------1
+
+        this.instructionScreen = new BasicScreen();
+        this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
+        this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
+
+        this.levelInScreen = new BasicScreen();
+        this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
+
+        this.gameOverScreen = new BasicScreen();
+        this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
+        this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
+
+        GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
+
+        this.scoreBoard = new ScoreBoard();
+        // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
+        this.scoreBoard.creatTextElement(SCORE, '0');
+        this.scoreBoard.creatTextElement(LEVEL, '0');
+        this.scoreBoard.creatTextElement(LIVES, '0');
+        this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
+        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
   }
   newGame() {
 
@@ -393,12 +423,79 @@ class Game {
   buildElement() {
 
   }
-  /**levelinscreen等待结束时执行
-   * 
-   */
-  waitComplete() {
+  onkey(){
+    document.onkeyup = (e) => {
+        switch (e.keyCode) {
+            case 65:
+                this.leftKeyDown = false;
+                break;
+            case 68:
+                this.rightKeyDown = false;
+                break;
+            case 87:
+                this.upKeyDown = false;
+                break;
+            case 83:
+                this.downKeyDown = false;
+                break;
+            case 32:
+                createjs.Ticker.paused = !createjs.Ticker.paused;
+                break;
+            default:
+        }
+    };
+    document.onkeydown = (e) => {
+        switch (e.keyCode) {
+            case 65:
+                if (!this.leftKeyDown) {
+                    this.leftKeyDown = true;
 
-  }
+                }
+                break;
+            case 68:
+                if (!this.rightKeyDown) {
+                    this.rightKeyDown = true;
+
+                }
+                break;
+            case 87:
+                if (!this.upKeyDown) {
+                    this.upKeyDown = true;
+
+                }
+                break;
+            case 83:
+                if (!this.downKeyDown) {
+                    this.downKeyDown = true;
+
+                }
+                break;
+            default:
+        }
+    };
+}
+get score() {
+  return this._score;
+}
+set score(val) {
+  this._score = val;
+  this.scoreBoard.update(SCORE,this._score);
+}
+get level() {
+  return this._level;
+}
+set level(val) {
+  this._level = val;
+  this.scoreBoard.update(LEVEL,this._level);
+  this.levelInScreen.update(LEVEL,LEVEL + ' : ' + this._level);
+}
+get lives() {
+  return this._lives;
+}
+set lives(val) {
+  this._lives = val;
+  this.scoreBoard.update(LIVES,this._lives);
+}
 
 
 }

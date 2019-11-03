@@ -16,6 +16,14 @@
       margin: 0;
       padding: 0;
     }
+     select{
+      width: auto;
+      padding:0 2%;
+       background: #e7bebe; 
+       /* position: relative;  */
+      /* margin: 0px 0px;  */
+       /* left: 50%; */
+    } 
     /* .open_btn{
       color: #000000;
       font-size: 50px;
@@ -43,14 +51,15 @@
   <script src="classes/utils.js"></script>
   <script src="lib.js"></script>
   <script src="ma.js"></script>
-  <script src="include/0base.js"></script>
+  <!-- <script src="include/0base.js"></script> -->
+  <script src="include/main.js"></script>
   <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
 </head>
 
 <body style="background-color:#333">
   
-  <div id="game" style="position:absolute;">
-    <p id="fps" style="font-size: 16px;font-family: Arial;color: #030303 ;display: none"></p>
+  <div id="game" style="position: absolute">
+    <p id="fps" style="font-size: 16px;font-family: Arial;color: #030303 ;"></p>
     
     <!-- 加入dom到舞台 -->
     <!-- <p id="testTxt" style="width:200px;color: #ff0000;display: none;cursor: pointer">CreateJS是基于HTML5开发的一套模块化的库和工具。
@@ -62,9 +71,15 @@
 
 
     <!-- canvas width,height (750,1206) -->
-    <canvas id="canvas" width="750" height="980" style="background-color:#e7bebe;display: none">
+    <canvas id="canvas" width="750" height="980" style="background-color:#e7bebe;">
     </canvas>
-    <select>
+    <select >
+      <option value="0">game0</option>
+      <option value="1">game1</option>
+      <option value="2">game2</option>
+      <option value="3">game3</option>
+    </select>
+    <select >
       <option value="0">game0</option>
       <option value="1">game1</option>
       <option value="2">game2</option>
