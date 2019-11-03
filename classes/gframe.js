@@ -29,10 +29,10 @@ class GFrame {
     } else {
       stageScale = stageWidth / width;
     }
-    stage.canvas.style.width=stage.canvas.width*stageScale+'px';
-    stage.canvas.style.height=stage.canvas.height*stageScale+'px';
-    // gameDiv.style.transformOrigin = '0 0';
-    // gameDiv.style.transform = 'scale(' + stageScale + ')';
+    // stage.canvas.style.width=stage.canvas.width*stageScale+'px';
+    // stage.canvas.style.height=stage.canvas.height*stageScale+'px';
+    gameDiv.style.transformOrigin = '0 0';
+    gameDiv.style.transform = 'scale(' + stageScale + ')';
   }
   /**预加载
    * 
@@ -383,7 +383,7 @@ class Game {
         mc.style.fontSize = 30; //按钮label字体大小
 
         this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面4', width / 2, 300);
+        this.titleScreen.createDisplayText('开始界面5', width / 2, 300);
         this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
         // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
