@@ -318,7 +318,7 @@ lib.properties = {
 		{src:"images/Bitmap4.png", id:"Bitmap4"},
 		{src:"images/Butterfly.png", id:"Butterfly"},
 		{src:"images/enterBtn2.png", id:"enterBtn2"},
-		{src:"sounds/p.mp3", id:"p"},
+		{src:"sounds/p.mp3", id:"p",data:"1"},
 		{src:"sounds/woosh.mp3", id:"woosh"}
 	],
 	preloads: []

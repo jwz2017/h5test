@@ -4,6 +4,8 @@ const SCORE = "score",
   LIVES = "lives";
 class GFrame {
   constructor(canvasId) {
+    this.waitTime = 0;
+    this.waitCount = 40;
     this._systemFunction = this._systemWaitForClose;
     /*********接收animate影片剪辑播放过程发出的事件。***/
     // model = new createjs.EventDispatcher();
@@ -40,47 +42,46 @@ class GFrame {
    * @param {*} game 
    * @param {*} compid 
    */
-  preload(game,compid) {
-    queue = new createjs.LoadQueue();
-    queue.installPlugin(createjs.Sound); //注册声音插件
-
-    let loaderBar = new LoaderBar(stage);
-    loaderBar.x = (stage.canvas.width - loaderBar.getBounds().width) / 2;
-    loaderBar.y = (stage.canvas.height - loaderBar.getBounds().height) / 2;
+  preload(game, compid) {
+    if (!queue) {
+      queue=new createjs.LoadQueue();
+      queue.installPlugin(createjs.Sound); //注册声音插件
+      this.loaderBar=new LoaderBar();
+      this.loaderBar.x = (stage.canvas.width - this.loaderBar.getBounds().width) / 2;
+      this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
+    }
+    stage.addChild(this.loaderBar);
     queue.on('progress', (e) => {
-      loaderBar.startLoad(e.progress);
+      this.loaderBar.startLoad(e.progress);
     });
+    queue.on('complete', function onComplete(e) {
+      this.initGame(game);
+      queue.removeAllEventListeners();
+    }, this, true);
 
     if (compid instanceof Array) {
-      queue.on('complete', function onComplete(e) {
-        this.initGame(game);
-      }, this, true);
       queue.loadManifest(compid);
-    }
-    
-    else if (typeof compid==="string") {
-      let comp= AdobeAn.getComposition(compid);
-      let b = queue.on('fileload', this.onFileLoad, this, false, comp);
+    } 
+    else if (typeof compid === "string") {
+      let comp = AdobeAn.getComposition(compid);
+      queue.on('fileload', this.onFileLoad, this, false, comp);
       lib = comp.getLibrary();
-      queue.on('complete', function onComplete(e) {
-        queue.off('fileload', b);
-        this.initGame(game);
-      }, this, true);
       queue.loadManifest(lib.properties.manifest);
     }
-    
-    
+
+
   }
 
   /**初始化屏幕元素
    * 
    */
   initGame(game) {
-    this.game=game;
+    this.game = game;
     this.game.initScreen();
+    this.game.buildElement();
     this._switchSystemState(GFrame.state.STATE_TITLE);
   }
-  
+
   /**加载完成事件
    * 
    */
@@ -113,6 +114,8 @@ class GFrame {
       }
       stage.update(); //创建全局舞台刷新
     });
+
+
   }
   //选择游戏状态
   _switchSystemState(stateval) {
@@ -152,14 +155,14 @@ class GFrame {
   //标题状态
   _systemTitle() {
     stage.addChild(this.game.titleScreen);
-    this.game.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.okButton = this.game.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_INSTRUCTION;
   }
   //介绍界面状态
   _systemInstruction() {
     stage.addChild(this.game.instructionScreen);
-    this.game.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.okButton = this.game.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_NEW_GAME;
   }
@@ -171,7 +174,7 @@ class GFrame {
     stage.addEventListener(GFrame.event.GAME_OVER, () => {
       this._switchSystemState(GFrame.state.STATE_GAME_OVER);
     });
-    // stage.on(GFrame.event.WAIT_COMPLETE, this.game.waitComplete, this.game);
+    stage.on(GFrame.event.WAIT_COMPLETE, this.game.waitComplete, this.game);
     this.game.newGame();
     this._switchSystemState(GFrame.state.STATE_NEW_LEVEL);
   }
@@ -179,7 +182,7 @@ class GFrame {
   _systemNewLevel() {
     // document.onkeydown = null;
     // document.onkeyup = null;
-    stage.removeAllChildren();
+    if(this._lastSystemState===GFrame.state.STATE_GAME_PLAY)this.game.clear();
     this.game.newLevel();
     this._switchSystemState(GFrame.state.STATE_LEVEL_IN);
   }
@@ -193,10 +196,11 @@ class GFrame {
   _systemGameOver() {
     // document.onkeydown = null;
     // document.onkeyup = null;
-    stage.removeAllChildren();
+    this.game.clear();
+    // stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
-    this.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.okButton = this.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_TITLE;
   }
@@ -210,16 +214,18 @@ class GFrame {
   }
   //等级界面等待状态
   _systemWait() {
-    setTimeout(() => {
+    this.waitTime++;
+    if (this.waitTime >= this.waitCount) {
+      this.waitTime = 0;
       switch (this._lastSystemState) {
         case GFrame.state.STATE_LEVEL_IN:
           stage.addChild(this.game.scoreBoard);
           stage.removeChild(this.game.levelInScreen);
-          // stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
+          stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
           break;
       }
       this._switchSystemState(this._nextSystemState);
-    }, 1500);
+    };
   }
 
   //按钮点击
@@ -233,10 +239,10 @@ GFrame.style = {
   TITLE_TEXT_SIZE: 36,
   TITLE_TEXT_COLOR: "#FF0000",
   SIDE_BUFFWIDTH: 10,
-  SCORE_TEXT_SIZE: 28,
+  SCORE_TEXT_SIZE: 32,
   SCORE_TEXT_COLOR: "#FFFFFF",
   SCOREBOARD_HEIGHT: 70,
-  SCORE_BUFF: 65
+  SCORE_BUFF: 190
 };
 GFrame.event = {
   GAME_OVER: "gameover",
@@ -260,27 +266,23 @@ GFrame.state = {
 class BasicScreen extends createjs.Container {
   constructor() {
     super();
-    this._textElements = {};
+    this.displayText=new createjs.Text();
   }
   /**创建显示文本
    * 
    * @param {string} text 文本内容
    * @param {number} xpos 文本x坐标
    * @param {number} ypos 文本y坐标
-   * @param {[string]} key 文本存储索引 默认null
    */
-  createDisplayText(text, xpos, ypos, key) {
-    let displayText = new createjs.Text(text);
-    displayText.x = xpos;
-    displayText.y = ypos;
-    displayText.textAlign = "center";
-    displayText.textBaseline = "middle";
-    displayText.font = GFrame.style.TITLE_TEXT_SIZE + "px Microsoft YaHei";
-    displayText.color = GFrame.style.TITLE_TEXT_COLOR;
-    this.addChild(displayText);
-    if (key) {
-      this._textElements[key] = displayText;
-    }
+  createDisplayText(text, xpos, ypos) {
+    this.displayText.text=text;
+    this.displayText.x = xpos;
+    this.displayText.y = ypos;
+    this.displayText.textAlign = "center";
+    this.displayText.textBaseline = "middle";
+    this.displayText.font = GFrame.style.TITLE_TEXT_SIZE + "px Microsoft YaHei";
+    this.displayText.color = GFrame.style.TITLE_TEXT_COLOR;
+    this.addChild(this.displayText);
   }
   /**创建按钮
    * 
@@ -300,16 +302,17 @@ class BasicScreen extends createjs.Container {
    * @param {string} key 文本索引
    * @param {string} val 文本内容
    */
-  update(key, val) {
-    this._textElements[key].text = val;
+  setText(val) {
+    this.displayText.text = val;
   }
+
 }
 class SideBysideScore extends createjs.Container {
   constructor(labeText, valText) {
     super();
     this._label = new createjs.Text(labeText + ' ' + ':', GFrame.style.SCORE_TEXT_SIZE + 'px Microsoft YaHei', GFrame.style.SCORE_TEXT_COLOR);
     this._value = new createjs.Text(valText, GFrame.style.SCORE_TEXT_SIZE + 'px Microsoft YaHei', GFrame.style.SCORE_TEXT_COLOR);
-    // this._value.y = 2;
+    this._value.y = 2;
     this._label.x = 0;
     this._value.x = GFrame.style.SIDE_BUFFWIDTH + this._label.getBounds().width;
     this.addChild(this._label, this._value);
@@ -371,48 +374,48 @@ class ScoreBoard extends createjs.Container {
 /***************************************游戏基类****************************** */
 class Game {
   constructor() {
-    this._lives=0;
-    this._score=0;
-    this._level=0;
-    this.buildElement();
+    this._lives = 0;
+    this._score = 0;
+    this._level = 0;
   }
-  initScreen(){
+  initScreen() {
     let width = stage.canvas.width,
-            height = stage.canvas.height;
+      height = stage.canvas.height;
 
-        mc.style.fontSize = 30; //按钮label字体大小
+    mc.style.fontSize = 40; //按钮label字体大小
 
-        this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面5', width / 2, 300);
-        this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
-        // this.titleScreen=new lib.Title();//协作animate使用-------------------1
+    this.titleScreen = new BasicScreen();
+    this.titleScreen.createDisplayText('开始界面5', width / 2, 300);
+    this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
+    // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
-        this.instructionScreen = new BasicScreen();
-        this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
-        this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
+    this.instructionScreen = new BasicScreen();
+    this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
+    this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
 
-        this.levelInScreen = new BasicScreen();
-        this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
+    this.levelInScreen = new BasicScreen();
+    this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
 
-        this.gameOverScreen = new BasicScreen();
-        this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
-        this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
+    this.gameOverScreen = new BasicScreen();
+    this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
+    this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
 
-        GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
-
-        this.scoreBoard = new ScoreBoard();
-        // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, '0');
-        this.scoreBoard.creatTextElement(LEVEL, '0');
-        this.scoreBoard.creatTextElement(LIVES, '0');
-        this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
+    this.scoreBoard = new ScoreBoard();
+    // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
+    this.scoreBoard.creatTextElement(SCORE, '0');
+    this.scoreBoard.creatTextElement(LEVEL, '0');
+    this.scoreBoard.creatTextElement(LIVES, '0');
+    this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
+    // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
   }
   newGame() {
 
   }
   newLevel() {
 
+  }
+  waitComplete() {
+    //override
   }
   runGame() {
 
@@ -423,79 +426,83 @@ class Game {
   buildElement() {
 
   }
-  onkey(){
+  clear() {
+    stage.removeAllChildren();
+    
+  }
+  onkey() {
     document.onkeyup = (e) => {
-        switch (e.keyCode) {
-            case 65:
-                this.leftKeyDown = false;
-                break;
-            case 68:
-                this.rightKeyDown = false;
-                break;
-            case 87:
-                this.upKeyDown = false;
-                break;
-            case 83:
-                this.downKeyDown = false;
-                break;
-            case 32:
-                createjs.Ticker.paused = !createjs.Ticker.paused;
-                break;
-            default:
-        }
+      switch (e.keyCode) {
+        case 65:
+          this.leftKeyDown = false;
+          break;
+        case 68:
+          this.rightKeyDown = false;
+          break;
+        case 87:
+          this.upKeyDown = false;
+          break;
+        case 83:
+          this.downKeyDown = false;
+          break;
+        case 32:
+          createjs.Ticker.paused = !createjs.Ticker.paused;
+          break;
+        default:
+      }
     };
     document.onkeydown = (e) => {
-        switch (e.keyCode) {
-            case 65:
-                if (!this.leftKeyDown) {
-                    this.leftKeyDown = true;
+      switch (e.keyCode) {
+        case 65:
+          if (!this.leftKeyDown) {
+            this.leftKeyDown = true;
 
-                }
-                break;
-            case 68:
-                if (!this.rightKeyDown) {
-                    this.rightKeyDown = true;
+          }
+          break;
+        case 68:
+          if (!this.rightKeyDown) {
+            this.rightKeyDown = true;
 
-                }
-                break;
-            case 87:
-                if (!this.upKeyDown) {
-                    this.upKeyDown = true;
+          }
+          break;
+        case 87:
+          if (!this.upKeyDown) {
+            this.upKeyDown = true;
 
-                }
-                break;
-            case 83:
-                if (!this.downKeyDown) {
-                    this.downKeyDown = true;
+          }
+          break;
+        case 83:
+          if (!this.downKeyDown) {
+            this.downKeyDown = true;
 
-                }
-                break;
-            default:
-        }
+          }
+          break;
+        default:
+      }
     };
-}
-get score() {
-  return this._score;
-}
-set score(val) {
-  this._score = val;
-  this.scoreBoard.update(SCORE,this._score);
-}
-get level() {
-  return this._level;
-}
-set level(val) {
-  this._level = val;
-  this.scoreBoard.update(LEVEL,this._level);
-  this.levelInScreen.update(LEVEL,LEVEL + ' : ' + this._level);
-}
-get lives() {
-  return this._lives;
-}
-set lives(val) {
-  this._lives = val;
-  this.scoreBoard.update(LIVES,this._lives);
-}
+  }
+  get score() {
+    return this._score;
+  }
+  set score(val) {
+    this._score = val;
+    this.scoreBoard.update(SCORE, this._score);
+  }
+  get level() {
+    return this._level;
+  }
+  set level(val) {
+    this._level = val;
+    this.scoreBoard.update(LEVEL, this._level);
+    this.levelInScreen.setText( LEVEL + ' : ' + this._level);
+  }
+  get lives() {
+    return this._lives;
+  }
+  set lives(val) {
+    this._lives = val;
+    this.scoreBoard.update(LIVES, this._lives);
+  }
 
 
 }

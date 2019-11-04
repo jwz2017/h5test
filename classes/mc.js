@@ -123,12 +123,12 @@ class LoaderBar extends createjs.Container {
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
-    this.titleText=new createjs.Text('loading...','30px Stylus BT','#ffffff');
+    this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
     this.titleText.textAlign="center";
     this.titleText.x=width/2;
     this.titleText.y=-35;
     //数字
-    this.text=new createjs.Text(this.percentLoaded+"%", '20px Microsoft YaHei', "#00ff00");
+    this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
     this.text.textAlign="center";
     this.text.x=width/2;
     this.text.y=height+10;

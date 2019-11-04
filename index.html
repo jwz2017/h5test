@@ -20,14 +20,8 @@
       width: auto;
       font-size: 32px;
       padding:0 2% ;
-       background: #e7bebe; 
-       /* position: relative;  */
-      /* margin: 0px 0px;  */
-       /* left: 50%; */
+       background: #eebeb3; 
     } 
-    /* option{
-      font-size: 32px;
-    } */
     /* .open_btn{
       color: #000000;
       font-size: 50px;
@@ -54,9 +48,12 @@
   <script src="classes/BasePeople.js"></script>
   <script src="classes/utils.js"></script>
   <script src="lib.js"></script>
-  <script src="ma.js"></script>
-  <!-- <script src="include/0base.js"></script> -->
+  <script src="assets/ma.js"></script>
   <script src="include/main.js"></script>
+  <script src="include/0move.js"></script>
+  <script src="include/0playSound.js"></script>
+  <script src="include/0sprite.js"></script>
+  <script src="include/0withDom.js"></script>
   <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
 </head>
 
@@ -66,28 +63,23 @@
     <p id="fps" style="font-size: 32px;font-family: Arial;color: #030303 ;"></p>
     
     <!-- 加入dom到舞台 -->
-    <!-- <p id="testTxt" style="width:200px;color: #ff0000;display: none;cursor: pointer">CreateJS是基于HTML5开发的一套模块化的库和工具。
-    基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p> -->
+    <p id="testTxt" style="width:200px;color: #ff0000;display: none;cursor: pointer">CreateJS是基于HTML5开发的一套模块化的库和工具。
+    基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
     
     <!-- 加入dom到animate -->
-    <!-- <a id="openBtn" class="open_btn" style="display: none;cursor: pointer;">打开弹窗</a>
-    <input type="text" id="inputText" class="input_text" placeholder="请输入姓名" style="display: none;width: 170px;height: 50px;font-size: 30px"> -->
+    <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
+    <input type="text" id="inputText" class="input_text" placeholder="请输入姓名" style="display: none;width: 170px;height: 50px;font-size: 30px">
 
 
     <!-- canvas width,height (750,1206) -->
-    <canvas id="canvas" width="750" height="980" style="background-color:#e7bebe;">
+    <canvas id="canvas" width="750" height="980" style="background-color:#d39b8d;">
     </canvas>
-    <select >
-      <option value="0">game0</option>
-      <option value="1">game1</option>
-      <option value="2">game2</option>
-      <option value="3">game3</option>
-    </select>
-    <select >
-      <option value="0">game0</option>
-      <option value="1">game1</option>
-      <option value="2">game2</option>
-      <option value="3">game3</option>
+    <select id="select1">
+      <option value="0">base</option>
+      <option value="1">move</option>
+      <option value="2">sound</option>
+      <option value="3">sprite</option>
+      <option value="4">withdom</option>
     </select>
   </div>
   
