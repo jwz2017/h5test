@@ -1,7 +1,4 @@
 var stage, queue, model, lib;
-const SCORE = "score",
-  LEVEL = "level",
-  LIVES = "lives";
 class GFrame {
   constructor(canvasId) {
     this.waitTime = 0;
@@ -42,7 +39,7 @@ class GFrame {
    * @param {*} game 
    * @param {*} compid 
    */
-  preload(game, compid) {
+  preload(GClass, compid) {
     if (!queue) {
       queue=new createjs.LoadQueue();
       queue.installPlugin(createjs.Sound); //注册声音插件
@@ -55,8 +52,8 @@ class GFrame {
       this.loaderBar.startLoad(e.progress);
     });
     queue.on('complete', function onComplete(e) {
-      this.initGame(game);
       queue.removeAllEventListeners();
+      this.initGame(GClass);
     }, this, true);
 
     if (compid instanceof Array) {
@@ -75,10 +72,8 @@ class GFrame {
   /**初始化屏幕元素
    * 
    */
-  initGame(game) {
-    this.game = game;
-    this.game.initScreen();
-    this.game.buildElement();
+  initGame(GClass) {
+    this.game = new GClass();
     this._switchSystemState(GFrame.state.STATE_TITLE);
   }
 
@@ -242,7 +237,7 @@ GFrame.style = {
   SCORE_TEXT_SIZE: 32,
   SCORE_TEXT_COLOR: "#FFFFFF",
   SCOREBOARD_HEIGHT: 70,
-  SCORE_BUFF: 190
+  SCORE_BUFF: 180
 };
 GFrame.event = {
   GAME_OVER: "gameover",
@@ -372,11 +367,12 @@ class ScoreBoard extends createjs.Container {
   }
 }
 /***************************************游戏基类****************************** */
+const SCORE = "score",
+      LEVEL = "level";
 class Game {
   constructor() {
-    this._lives = 0;
-    this._score = 0;
-    this._level = 0;
+    this.initScreen();
+    this.buildElement();
   }
   initScreen() {
     let width = stage.canvas.width,
@@ -404,7 +400,6 @@ class Game {
     // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
     this.scoreBoard.creatTextElement(SCORE, '0');
     this.scoreBoard.creatTextElement(LEVEL, '0');
-    this.scoreBoard.creatTextElement(LIVES, '0');
     this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
     // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
   }
@@ -429,6 +424,9 @@ class Game {
   clear() {
     stage.removeAllChildren();
     
+  }
+  updateScoreBoard(key,val){
+    this.scoreBoard.update(key,val);        
   }
   onkey() {
     document.onkeyup = (e) => {
@@ -481,28 +479,5 @@ class Game {
       }
     };
   }
-  get score() {
-    return this._score;
-  }
-  set score(val) {
-    this._score = val;
-    this.scoreBoard.update(SCORE, this._score);
-  }
-  get level() {
-    return this._level;
-  }
-  set level(val) {
-    this._level = val;
-    this.scoreBoard.update(LEVEL, this._level);
-    this.levelInScreen.setText( LEVEL + ' : ' + this._level);
-  }
-  get lives() {
-    return this._lives;
-  }
-  set lives(val) {
-    this._lives = val;
-    this.scoreBoard.update(LIVES, this._lives);
-  }
-
-
+  
 }

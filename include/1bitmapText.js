@@ -1,236 +1,108 @@
-window.onload = function () {
-    "use strict";
-    /*************初始化 整个游戏入口*****/
-    var main=new Main('canvas');
-    //添加代码
-    
-}
-class Main extends GFrame {
-    constructor(canvasId) {
-        super(canvasId);
-        
-        /*********自适应*********** */
-        // stage.canvas.height=document.documentElement.clientHeight;
-        this.adapt();
+// window.onload = function () {
+//     "use strict";
+//     /*************初始化 整个游戏入口*****/
+//     var g = new GFrame('canvas');
+//     /**********自适应************* */
+//     g.adapt();
+//     /*********预加载手动********** */
+//     g.preload(BitmapText, [{
+//         id: "letters",
+//         src: "assets/letters.png"
+//     }]);
 
-        /*********预加载手动********** */
-        this.preload([{
-            id: "letters",
-            src: "assets/letters.png"
-        }]);
+//     /***********fps********** */
+//     FPS.startFPS(stage);
+// };
 
-        /*********animate加载******* ---------------------------------------1*/
-        // let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        // lib = comp.getLibrary();
-        // this.preload(lib.properties.manifest, comp);
-
-        /*********不加载，直接初始化*************** */
-        // this.init();
-
-        FPS.startFPS(stage,);
-    }
-    
-
-    initScreen() {
-        let width = stage.canvas.width,
-            height = stage.canvas.height;
-
-        mc.style.fontSize = 30; //按钮label字体大小
-
-        this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面', width / 2, 300);
-        this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
-        // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-        this.instructionScreen = new BasicScreen();
-        this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
-        this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
-
-        this.levelInScreen = new BasicScreen();
-        this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-        this.gameOverScreen = new BasicScreen();
-        this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
-        this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
-
-        GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
-
-        this.scoreBoard = new ScoreBoard();
-        this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, '0');
-        this.scoreBoard.creatTextElement(LEVEL, '0');
-        this.scoreBoard.creatTextElement(LIVES, '0');
-        this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
-        this.game = new MyGame();
-    }
-}
 (function () {
     "use strict";
-    //程序变量
-    let _level = 0,
-        _lives = 5,
-        _score = 0;
     //游戏变量;
+    var score, level;
+    var spriteSheet,bitmapText;
+        class BitmapText extends Game {
+            constructor() {
+                super();
+                this.titleScreen.setText("使用bitmapText测试");
+            }
+            /**建立游戏元素游戏初始化
+             * 在构造函数内建立
+             */
+            buildElement() {
+                // this.onkey()
+                var spriteData = {
+                    "images": ["assets/letters.png"],
+                    "frames": [
 
-    class MyGame extends Game {
-        constructor() {
-            super();
-        }
-        /**建立游戏元素
-         * 在构造函数里建立
-         */
-        buildElement() {
+                        [2, 2, 34, 41],
+                        [34, 176, 22, 43],
+                        [36, 45, 26, 41],
+                        [34, 88, 24, 41],
+                        [2, 45, 32, 41],
+                        [34, 131, 22, 43],
+                        [2, 174, 30, 41],
+                        [38, 2, 24, 41],
+                        [2, 131, 30, 41],
+                        [2, 88, 30, 41]
+                    ],
+                    "animations": {
 
-        }
-        newGame() {
-            this.score = 0;
-            this.lives = 5;
-            _level = 0;
-        }
-        newLevel() {
-            this.level++;
-        }
-        /**levelinscreen等待结束时执行
-         * 
-         */
-        waitComplete() {
-            // this.onkey();
-            var spriteData={
-                "images": ["assets/letters.png"],
-                "frames": [
-                
-                    [2, 2, 34, 41], 
-                    [34, 176, 22, 43], 
-                    [36, 45, 26, 41], 
-                    [34, 88, 24, 41], 
-                    [2, 45, 32, 41], 
-                    [34, 131, 22, 43], 
-                    [2, 174, 30, 41], 
-                    [38, 2, 24, 41], 
-                    [2, 131, 30, 41], 
-                    [2, 88, 30, 41]
-                ],
-                "animations": {
-                    
-                        "0":[0], 
-                        "1":[1], 
-                        "2":[2], 
-                        "3":[3], 
-                        "4":[4], 
-                        "5":[5], 
-                        "6":[6], 
-                        "7":[7], 
-                        "8":[8], 
-                        "9":[9]
-                },
-                "texturepacker": [
+                        "0": [0],
+                        "1": [1],
+                        "2": [2],
+                        "3": [3],
+                        "4": [4],
+                        "5": [5],
+                        "6": [6],
+                        "7": [7],
+                        "8": [8],
+                        "9": [9]
+                    },
+                    "texturepacker": [
                         "SmartUpdateHash: $TexturePacker:SmartUpdate:30a491e7ec1f55acfc7681f12d743fa2:1/1$",
                         "Created with TexturePacker (http://www.texturepacker.com) for EaselJS"
-                ]
-                }
+                    ]
+                };
+                spriteSheet = new createjs.SpriteSheet(spriteData);
+                bitmapText = new createjs.BitmapText("0", spriteSheet);
+                bitmapText.x = bitmapText.y = 400;
+                
+                
+            }
+            newGame() {
+                score = 0;
+                this.updateScoreBoard(SCORE, score);
+                level = 0;
+            }
+            newLevel() {
+                level++;
+                this.updateScoreBoard(LEVEL, level);
+            }
+            waitComplete() {
+                stage.addChild(bitmapText);
+                var _this = this;
+                this.a=setInterval(this._updataScore = function () {
+                    _this.updataScore();
+                }, 300);
+            }
+            updataScore(){
+                score++;
+                this.updateScoreBoard(SCORE,score);
 
-            this.spriteSheet=new createjs.SpriteSheet(spriteData);
-            this.bitmapText=new createjs.BitmapText(_score.toString(),this.spriteSheet);
-            stage.addChild(this.bitmapText);
-            this.bitmapText.x=this.bitmapText.y=100;
-            var _this=this;
-            setInterval(this._updataScore=function(){
-                _this.updataScore();
-            },300);
+                stage.removeChild(bitmapText);
+                bitmapText=new createjs.BitmapText(score.toString(),spriteSheet);
+                stage.addChild(bitmapText);
+                bitmapText.letterSpacing = 6;
+                bitmapText.x=bitmapText.y=400;
+                // console.log(this.bitmapText.text);
+            }
+            runGame() {
+
+            }
+            clear() {
+                super.clear();
+                clearInterval(this.a);
+            }
 
         }
-        updataScore(){
-            _score++;
-            stage.removeChild(this.bitmapText);
-            this.bitmapText=new createjs.BitmapText(_score.toString(),this.spriteSheet);
-            stage.addChild(this.bitmapText);
-            this.bitmapText.letterSpacing = 6;
-            this.bitmapText.x=this.bitmapText.y=100;
-            console.log(this.bitmapText.text);
-            
-            
-        }
-        runGame() {
-            
-            
-        }
-
-
-        
-        onkey(){
-            document.onkeyup = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        this.leftKeyDown = false;
-                        break;
-                    case 68:
-                        this.rightKeyDown = false;
-                        break;
-                    case 87:
-                        this.upKeyDown = false;
-                        break;
-                    case 83:
-                        this.downKeyDown = false;
-                        break;
-                    case 32:
-                        createjs.Ticker.paused = !createjs.Ticker.paused;
-                        break;
-                    default:
-                }
-            };
-            document.onkeydown = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        if (!this.leftKeyDown) {
-                            this.leftKeyDown = true;
-
-                        }
-                        break;
-                    case 68:
-                        if (!this.rightKeyDown) {
-                            this.rightKeyDown = true;
-
-                        }
-                        break;
-                    case 87:
-                        if (!this.upKeyDown) {
-                            this.upKeyDown = true;
-
-                        }
-                        break;
-                    case 83:
-                        if (!this.downKeyDown) {
-                            this.downKeyDown = true;
-
-                        }
-                        break;
-                    default:
-                }
-            };
-        }
-        get score() {
-            return _score;
-        }
-        set score(val) {
-            _score = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, _score));
-        }
-        get level() {
-            return _level;
-        }
-        set level(val) {
-            _level = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + _level));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, _level));
-        }
-        get lives() {
-            return _lives;
-        }
-        set lives(val) {
-            _lives = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, _lives));
-        }
-    }
-    window.MyGame = MyGame;
+    window.BitmapText = BitmapText;
 })();

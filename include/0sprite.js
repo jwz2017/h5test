@@ -5,7 +5,7 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     g.preload(new Sprite,[{
+//     g.preload(Sprite,[{
 //         id: "woody_0",
 //         src: "images/woody_0.png"
 //     },{
@@ -23,9 +23,9 @@
 //     }]);
 
 //     /*********animate加载*******/
-//     // g.preload(new Sprite, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     // g.preload(Sprite, "A81D833FE7C7754FB5395FF7A6EFA6E1");
 //     /*********不加载********** */
-//     // g.initGame(new Sprite)
+//     // g.initGame(Sprite)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 
@@ -33,19 +33,17 @@
 (function () {
     "use strict";
     //游戏变量;
-
+    var score,level;
     class Sprite extends Game {
         constructor() {
             super();
-            
+            this.titleScreen.setText("sprite测试");
+            this.instructionScreen.setText("w,a,s,d=上下左右，\n小键盘4756出拳");
         }
         /**建立游戏元素
          * 在构造函数里建立
          */
         buildElement() {
-            this.titleScreen.setText("sprite测试");
-            this.instructionScreen.setText("w,a,s,d=上下左右，\n小键盘4756出拳");
-            
             this.spriteData = {
                 images: ["images/woody_0.png", "images/woody_1.png", "images/woody_2.png"],
                 frames: {
@@ -130,12 +128,13 @@
             this.onkey();
         }
         newGame() {
-            this.score = 0;
-            this.lives = 5;
-            this._level = 0;
+            score = 0;
+            this.updateScoreBoard(SCORE,score);
+            level = 0;
         }
         newLevel() {
-            this.level++;
+            level++;
+            this.updateScoreBoard(LEVEL,level);
         }
         waitComplete() {
             stage.addChild(this.ma);

@@ -5,15 +5,15 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     g.preload(new Move,[{
+//     g.preload(Move,[{
 //         id: "butterfly",
 //         src: "assets/butterfly.png"
 //     }]);
 
 //     /*********animate加载*******/
-//     // g.preload(new Move, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     // g.preload(Move, "A81D833FE7C7754FB5395FF7A6EFA6E1");
 //     /*********不加载********** */
-//     // g.initGame(new Base)
+//     // g.initGame(Base)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 
@@ -22,27 +22,28 @@
 (function () {
     "use strict";
     //游戏变量;
+    var score,level;
     var butterfly;
     class Move extends Game {
         constructor() {
             super();
-            
+            this.titleScreen.setText("缓动测试");
         }
         /**建立游戏元素
          * 在构造函数里建立
          */
         buildElement() {
             this.onkey();
-            this.titleScreen.setText("缓动测试");
             butterfly=new createjs.Bitmap("assets/butterfly.png");//直接加载地址，image没有width
         }
         newGame() {
-            this.score = 0;
-            this.lives = 5;
-            this._level = 0;
+            score = 0;
+            this.updateScoreBoard(SCORE,score);
+            level = 0;
         }
         newLevel() {
-            this.level++;
+            level++;
+            this.updateScoreBoard(LEVEL,level);
         }
         waitComplete(){
             // butterfly.regX=butterfly.regY=50;

@@ -5,15 +5,15 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     // g.preload(new PlaySound,[{
+//     // g.preload(PlaySound,[{
 //     //     id: "butterfly",
 //     //     src: "assets/butterfly.png"
 //     // }]);
 
 //     /*********animate加载*******/
-//     g.preload(new PlaySound, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     g.preload(PlaySound, "A81D833FE7C7754FB5395FF7A6EFA6E1");
 //     /*********不加载********** */
-//     // g.initGame(new PlaySound)
+//     // g.initGame(PlaySound)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 
@@ -21,23 +21,23 @@
 (function () {
     "use strict";
     //游戏变量;
+    var score,level;
     var btn1,btn2,btn3,sound;
     class PlaySound extends Game {
         constructor() {
             super();
-            
+            this.titleScreen.setText("声音测试");
         }
         /**建立游戏元素
          * 在构造函数里建立
          */
         buildElement() {
             // this.onkey()
-            this.titleScreen.setText("声音测试");
             /**
              * 使用interrupt_any时，要再预加载lib里设置data:"1"：一个声音只能再一个通道里播放。
              */
             btn1 = new PushButton(null, "button", ()=>{
-                createjs.Sound.play('p',{interrupt:createjs.Sound.INTERRUPT_ANY});
+                sound=createjs.Sound.play('p',{interrupt:createjs.Sound.INTERRUPT_ANY});
             }, 100, 200,150,60);
 
 
@@ -60,12 +60,13 @@
             },100,400,150,60);
         }
         newGame() {
-            this.score = 0;
-            this.lives = 5;
-            this._level = 0;
+            score = 0;
+            this.updateScoreBoard(SCORE,score);
+            level = 0;
         }
         newLevel() {
-            this.level++;
+            level++;
+            this.updateScoreBoard(LEVEL,level);
         }
         waitComplete() {
             stage.addChild(btn1,btn2,btn3);

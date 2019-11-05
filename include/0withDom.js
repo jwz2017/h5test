@@ -5,15 +5,15 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     // g.preload(new DomTest,[{
+//     // g.preload(DomTest,[{
 //     //     id: "butterfly",
 //     //     src: "assets/butterfly.png"
 //     // }]);
 
 //     /*********animate加载*******/
-//     g.preload(new DomTest, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     g.preload(DomTest, "A81D833FE7C7754FB5395FF7A6EFA6E1");
 //     /*********不加载********** */
-//     // g.initGame(new DomTest)
+//     // g.initGame(DomTest)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 
@@ -21,18 +21,18 @@
 (function () {
     "use strict";
     //游戏变量;
+    var score,level;
     var textTxt,domElement,openBtn,openBtnElement,nameInput,nameInpuElement,pop;
     class DomTest extends Game {
         constructor() {
             super();
-            
+            this.titleScreen.setText("加入dom测试");
         }
         /**建立游戏元素
          * 在构造函数里建立
          */
         buildElement() {
             // this.onkey()
-            this.titleScreen.setText("加入dom测试");
             // 加入dom到舞台
             textTxt = document.getElementById("testTxt");
             domElement = new createjs.DOMElement(textTxt);
@@ -64,16 +64,15 @@
             
         }
         newGame() {
-            this.score = 0;
-            this.lives = 5;
-            this._level = 0;
+            score = 0;
+            this.updateScoreBoard(SCORE,score);
+            level = 0;
         }
         newLevel() {
-            this.level++;
+            level++;
+            this.updateScoreBoard(LEVEL,level);
         }
         waitComplete() {
-            
-
             textTxt.style.display = "block";
             stage.addChild(domElement);
 
