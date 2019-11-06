@@ -239,7 +239,7 @@ GFrame.style = {
   SCORE_TEXT_SIZE: 32,
   SCORE_TEXT_COLOR: "#FFFFFF",
   SCOREBOARD_HEIGHT: 70,
-  SCORE_BUFF: 180
+  SCORE_BUFF: 160
 };
 GFrame.event = {
   GAME_OVER: "gameover",
@@ -429,6 +429,9 @@ class Game {
   }
   updateScoreBoard(key,val){
     this.scoreBoard.update(key,val);        
+  }
+  updateLevelInScreen(val){
+    this.levelInScreen.setText("level: "+val);
   }
   onkey() {
     document.onkeyup = (e) => {

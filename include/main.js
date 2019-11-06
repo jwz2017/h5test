@@ -15,30 +15,31 @@ window.onload = function () {
     /***************************选择菜单************************************************************************ */
     var select = document.getElementById("select1");
     select.onchange = function () {
-
         if (g.game.titleScreen.hasEventListener(GFrame.event.OK_BUTTON)) {
             g.game.titleScreen.removeEventListener(GFrame.event.OK_BUTTON, g.okButton);
         } else if (g.game.instructionScreen.hasEventListener(GFrame.event.OK_BUTTON)) {
             g.game.instructionScreen.removeEventListener(GFrame.event.OK_BUTTON, g.okButton);
         } else if (g.game.gameOverScreen.hasEventListener(GFrame.event.OK_BUTTON)) {
             g.game.gameOverScreen.removeEventListener(GFrame.event.OK_BUTTON, g.okButton);
-        } else if (g._currentSystemState == GFrame.state.STATE_WAIT) {
-            g._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
-            g.waitTime = 0;
         }
+        //  else if (g._currentSystemState == GFrame.state.STATE_WAIT) {
+        //     g._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
+        //     g.waitTime = 0;
+        // }
 
+        g._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE)
         g.game.clear();
         stage.removeAllEventListeners();
 
         let index = select.selectedIndex;
         switch (select.options[index].text) {
             case "base":
-            g.initGame(Base);
+                g.initGame(Base);
                 break;
             case "move":
                 if (!Move.l) {
                     g.preload(Move);
-                    Move.loaded=true;
+                    Move.loaded = true;
                 } else {
                     g.initGame(Move);
                 }
@@ -76,12 +77,30 @@ window.onload = function () {
                 }
                 break;
             case "bounce":
-                    g.initGame(Bounce);
+                g.initGame(Bounce);
                 break;
             case "colorDrop":
-                    g.initGame(Colordrop);
+                g.initGame(Colordrop);
                 break;
-
+            case "match":
+                if (!Match.loaded) {
+                    g.preload(Match);
+                    Match.loaded = true
+                } else {
+                    g.initGame(Match);
+                }
+                break;
+            case "pazzle":
+                if (!Puzzle.loaded) {
+                    g.preload(Puzzle);
+                    Puzzle.loaded = true
+                } else {
+                    g.initGame(Puzzle);
+                }
+                break;
+            case "spclick":
+                g.initGame(SuperClick);
+                break;
 
             default:
                 break;
@@ -94,7 +113,7 @@ window.onload = function () {
 (function () {
     "use strict";
     //游戏变量;
-    var score, level;
+    var score, level; //定义。。构造内初始化，new game初始化
     class Base extends Game {
         constructor() {
             super();
@@ -113,6 +132,7 @@ window.onload = function () {
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
 
@@ -126,7 +146,7 @@ window.onload = function () {
         }
 
     }
-    Base.loaded=false;
-    Base.loadItem=null;
+    Base.loaded = false;
+    Base.loadItem = null;
     window.Base = Base;
 })();

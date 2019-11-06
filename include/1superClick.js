@@ -1,87 +1,27 @@
-var lib;
-const SCORE = "score",
-    LEVEL = "level",
-    LIVES = "lives",
-    CLICKS = "clicks",
-    NEEDED = "needed",
-    ACHIEVE = "achieve";
-window.onload = function () {
-    "use strict";
-    /*************初始化 整个游戏入口*****/
-    new Main('canvas');
-    //添加代码
+// window.onload = function () {
+//     "use strict";
+//     /*************初始化 整个游戏入口*****/
+//     var g = new GFrame('canvas');
+//     /**********自适应************* */
+//     g.adapt();
+//     /*********预加载********** */
+//     // g.preload(SuperClick);
+//     /*********不加载********** */
+//     g.initGame(SuperClick);
+//     /***********fps********** */
+//     FPS.startFPS(stage);
+// };
 
-}
-class Main extends GFrame {
-    constructor(canvasId) {
-        super(canvasId);
-        
-        /*********自适应*********** */
-        // stage.canvas.height=document.documentElement.clientHeight;
-        this.adapt();
-
-        /*********预加载手动********** */
-        // this.preload([{
-        //     id: "butterfly",
-        //     src: "assets/butterfly.png"
-        // }]);
-
-        /*********animate加载******* ---------------------------------------1*/
-        let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        lib = comp.getLibrary();
-        this.preload(lib.properties.manifest, comp);
-
-        /*********不加载，直接初始化*************** */
-        // this.init();
-
-        FPS.startFPS(stage);
-    }
-    
-
-    initScreen() {
-        let width = stage.canvas.width,
-            height = stage.canvas.height;
-
-        mc.style.fontSize = 30; //按钮label字体大小
-
-        this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面', width / 2, 200);
-        this.titleScreen.createOkButton((width - 200) / 2, height / 2 +100, 'start', 200, 40);
-        // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-        this.instructionScreen = new BasicScreen();
-        this.instructionScreen.createDisplayText('介绍界面', width / 2, 200);
-        this.instructionScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'ok', 200, 40);
-
-        this.levelInScreen = new BasicScreen();
-        this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-        this.gameOverScreen = new BasicScreen();
-        this.gameOverScreen.createDisplayText('结束界面', width / 2, 200);
-        this.gameOverScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'gameover', 200, 40);
-
-        GFrame.style.SCORE_BUFF = 74; //分数版元素间隔大小
-        GFrame.style.SCORE_TEXT_SIZE=18;
-
-        this.scoreBoard = new ScoreBoard();
-        this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, '0');
-        this.scoreBoard.creatTextElement(LEVEL, '0');
-        this.scoreBoard.creatTextElement(CLICKS, '0');
-        this.scoreBoard.creatTextElement(NEEDED, '0');
-        this.scoreBoard.creatTextElement(ACHIEVE, '0');
-        this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
-        this.game = new MyGame();
-    }
-}
 (function () {
     "use strict";
-    //程序变量
-    let level = 0,
-        lives = 5,
-        score = 0;
-    //游戏变量;
+    //游戏变量;定义。。构造内初始化，new game初始化
+    var score, level;
+    const LIVES = "lives",
+        CLICKS = "clicks",
+        NEEDED = "needed",
+        ACHIEVE = "achieve";
+    const GOOD = "#2969ab",
+        BAD = "#ff0000";
     let radius = 8,
         maxScore = 50,
         maxscale,
@@ -94,24 +34,53 @@ class Main extends GFrame {
         needed = 0,
         achieve = 0,
         balls = [];
-    const GOOD = "#2969ab",
-        BAD = "#ff0000";
 
-    class MyGame extends Game {
+    class SuperClick extends Game {
         constructor() {
             super();
         }
-        /**建立游戏元素
-         * 在构造函数里建立
+        /**建立游戏元素游戏初始化
+         * 在构造函数内建立
          */
-        buildElement() {
+        initScreen() {
+            let width = stage.canvas.width,
+                height = stage.canvas.height;
 
+            mc.style.fontSize = 40; //按钮label字体大小
+
+            this.titleScreen = new BasicScreen();
+            this.titleScreen.createDisplayText('超级点击', width / 2, 300);
+            this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
+            // this.titleScreen=new lib.Title();//协作animate使用-------------------1
+
+            this.instructionScreen = new BasicScreen();
+            this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
+            this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
+
+            this.levelInScreen = new BasicScreen();
+            this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
+
+            this.gameOverScreen = new BasicScreen();
+            this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
+            this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
+
+            this.scoreBoard = new ScoreBoard();
+            // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
+            this.scoreBoard.creatTextElement(SCORE, '0');
+            this.scoreBoard.creatTextElement(LEVEL, '0');
+            this.scoreBoard.creatTextElement(CLICKS, '0');
+            this.scoreBoard.creatTextElement(NEEDED, '0', 20, 60);
+            this.scoreBoard.creatTextElement(ACHIEVE, '0', 300, 60);
+            this.scoreBoard.createBG(width, 100, '#333');
+            // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
+        }
+        buildElement() {
+            // this.onkey()
         }
         newGame() {
             score = 0;
+            this.updateScoreBoard(SCORE, score);
             level = 0;
-            lives = 5;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
             stage.addEventListener('mousedown', (e) => {
                 if (createjs.Ticker.paused) {
                     return;
@@ -125,8 +94,8 @@ class Main extends GFrame {
         }
         newLevel() {
             level++;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, level));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + level));
+            this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
             clicks = 0;
             achieve = 0;
             needed = 14 + level * 2;
@@ -139,15 +108,11 @@ class Main extends GFrame {
             numCircles = level * 25;
             percentBadCircle = (level < 25) ? level + 9 : 40;
             numCreated = 0;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, CLICKS, clicks));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, ACHIEVE, achieve));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, NEEDED, needed));
+            this.updateScoreBoard(CLICKS,clicks+"/"+numCircles);
+            this.updateScoreBoard(ACHIEVE,achieve);
+            this.updateScoreBoard(NEEDED,needed);
         }
-        /**levelinscreen等待结束时执行
-         * 
-         */
         waitComplete() {
-            // this.onkey();
 
         }
         runGame() {
@@ -156,7 +121,6 @@ class Main extends GFrame {
             this._checkBall();
             this._checkOver();
             this._checkLevelUp();
-            
         }
         _creatElement() {
             if (balls.length < maxOnScreen && numCreated < numCircles) {
@@ -169,8 +133,8 @@ class Main extends GFrame {
                     circle.type = GOOD;
                     numCreated++;
                 }
-                circle.x = Math.random() * stage.canvas.width;
-                circle.y = Math.random() * stage.canvas.height - GFrame.style.SCOREBOARD_HEIGHT;
+                circle.x = Math.random() * (stage.canvas.width-radius*2+radius);
+                circle.y = Math.random()* (stage.canvas.height-100-radius*2)+100+radius;
                 circle.scaleX = circle.scaleY = 0.5;
                 circle.clicked = false;
                 circle.first = true;
@@ -201,9 +165,9 @@ class Main extends GFrame {
                     score += addScore;
                     clicks++;
                     achieve = Math.round(clicks / numCircles * 100);
-                    stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, ACHIEVE, achieve + "%"));
-                    stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, score));
-                    stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, CLICKS, clicks + "/" + numCircles));
+                    this.updateScoreBoard(ACHIEVE,achieve + "%");
+                    this.updateScoreBoard(SCORE,score);
+                    this.updateScoreBoard(CLICKS,clicks + "/" + numCircles);
                     var txt = new createjs.Text(addScore, 'bold 12px arial', '#ff0000');
                     txt.textAlign = 'center';
                     txt.textBaseline = 'middle';
@@ -228,13 +192,11 @@ class Main extends GFrame {
             }
             if (this.gameOver) {
                 this.gameOver = false;
-                balls.splice(0, balls.length);
                 stage.dispatchEvent(GFrame.event.GAME_OVER);
             }
         }
         _checkLevelUp() {
-            if (achieve > needed) {
-                balls.splice(0, balls.length);
+            if (achieve >= needed) {
                 stage.dispatchEvent(GFrame.event.NEW_LEVEL);
             }
         }
@@ -242,57 +204,13 @@ class Main extends GFrame {
             stage.removeChild(this);
             
         }
-        onkey(){
-            document.onkeyup = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        this.leftKeyDown = false;
-                        break;
-                    case 68:
-                        this.rightKeyDown = false;
-                        break;
-                    case 87:
-                        this.upKeyDown = false;
-                        break;
-                    case 83:
-                        this.downKeyDown = false;
-                        break;
-                    case 32:
-                        createjs.Ticker.paused = !createjs.Ticker.paused;
-                        break;
-                    default:
-                }
-            };
-            document.onkeydown = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        if (!this.leftKeyDown) {
-                            this.leftKeyDown = true;
-
-                        }
-                        break;
-                    case 68:
-                        if (!this.rightKeyDown) {
-                            this.rightKeyDown = true;
-
-                        }
-                        break;
-                    case 87:
-                        if (!this.upKeyDown) {
-                            this.upKeyDown = true;
-
-                        }
-                        break;
-                    case 83:
-                        if (!this.downKeyDown) {
-                            this.downKeyDown = true;
-
-                        }
-                        break;
-                    default:
-                }
-            };
+        clear() {
+            super.clear();
+            balls.splice(0,balls.length);
         }
+
     }
-    window.MyGame = MyGame;
+    SuperClick.loaded = false;
+    SuperClick.loadItem = null;
+    window.SuperClick = SuperClick;
 })();

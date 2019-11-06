@@ -16,9 +16,8 @@
     "use strict";
     //游戏变量;
     var score, level;
-    var colors=["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ewe0ee"],
-    slots = [],
-    shapes = [];
+    const colors=["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ewe0ee"];
+    var slots , shapes ;
     class Colordrop extends Game {
         constructor() {
             super();

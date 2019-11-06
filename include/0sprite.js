@@ -4,13 +4,9 @@
 //     var g = new GFrame('canvas');
 //     /**********自适应************* */
 //     g.adapt();
-//     /*********预加载手动********** */
+//     /*********预加载********** */
 //     g.preload(Sprite);
 
-//     /*********animate加载*******/
-//     // g.preload(Sprite, "A81D833FE7C7754FB5395FF7A6EFA6E1");
-//     /*********不加载********** */
-//     // g.initGame(Sprite)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 // };
@@ -86,6 +82,36 @@
                     }
                 }
             }
+            this.spriteData1={
+                "images": ["assets/aa.png"],
+                "frames": [
+                
+                    [2, 180, 126, 176], 
+                    [2, 2, 126, 176], 
+                    [130, 281, 95, 72], 
+                    [130, 355, 94, 102], 
+                    [2, 358, 78, 96], 
+                    [130, 203, 96, 76], 
+                    [130, 2, 103, 109], 
+                    [130, 113, 100, 88]
+                ],
+                "animations": {
+                    
+                        "back":[0,1,"back",0.1], 
+                        "card":[1], 
+                        "garlic":[2], 
+                        "onion":[3], 
+                        "pepper":[4], 
+                        "potato":[5], 
+                        "spinach":[6], 
+                        "tomato":[7]
+                },
+                "texturepacker": [
+                    "SmartUpdateHash: $TexturePacker:SmartUpdate:30a491e7ec1f55acfc7681f12d743fa2:1/1$",
+                    "Created with TexturePacker (http://www.texturepacker.com) for EaselJS"
+            ]
+            
+                }
             
             /**
              * 简单使用sprite
@@ -94,6 +120,16 @@
             this.sprite=new createjs.Sprite(spriteSheet,"walk");
             this.sprite.x=this.sprite.y=200;
             // sprite.paused=false;
+            
+            /**
+             * 使用tp制作sprite
+             */
+            var spriteSheet1=new createjs.SpriteSheet(this.spriteData1);
+            this.sprite1=new createjs.Sprite(spriteSheet1,"back");
+            // sprite.paused=false;
+            this.sprite1.gotoAndStop("back");
+            this.sprite1.x=400;
+            this.sprite1.y=600;
 
             /**
              * 用animate制作sprite
@@ -123,7 +159,7 @@
         }
         waitComplete() {
             stage.addChild(this.ma);
-            stage.addChild(this.sprite);
+            stage.addChild(this.sprite,this.sprite1);
             stage.addChild(this.people);
         }
 
@@ -251,6 +287,9 @@
     }, {
         id: "ma",
         src: "assets/ma.png"
+    },{
+        id: "aa",
+        src: "assets/aa.png"
     }];
     window.Sprite = Sprite;
 
