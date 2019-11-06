@@ -11,12 +11,11 @@
 //     // }]);
 
 //     /*********animate加载*******/
-//     g.preload(DomTest, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     g.preload(DomTest);
 //     /*********不加载********** */
 //     // g.initGame(DomTest)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
-
 // };
 (function () {
     "use strict";
@@ -96,5 +95,7 @@
             nameInput.style.display="none";
         }
     }
+    DomTest.loaded=false;
+    DomTest.loadItem="A81D833FE7C7754FB5395FF7A6EFA6E1";
     window.DomTest = DomTest;
 })();

@@ -1,24 +1,19 @@
+/**
+ * 声音加载一次。。
+ */
 window.onload = function () {
     "use strict";
     /*************初始化 整个游戏入口*****/
     var g = new GFrame('canvas');
     /**********自适应************* */
     g.adapt();
-    /*********预加载手动********** */
-    // g.preload(Base,[{
-    //     id: "butterfly",
-    //     src: "assets/butterfly.png"
-    // }]);
-
-    /*********animate加载*******/
-    // g.preload(Move, "A81D833FE7C7754FB5395FF7A6EFA6E1");
-    /*********不加载********** */
+    /*********加载********** */
     g.initGame(Base);
     /***********fps********** */
     FPS.startFPS(stage);
 
-    /*************************************************************************************************** */
-    var select = this.document.getElementById("select1");
+    /***************************选择菜单************************************************************************ */
+    var select = document.getElementById("select1");
     select.onchange = function () {
 
         if (g.game.titleScreen.hasEventListener(GFrame.event.OK_BUTTON)) {
@@ -38,71 +33,53 @@ window.onload = function () {
         let index = select.selectedIndex;
         switch (select.options[index].text) {
             case "base":
-                g.initGame(Base);
+            g.initGame(Base);
                 break;
             case "move":
-                if (!g.a1) {
-                    g.preload(Move, [{
-                        id: "butterfly",
-                        src: "assets/butterfly.png"
-                    }]);
-                    g.a1 = true
+                if (!Move.l) {
+                    g.preload(Move);
+                    Move.loaded=true;
                 } else {
                     g.initGame(Move);
                 }
                 break;
             case "sound":
-                if (!g.a2) {
-                    g.preload(PlaySound, "A81D833FE7C7754FB5395FF7A6EFA6E1");
-                    g.a2 = true
+                if (!PlaySound.loaded) {
+                    g.preload(PlaySound);
+                    PlaySound.loaded = true;
                 } else {
                     g.initGame(PlaySound);
                 }
                 break;
             case "sprite":
-                if (!g.a3) {
-                    g.preload(Sprite, [{
-                        id: "woody_0",
-                        src: "images/woody_0.png"
-                    }, {
-                        id: "woody_1",
-                        src: "images/woody_1.png"
-                    }, {
-                        id: "woody_2",
-                        src: "images/woody_2.png"
-                    }, {
-                        id: "guiqizhan",
-                        src: "images/guiqizhan.png"
-                    }, {
-                        id: "ma",
-                        src: "assets/ma.png"
-                    }]);
-                    g.a3 = true
+                if (!Sprite.loaded) {
+                    g.preload(Sprite);
+                    Sprite.loaded = true
                 } else {
                     g.initGame(Sprite);
                 }
                 break;
             case "withdom":
-                if (!g.a2) {
-                    g.preload(DomTest, "A81D833FE7C7754FB5395FF7A6EFA6E1");
-                    g.a2 = true
+                if (!PlaySound.loaded) {
+                    g.preload(DomTest);
+                    PlaySound.loaded = true
                 } else {
                     g.initGame(DomTest);
                 }
                 break;
             case "bmText":
-                if (!g.a4) {
-                    g.preload(BitmapText, [{
-                        id: "letters",
-                        src: "assets/letters.png"
-                    }]);
-                    g.a4 = true
+                if (!BitmapText.loaded) {
+                    g.preload(BitmapText);
+                    BitmapText.loaded = true
                 } else {
                     g.initGame(BitmapText);
                 }
                 break;
             case "bounce":
                     g.initGame(Bounce);
+                break;
+            case "colorDrop":
+                    g.initGame(Colordrop);
                 break;
 
 
@@ -149,5 +126,7 @@ window.onload = function () {
         }
 
     }
+    Base.loaded=false;
+    Base.loadItem=null;
     window.Base = Base;
 })();

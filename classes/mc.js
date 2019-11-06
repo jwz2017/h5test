@@ -147,10 +147,12 @@ class LoaderBar extends createjs.Container {
    */
   startLoad(percentLoaded) {
     this.percentLoaded=percentLoaded;
-    this._redraw();
     if (this.percentLoaded >= 1) {
-      this.parent.removeChild(this);
+      // console.log(this.percentLoaded,this.parent);
+      this.percentLoaded=1;
+      // this.parent.removeChild(this);
     }
+    this._redraw();
   }
 }
 //墙

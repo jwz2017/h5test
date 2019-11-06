@@ -5,10 +5,7 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     g.preload(BitmapText, [{
-//         id: "letters",
-//         src: "assets/letters.png"
-//     }]);
+//     g.preload(BitmapText);
 
 //     /***********fps********** */
 //     FPS.startFPS(stage);
@@ -104,5 +101,10 @@
             }
 
         }
+        BitmapText.loaded=false;
+        BitmapText.loadItem=[{
+            id: "letters",
+            src: "assets/letters.png"
+        }];
     window.BitmapText = BitmapText;
 })();

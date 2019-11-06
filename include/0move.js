@@ -5,24 +5,14 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     g.preload(Move,[{
-//         id: "butterfly",
-//         src: "assets/butterfly.png"
-//     }]);
-
-//     /*********animate加载*******/
-//     // g.preload(Move, "A81D833FE7C7754FB5395FF7A6EFA6E1");
-//     /*********不加载********** */
-//     // g.initGame(Base)
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-
+//     g.preload(Move);
 // };
+
 
 (function () {
     "use strict";
     //游戏变量;
-    var score,level;
+    var score, level;
     var butterfly;
     class Move extends Game {
         constructor() {
@@ -34,22 +24,22 @@
          */
         buildElement() {
             this.onkey();
-            butterfly=new createjs.Bitmap("assets/butterfly.png");//直接加载地址，image没有width
+            butterfly = new createjs.Bitmap("assets/butterfly.png"); //直接加载地址，image没有width
         }
         newGame() {
             score = 0;
-            this.updateScoreBoard(SCORE,score);
+            this.updateScoreBoard(SCORE, score);
             level = 0;
         }
         newLevel() {
             level++;
-            this.updateScoreBoard(LEVEL,level);
+            this.updateScoreBoard(LEVEL, level);
         }
-        waitComplete(){
+        waitComplete() {
             // butterfly.regX=butterfly.regY=50;
-            butterfly.x=200;
-            butterfly.y=GFrame.style.SCOREBOARD_HEIGHT;
-            butterfly.t=0;
+            butterfly.x = 200;
+            butterfly.y = GFrame.style.SCOREBOARD_HEIGHT;
+            butterfly.t = 0;
             stage.addChild(butterfly);
             /**
              * 交换元素图层
@@ -59,7 +49,7 @@
              * 鼠标事件以及e.current和currentTarget
              */
             stage.addEventListener('stagemousedown', (e) => {
-                butterfly.t=0;
+                butterfly.t = 0;
                 butterfly.x = stage.mouseX;
                 butterfly.y = stage.mouseY;
                 console.log(e.target === stage); //stagemousedown的e.target===e.currentTarget===target.
@@ -76,6 +66,8 @@
                 stage.removeChild(img);
                 console.log(this);
             } */
+
+
         }
         runGame() {
             /**
@@ -116,17 +108,22 @@
              * cubic.easeInOut:先加速到 c/2，再减速到c。再继续向前
              * cubic.easeOutIn:先减速到 c/2，再加速到c。再继续向前
              */
-            butterfly.y=easing.cubic.easeIn(butterfly.t,0,800,200);//单纯的加减速度。。。*********
-            
+            butterfly.y = easing.cubic.easeIn(butterfly.t, 0, 800, 200); //单纯的加减速度。。。*********
+
             //后面待续。。。。。。。
-            
-            
+
+
         }
-        clear(){
+        clear() {
             super.clear();
-            
-            
+
+
         }
     }
+    Move.loaded=false;
+    Move.loadItem = [{
+        id: "butterfly",
+        src: "assets/butterfly.png"
+    }];
     window.Move = Move;
 })();

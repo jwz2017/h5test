@@ -11,13 +11,13 @@
 //     // }]);
 
 //     /*********animate加载*******/
-//     g.preload(PlaySound, "A81D833FE7C7754FB5395FF7A6EFA6E1");
+//     g.preload(PlaySound);
 //     /*********不加载********** */
 //     // g.initGame(PlaySound)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
-
 // };
+
 (function () {
     "use strict";
     //游戏变量;
@@ -81,5 +81,7 @@
             sound=null;
         }
     }
+    PlaySound.loaded=false;
+    PlaySound.loadItem="A81D833FE7C7754FB5395FF7A6EFA6E1";
     window.PlaySound = PlaySound;
 })();

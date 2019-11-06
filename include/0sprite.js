@@ -5,22 +5,7 @@
 //     /**********自适应************* */
 //     g.adapt();
 //     /*********预加载手动********** */
-//     g.preload(Sprite,[{
-//         id: "woody_0",
-//         src: "images/woody_0.png"
-//     },{
-//         id: "woody_1",
-//         src: "images/woody_1.png"
-//     },{
-//         id: "woody_2",
-//         src: "images/woody_2.png"
-//     },{
-//         id: "guiqizhan",
-//         src: "images/guiqizhan.png"
-//     },{
-//         id:"ma",
-//         src:"assets/ma.png"
-//     }]);
+//     g.preload(Sprite);
 
 //     /*********animate加载*******/
 //     // g.preload(Sprite, "A81D833FE7C7754FB5395FF7A6EFA6E1");
@@ -28,8 +13,8 @@
 //     // g.initGame(Sprite)
 //     /***********fps********** */
 //     FPS.startFPS(stage);
-
 // };
+
 (function () {
     "use strict";
     //游戏变量;
@@ -250,6 +235,23 @@
             this.onkey=super.onkey;
         }
     }
+    Sprite.loaded=false;
+    Sprite.loadItem=[{
+        id: "woody_0",
+        src: "images/woody_0.png"
+    }, {
+        id: "woody_1",
+        src: "images/woody_1.png"
+    }, {
+        id: "woody_2",
+        src: "images/woody_2.png"
+    }, {
+        id: "guiqizhan",
+        src: "images/guiqizhan.png"
+    }, {
+        id: "ma",
+        src: "assets/ma.png"
+    }];
     window.Sprite = Sprite;
 
     class People extends BasePeople {

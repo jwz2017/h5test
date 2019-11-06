@@ -38,22 +38,22 @@ utils.randomColor = function () {
  * @param {object} obj 被检测对象
  * @param {number} bounce 反弹系数
  */
-utils.checkBounds=function(obj,left=0,top=0,right=750,bottom=980,bounce=-0.7) {
-    let o=obj.getBounds();
-    if (obj.x+o.x<left) {
-        obj.x=left-o.x;
-        obj.vx*=bounce;
-        
-    }else if (obj.x+o.x+o.width>right) {
-        obj.x=right-o.x-o.width;
-        obj.vx*=bounce;
+utils.checkBounds = function (obj, left = 0, top = 0, right = 750, bottom = 980, bounce = -0.7) {
+    let o = obj.getBounds();
+    if (obj.x + o.x < left) {
+        obj.x = left - o.x;
+        obj.vx *= bounce;
+
+    } else if (obj.x + o.x + o.width > right) {
+        obj.x = right - o.x - o.width;
+        obj.vx *= bounce;
     }
-    if (obj.y+o.y<top) {
-        obj.y=top-o.y;
-        obj.vy*=bounce;
-    }else if (obj.y+o.y+o.height>bottom) {
-        obj.y=bottom-o.y-o.height;
-        obj.vy*=bounce;
+    if (obj.y + o.y < top) {
+        obj.y = top - o.y;
+        obj.vy *= bounce;
+    } else if (obj.y + o.y + o.height > bottom) {
+        obj.y = bottom - o.y - o.height;
+        obj.vy *= bounce;
     }
 }
 /**旋转坐标(逆)
@@ -63,8 +63,11 @@ utils.checkBounds=function(obj,left=0,top=0,right=750,bottom=980,bounce=-0.7) {
  * @param {*} cos 
  * @param {*} sin 
  */
-utils.rotateP1=function(xpos,ypos,cos,sin) {
-    return {x:cos*xpos+sin*ypos,y:cos*ypos-sin*xpos};
+utils.rotateP1 = function (xpos, ypos, cos, sin) {
+    return {
+        x: cos * xpos + sin * ypos,
+        y: cos * ypos - sin * xpos
+    };
 }
 /**旋转回去（顺）
  * 
@@ -73,8 +76,11 @@ utils.rotateP1=function(xpos,ypos,cos,sin) {
  * @param {*} cos 
  * @param {*} sin 
  */
-utils.rotateP2=function (xpos,ypos,cos,sin) {
-    return {x:cos*xpos-sin*ypos,y:cos*ypos+sin*xpos};
+utils.rotateP2 = function (xpos, ypos, cos, sin) {
+    return {
+        x: cos * xpos - sin * ypos,
+        y: cos * ypos + sin * xpos
+    };
 }
 /**
  * 绘制图形
@@ -82,15 +88,27 @@ utils.rotateP2=function (xpos,ypos,cos,sin) {
  * @param {*} mat 
  * @param {*} points 
  */
-utils.drawPoints=function (g, mat, points) {
+utils.drawPoints = function (g, mat, points) {
     points.forEach((point, i) => {
-      const p = mat.transformPoint(point[0], point[1])
-      p.x = Math.ceil(p.x);
-      p.y = Math.ceil(p.y)
-      if (i == 0) {
-        g.moveTo(p.x, p.y)
-      } else {
-        g.lineTo(p.x, p.y)
-      }
+        const p = mat.transformPoint(point[0], point[1])
+        p.x = Math.ceil(p.x);
+        p.y = Math.ceil(p.y)
+        if (i == 0) {
+            g.moveTo(p.x, p.y)
+        } else {
+            g.lineTo(p.x, p.y)
+        }
     })
-  }
+}
+/**
+ * Array随机排序
+ */
+utils.randomArray=function(array){
+    if (!Array.prototype.derangedArray) {
+        Array.prototype.derangedArray = function () {
+            for (var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
+            return this;
+        };
+    }
+    array=array.derangedArray();
+}

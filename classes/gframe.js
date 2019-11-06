@@ -39,7 +39,7 @@ class GFrame {
    * @param {*} game 
    * @param {*} compid 
    */
-  preload(GClass, compid) {
+  preload(GClass) {
     if (!queue) {
       queue=new createjs.LoadQueue();
       queue.installPlugin(createjs.Sound); //注册声音插件
@@ -48,23 +48,25 @@ class GFrame {
       this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
     }
     stage.addChild(this.loaderBar);
-    queue.on('progress', (e) => {
-      this.loaderBar.startLoad(e.progress);
-    });
-    queue.on('complete', function onComplete(e) {
-      queue.removeAllEventListeners();
-      this.initGame(GClass);
-    }, this, true);
 
-    if (compid instanceof Array) {
-      queue.loadManifest(compid);
+    if (GClass.loadItem instanceof Array) {
+      queue.loadManifest(GClass.loadItem);
     } 
-    else if (typeof compid === "string") {
-      let comp = AdobeAn.getComposition(compid);
+    else if (typeof GClass.loadItem === "string") {
+      let comp = AdobeAn.getComposition(GClass.loadItem);
       queue.on('fileload', this.onFileLoad, this, false, comp);
       lib = comp.getLibrary();
       queue.loadManifest(lib.properties.manifest);
     }
+    queue.on('complete', function onComplete(e) {
+      queue.removeAllEventListeners();
+      stage.removeChild(this.loaderBar);
+      this.initGame(GClass);
+    }, this, true);
+    queue.on('progress', (e) => {
+      this.loaderBar.startLoad(e.progress);
+    });
+
 
 
   }
@@ -195,7 +197,7 @@ class GFrame {
     // stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
-    this.okButton = this.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.okButton = this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_TITLE;
   }
