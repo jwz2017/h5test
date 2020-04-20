@@ -5,7 +5,7 @@ window.onload = function () {
   var g = new GFrame('canvas');
   /**********自适应************* */
   g.adapt();
-  /*********加载（和菜单选一个）********** */
+  /*********加载（没菜单时开启）********** */
   // g.preload(PlaySound);
 
   /****************选择菜单******************* */
@@ -53,13 +53,11 @@ class GFrame {
     });
   }
 
-  /**自适应
+  /********************自适应*********************
    * 
    * @param {boolean} h =true,是否高度适应
    */
   adapt() {
-    // let stageWidth = document.documentElement.clientWidth,
-    //   stageHeight = document.documentElement.clientHeight;
     var stageWidth = window.innerWidth;
     var stageHeight = window.innerHeight;
     if (typeof stageWidth != "number") {
@@ -79,16 +77,14 @@ class GFrame {
     if (stageWidth / stageHeight > 0.665) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-    } else {//宽度自适应
+    } else { //宽度自适应
       stageScale = stageWidth / width;
     }
-    
-    // stage.canvas.style.width=stage.canvas.width*stageScale+'px';
-    // stage.canvas.style.height=stage.canvas.height*stageScale+'px';
     gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
   }
-  /**预加载
+
+  /*********************预加载****************************
    * 
    * @param {*} array 
    * @param {*} game 
@@ -245,7 +241,7 @@ class GFrame {
   //结束界面状态
   _systemGameOver() {
     this.game.clear();
-    stage.removeAllChildren();
+    // stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
     this.okButton = this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
@@ -288,7 +284,6 @@ GFrame.style = {
   TITLE_TEXT_COLOR: "#FF0000",
   SIDE_BUFFWIDTH: 10,
   SCORE_TEXT_COLOR: "#FFFFFF",
-  // SCORE_BUFF: 160,
   //分数板样式
   SCORE_TEXT_SIZE: 36,
   SCORE_BUFF: 2,
@@ -486,7 +481,7 @@ class ScoreBoard extends createjs.Container {
 /***************************************游戏基类****************************** */
 const SCORE = "score",
   LEVEL = "level",
-  LIEVES="lieves"
+  LIEVES = "lieves"
 class Game {
   constructor() {
     this.buildElement();
@@ -495,7 +490,6 @@ class Game {
   initScreen() {
     let width = stage.canvas.width,
       height = stage.canvas.height;
-      // height = document.documentElement.clientHeight;
     mc.style.fontSize = 40; //mc组件字体大小
     this.titleScreen = new BasicScreen();
     this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
@@ -513,9 +507,13 @@ class Game {
     this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
     this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'gameover', 300, 60);
 
-    // this.scoreBoard = new ScoreBoard();
-    // this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
-    // this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
+    this.createScoreBoard();
+
+  }
+  createScoreBoard() {
+    this.scoreBoard = new ScoreBoard(0,0,null);
+    this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
+    this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
   }
   newGame() {
 
@@ -536,7 +534,7 @@ class Game {
 
   }
   clear() {
-    
+    stage.removeAllChildren();
   }
   updateScoreBoard(key, val) {
     this.scoreBoard.update(key, val);

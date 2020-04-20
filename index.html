@@ -2,47 +2,19 @@
 <html>
 <head>
   <meta charset="utf-8">
-
-  <!-- 手机宽带自适应，width=750为设计宽度,不用adapt -->
-  <meta name="viewport" content="width=750,user-scalable=no,initial-scale=1"/>
-  
-
   <!-- 设置高度自适应，居中等，需要adapt() -->
-  <!-- <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
+  <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
-  <!-- <meta name="apple-mobile-web-app-capable" content="no"> -->
   <style>
     * {
       margin: 0;
-      /* padding: 0; */
     }
-     select{
-      width: auto;
-      font-size: 32px;
-      padding:0 2% ;
-       background: #eebeb3; 
-    } 
     select:focus option:hover{
       color: white;
       background-image: linear-gradient(#726512,#6d621e);
     }
-    /* .open_btn{
-      color: #000000;
-      font-size: 50px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .input_text{
-      color: aquamarine;
-      width: 182px;
-      height: 41px;
-      background-color: #270C51;
-      border:3px solid #4E2383;
-      line-height: 41px;
-      font-size: 14px;
-      padding: 0 10px;
-    } */
   </style>
+
   <title>h5Test</title>
   <script src="classes/createjs.min.js"></script>
   <script src="classes/gframe.js"></script>
@@ -67,12 +39,9 @@
   <script src="include/1fFakezee.js"></script>
   <script src="include/2aCannon.js"></script>
   <script src="include/2bMakeThingsMove.js"></script>
-
-  <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
 </head>
 
 <body style="background-color:#333">
-  
   <div id="game" style="position: absolute">
     <!-- fps -->
     <p id="fps" style="font-size: 32px;font-family: Arial;color: #030303 ;"></p>

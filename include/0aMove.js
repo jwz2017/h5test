@@ -1,7 +1,6 @@
 (function () {
     "use strict";
     //游戏变量;
-    var score, level;
     var butterfly;
     class Move extends Game {
         constructor() {
@@ -16,14 +15,8 @@
             butterfly = new createjs.Bitmap("assets/butterfly.png"); //直接加载地址，image没有width
         }
         newGame() {
-            score = 0;
-            this.updateScoreBoard(SCORE, score);
-            level = 0;
         }
         newLevel() {
-            level++;
-            this.updateScoreBoard(LEVEL, level);
-            this.updateLevelInScreen(level);
         }
         waitComplete() {
             // butterfly.regX=butterfly.regY=50;

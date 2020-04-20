@@ -29,12 +29,11 @@
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
          */
-        initScreen() {
-           super.initScreen();
+        createScoreBoard() {
             GFrame.style.SCOREBOARD_HEIGHT=100;
-            this.scoreBoard = new ScoreBoard();
-            this.scoreBoard.createTextElement(SCORE, '0',20,14);
-            this.scoreBoard.createTextElement(LEVEL, '0',320,14);
+           this.scoreBoard=new ScoreBoard();
+           this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
+           this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
             this.scoreBoard.createTextElement(CLICKS, '0',560,14);
             this.scoreBoard.createTextElement(NEEDED, '0', 20, 60);
             this.scoreBoard.createTextElement(ACHIEVE, '0', 320, 60);
@@ -170,7 +169,8 @@
             
         }
         clear() {
-            stage.removeAllChildren();
+            super.clear();
+            // stage.removeAllChildren();
             balls.splice(0,balls.length);
         }
 
