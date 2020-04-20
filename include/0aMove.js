@@ -1,14 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载手动********** */
-//     g.preload(Move);
-// };
-
-
 (function () {
     "use strict";
     //游戏变量;
@@ -34,6 +23,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             // butterfly.regX=butterfly.regY=50;
@@ -120,7 +110,6 @@
 
         }
     }
-    Move.loaded=false;
     Move.loadItem = [{
         id: "butterfly",
         src: "assets/butterfly.png"

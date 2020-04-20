@@ -1,22 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载手动********** */
-//     // g.preload(DomTest,[{
-//     //     id: "butterfly",
-//     //     src: "assets/butterfly.png"
-//     // }]);
-
-//     /*********animate加载*******/
-//     g.preload(DomTest);
-//     /*********不加载********** */
-//     // g.initGame(DomTest)
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
 (function () {
     "use strict";
     //游戏变量;
@@ -70,6 +51,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL,level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             textTxt.style.display = "block";
@@ -82,6 +64,7 @@
         }
 
         runGame() {
+            domElement.rotation+=1;
 
         }
         clear() {

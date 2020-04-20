@@ -6,8 +6,6 @@
 //     g.adapt();
 //     /*********预加载********** */
 //     g.preload(Match);
-//     /*********不加载********** */
-//     // g.initGame(Match);
 //     /***********fps********** */
 //     FPS.startFPS(stage);
 // };
@@ -21,8 +19,7 @@
         constructor() {
             super();
             this.titleScreen.setText("查找游戏");
-            faces=[];
-            cards=[];
+            
         }
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
@@ -36,6 +33,8 @@
             level = 0;
             selectedCards = [];
             matches = 0;
+            faces=[];
+            cards=[];
         }
         newLevel() {
             level++;

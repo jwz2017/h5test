@@ -1,116 +1,38 @@
-var lib;
-const SCORE = "score",
-    LEVEL = "level",
-    LIVES = "lives";
-window.onload = function () {
-    "use strict";
-    /*************初始化 整个游戏入口*****/
-    new Main('canvas');
-    //添加代码
-
-}
-class Main extends GFrame {
-    constructor(canvasId) {
-        super(canvasId);
-
-        /*********自适应*********** */
-        // stage.canvas.height=document.documentElement.clientHeight;
-        this.adapt();
-
-        /*********预加载手动********** */
-        // this.preload([{
-        //     id: "butterfly",
-        //     src: "assets/butterfly.png"
-        // }]);
-
-        //单张图片加载完成时
-        this.img=new Image();
-        this.img.src="assets/butterfly.png";
-        this.img.addEventListener('load',()=>{console.log("complete");
-        })
-        
-        /*********animate加载******* ---------------------------------------1*/
-        let comp = AdobeAn.getComposition("A81D833FE7C7754FB5395FF7A6EFA6E1");
-        lib = comp.getLibrary();
-        this.preload(lib.properties.manifest, comp);
-
-        /*********不加载，直接初始化*************** */
-        // this.init();
-
-        FPS.startFPS(stage);
-    }
-
-
-    initScreen() {
-        let width = stage.canvas.width,
-            height = stage.canvas.height;
-
-        mc.style.fontSize = 30; //按钮label字体大小
-
-        this.titleScreen = new BasicScreen();
-        this.titleScreen.createDisplayText('开始界面', width / 2, 200);
-        this.titleScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'start', 200, 40);
-        // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-        this.instructionScreen = new BasicScreen();
-        this.instructionScreen.createDisplayText('介绍界面', width / 2, 200);
-        this.instructionScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'ok', 200, 40);
-
-        this.levelInScreen = new BasicScreen();
-        this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-        this.gameOverScreen = new BasicScreen();
-        this.gameOverScreen.createDisplayText('结束界面', width / 2, 200);
-        this.gameOverScreen.createOkButton((width - 200) / 2, height / 2 + 100, 'gameover', 200, 40);
-
-        GFrame.style.SCORE_BUFF = 200; //分数版元素间隔大小
-
-        this.scoreBoard = new ScoreBoard();
-        this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-        this.scoreBoard.creatTextElement(SCORE, '0');
-        this.scoreBoard.creatTextElement(LEVEL, '0');
-        this.scoreBoard.creatTextElement(LIVES, '0');
-        this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-        // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
-        this.game = new MyGame();
-    }
-}
 (function () {
     "use strict";
-    //程序变量
-    let _level = 0,
-        _lives = 5,
-        _score = 0;
-    //游戏变量;
-    let ship = new Ship(10, "#ff0000"),
-        ship2 = new Ship(6, "#00ff00"),
-        shape = new createjs.Shape(),
-        ball = new Ball(),
-        line = new createjs.Shape(),
-        gravity = 0.3;
-
-    class MyGame extends Game {
+    //游戏变量;定义。。构造内初始化，new game初始化
+    var score, level;
+    let ship,ship2,shape,ball,line,gravity=0.3;
+    class MakeThingsMove extends Game {
         constructor() {
             super();
+            this.titleScreen.setText("makethingsmove");
         }
-        /**建立游戏元素
-         * 在构造函数里建立
+        /**建立游戏元素游戏初始化
+         * 在构造函数内建立
          */
         buildElement() {
-            ship.x = ship.y = 300;
-            ship.vx = 0;
-            ship.vy = 0;
+            this.onkey()
+            ship=new Ship(10,"#ff0000");
+            ship.x=ship.y=300;
+            ship.vx=ship.vy=0;
 
-            ship2.vr = 0.05;
-            ship2.angle = 0;
-            ship2.x = 100;
-            ship2.y = 500;
-            ship2.cos = Math.cos(ship2.vr);
-            ship2.sin = Math.sin(ship2.vr);
-            ship2.mat = new createjs.Matrix2D().rotate(ship2.vr * 180 / Math.PI); //.translate(20,0).平移
+            ship2=new Ship(6,"#00ff00");
+            ship2.vr=0.05;
+            ship2.angle=0;
+            ship2.x=100;
+            ship2.y=500;
+            ship2.cos=Math.cos(ship2.vr);
+            ship2.sin=Math.sin(ship2.vr);
+            //.translate(20,0).平移
+            ship2.mat=new createjs.Matrix2D().rotate(ship2.vr*180/Math.PI);
 
-            ball.angle = 0;
-            ball.x = ball.y = 100;
+            shape=new createjs.Shape();
+            shape.angle = shape.xpos = shape.ypos = 0;
+            shape.graphics.beginStroke("#ff0000").moveTo(0, 100);
+
+            ball=new Ball();
+            ball.x=ball.y=100;
             //球拖拽
             ball.addEventListener('mousedown', () => {
                 ball.oldX = ball.x;
@@ -129,38 +51,33 @@ class Main extends GFrame {
                 createjs.Ticker.paused = false; //恢复以前运动
             })
 
-            shape.angle = shape.xpos = shape.ypos = 0;
-            shape.graphics.beginStroke("#ff0000").moveTo(0, 100);
-
+            line=new createjs.Shape();
             line.x = 50;
             line.y = 200;
             line.graphics.beginStroke('#000000').moveTo(0, 0).lineTo(300, 0);
             line.rotation = 10;
+
         }
         newGame() {
-            this.score = 0;
-            this.lives = 5;
-            _level = 0;
+            score = 0;
+            this.updateScoreBoard(SCORE, score);
+            level = 0;
         }
         newLevel() {
-            this.level++;
+            level++;
+            this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
-        /**levelinscreen等待结束时执行
-         * 
-         */
         waitComplete() {
-            this.onkey();
             stage.addChild(ship, ball, shape, ship2, line);
 
-
-            //滤镜(需要开启cacle)
+            //滤镜(需要开启cache)
             // ship.filters=[new createjs.ColorFilter(0,0,0,1,0,0,255,0)];
             // ship.cache(-18,-18,36,36);
 
             //阴影
             // ship.shadow=new createjs.Shadow("#000000",1,1,10);
         }
-
         runGame() {
             // this.rotation(); //计算角度  鼠标跟随
             this.shipControl() //飞船控制
@@ -177,11 +94,7 @@ class Main extends GFrame {
             // this.circle2();//圆形运动坐标旋转版本
             this.circle3(); //圆形运动矩阵版本
             // this.matrixrotation();//矩阵操控对象
-
-
-
         }
-
         rotation() {
             //计算角度
             let dx = stage.mouseX - ship.x,
@@ -361,80 +274,13 @@ class Main extends GFrame {
                 ball.y = line.y + p.y;
             }
         }
+        clear() {
+            super.clear();
 
-        onkey() {
-            document.onkeyup = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        this.leftKeyDown = false;
-                        break;
-                    case 68:
-                        this.rightKeyDown = false;
-                        break;
-                    case 87:
-                        this.upKeyDown = false;
-                        break;
-                    case 83:
-                        this.downKeyDown = false;
-                        break;
-                    case 32:
-                        createjs.Ticker.paused = !createjs.Ticker.paused;
-                        break;
-                    default:
-                }
-            };
-            document.onkeydown = (e) => {
-                switch (e.keyCode) {
-                    case 65:
-                        if (!this.leftKeyDown) {
-                            this.leftKeyDown = true;
+        }
 
-                        }
-                        break;
-                    case 68:
-                        if (!this.rightKeyDown) {
-                            this.rightKeyDown = true;
-
-                        }
-                        break;
-                    case 87:
-                        if (!this.upKeyDown) {
-                            this.upKeyDown = true;
-
-                        }
-                        break;
-                    case 83:
-                        if (!this.downKeyDown) {
-                            this.downKeyDown = true;
-
-                        }
-                        break;
-                    default:
-                }
-            };
-        }
-        get score() {
-            return _score;
-        }
-        set score(val) {
-            _score = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, SCORE, _score));
-        }
-        get level() {
-            return _level;
-        }
-        set level(val) {
-            _level = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.LEVELIN_UPDATE, LEVEL, LEVEL + ' : ' + _level));
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LEVEL, _level));
-        }
-        get lives() {
-            return _lives;
-        }
-        set lives(val) {
-            _lives = val;
-            stage.dispatchEvent(new GFrame.event.DATA_UPDATE(GFrame.event.SCOREBOARD_UPDATE, LIVES, _lives));
-        }
     }
-    window.MyGame = MyGame;
+    MakeThingsMove.loaded=false;
+    MakeThingsMove.loadItem=null;
+    window.MakeThingsMove = MakeThingsMove;
 })();

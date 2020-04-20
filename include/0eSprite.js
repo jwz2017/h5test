@@ -1,20 +1,8 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载********** */
-//     g.preload(Sprite);
-
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;
     var score,level;
+    // var speed=1;
     class Sprite extends Game {
         constructor() {
             super();
@@ -156,6 +144,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL,level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             stage.addChild(this.ma);

@@ -1,17 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载********** */
-//     g.preload(Puzzle);
-//     /*********不加载********** */
-//     // g.initGame(Puzzle);
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
@@ -96,6 +82,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             //分割图片

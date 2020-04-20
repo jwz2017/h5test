@@ -1,17 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载********** */
-//     // g.preload(Colordrop);
-//     /*********不加载********** */
-//     g.initGame(Colordrop);
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;
@@ -56,6 +42,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             //Array随机排序

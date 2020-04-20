@@ -1,17 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载********** */
-//     // g.preload(SuperClick);
-//     /*********不加载********** */
-//     g.initGame(SuperClick);
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
@@ -38,44 +24,23 @@
     class SuperClick extends Game {
         constructor() {
             super();
+            
         }
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
          */
         initScreen() {
-            let width = stage.canvas.width,
-                height = stage.canvas.height;
-
-            mc.style.fontSize = 40; //按钮label字体大小
-
-            this.titleScreen = new BasicScreen();
-            this.titleScreen.createDisplayText('超级点击', width / 2, 300);
-            this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
-            // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-            this.instructionScreen = new BasicScreen();
-            this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
-            this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
-
-            this.levelInScreen = new BasicScreen();
-            this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-            this.gameOverScreen = new BasicScreen();
-            this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
-            this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
-
+           super.initScreen();
+            GFrame.style.SCOREBOARD_HEIGHT=100;
             this.scoreBoard = new ScoreBoard();
-            // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-            this.scoreBoard.creatTextElement(SCORE, '0');
-            this.scoreBoard.creatTextElement(LEVEL, '0');
-            this.scoreBoard.creatTextElement(CLICKS, '0');
-            this.scoreBoard.creatTextElement(NEEDED, '0', 20, 60);
-            this.scoreBoard.creatTextElement(ACHIEVE, '0', 300, 60);
-            this.scoreBoard.createBG(width, 100, '#333');
-            // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
+            this.scoreBoard.createTextElement(SCORE, '0',20,14);
+            this.scoreBoard.createTextElement(LEVEL, '0',320,14);
+            this.scoreBoard.createTextElement(CLICKS, '0',560,14);
+            this.scoreBoard.createTextElement(NEEDED, '0', 20, 60);
+            this.scoreBoard.createTextElement(ACHIEVE, '0', 320, 60);
         }
         buildElement() {
-            // this.onkey()
+            this.onkey()
         }
         newGame() {
             score = 0;
@@ -205,7 +170,7 @@
             
         }
         clear() {
-            super.clear();
+            stage.removeAllChildren();
             balls.splice(0,balls.length);
         }
 

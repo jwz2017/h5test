@@ -1,13 +1,56 @@
 var stage, queue, model, lib;
+window.onload = function () {
+  "use strict";
+  /*************初始化 整个游戏入口*****/
+  var g = new GFrame('canvas');
+  /**********自适应************* */
+  g.adapt();
+  /*********加载（和菜单选一个）********** */
+  // g.preload(PlaySound);
+
+  /****************选择菜单******************* */
+  var text = new createjs.Text("游戏菜单", '58px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+  text.x = 250;
+  text.y = 250;
+  var select = document.getElementById("select1");
+  var domElement = new createjs.DOMElement(select);
+  domElement.x = 220;
+  domElement.y = 350;
+  select.style.display = "block";
+  stage.addChild(domElement, text);
+  select.focus();
+  select.onchange = function () {
+    select.style.display = "none";
+    stage.removeChild(domElement, text);
+    let index = select.selectedIndex;
+    g.preload(eval(select.options[index].value));
+  }
+
+  /***********fps********** */
+  FPS.startFPS(stage);
+};
+
+/*************************GFrame************************************************************************ */
 class GFrame {
   constructor(canvasId) {
     this.waitTime = 0;
     this.waitCount = 40;
     this._systemFunction = this._systemWaitForClose;
-    /*********接收animate影片剪辑播放过程发出的事件。***/
-    // model = new createjs.EventDispatcher();
-
     this._setupStage(canvasId);
+
+    /*********接收animate影片剪辑播放过程发出的事件。***/
+    model = new createjs.EventDispatcher();
+    model.addEventListener(GFrame.event.PAUSE, () => {
+      if (this._currentSystemState == GFrame.state.STATE_GAME_PLAY) {
+        if (createjs.Ticker.paused) {
+          this._systemFunction = this._systemWaitForClose;
+        } else {
+          this._systemFunction = this._systemGamePlay;
+        }
+      } else {
+        createjs.Ticker.paused = false;
+      }
+    });
   }
 
   /**自适应
@@ -15,19 +58,31 @@ class GFrame {
    * @param {boolean} h =true,是否高度适应
    */
   adapt() {
-    let stageWidth = document.documentElement.clientWidth,
-      stageHeight = document.documentElement.clientHeight,
-      gameDiv = document.getElementById("game"),
+    // let stageWidth = document.documentElement.clientWidth,
+    //   stageHeight = document.documentElement.clientHeight;
+    var stageWidth = window.innerWidth;
+    var stageHeight = window.innerHeight;
+    if (typeof stageWidth != "number") {
+      if (document.compatMode == 'CSS1Compat') {
+        stageWidth = document.documentElement.clientWidth;
+        stageHeight = document.documentElement.clientHeight;
+      } else {
+        stageWidth = document.body.clientWidth;
+        stageHeight = document.body.clientHeight;
+      }
+    }
+    var gameDiv = document.getElementById("game"),
       width = stage.canvas.width,
       height = stage.canvas.height,
       stageScale = 1;
-    //0.665
-    if (stageWidth / stageHeight > 0.765) {
+    //0.665  高度自适应
+    if (stageWidth / stageHeight > 0.665) {
       stageScale = stageHeight / height;
       gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-    } else {
+    } else {//宽度自适应
       stageScale = stageWidth / width;
     }
+    
     // stage.canvas.style.width=stage.canvas.width*stageScale+'px';
     // stage.canvas.style.height=stage.canvas.height*stageScale+'px';
     gameDiv.style.transformOrigin = '0 0';
@@ -40,10 +95,14 @@ class GFrame {
    * @param {*} compid 
    */
   preload(GClass) {
+    if (!GClass.loadItem) {
+      this.initGame(GClass);
+      return;
+    }
     if (!queue) {
-      queue=new createjs.LoadQueue();
+      queue = new createjs.LoadQueue();
       queue.installPlugin(createjs.Sound); //注册声音插件
-      this.loaderBar=new LoaderBar();
+      this.loaderBar = new LoaderBar();
       this.loaderBar.x = (stage.canvas.width - this.loaderBar.getBounds().width) / 2;
       this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
     }
@@ -51,8 +110,7 @@ class GFrame {
 
     if (GClass.loadItem instanceof Array) {
       queue.loadManifest(GClass.loadItem);
-    } 
-    else if (typeof GClass.loadItem === "string") {
+    } else if (typeof GClass.loadItem === "string") {
       let comp = AdobeAn.getComposition(GClass.loadItem);
       queue.on('fileload', this.onFileLoad, this, false, comp);
       lib = comp.getLibrary();
@@ -66,9 +124,9 @@ class GFrame {
     queue.on('progress', (e) => {
       this.loaderBar.startLoad(e.progress);
     });
-
-
-
+    queue.on('error', () => {
+      console.log("loaderror");
+    });
   }
 
   /**初始化屏幕元素
@@ -97,22 +155,19 @@ class GFrame {
     stage.canvas.style.display = "block"; //显示canvas
     stage.enableMouseOver(); //开启鼠标经过事件
     createjs.Touch.enable(stage, true, false); //开启触摸
+
     //createjs.MotionGuidePlugin.install(); //使用引导层必须
+
     // createjs.FlashAudioPlugin.swfPath = "plugin/FlashAudioPlugin";//安装flash插件
     // createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);//安装flash插件
 
     // createjs.Ticker.framerate = 65; //设置帧频
     // createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
-
     createjs.Ticker.on("tick", (e) => {
-      if (!e.paused || this._currentSystemState != GFrame.state.STATE_GAME_PLAY) {
-        this._systemFunction();
-      }
-      stage.update(); //创建全局舞台刷新
+      this._systemFunction();
+      stage.update();
     });
-
-
   }
   //选择游戏状态
   _switchSystemState(stateval) {
@@ -177,9 +232,7 @@ class GFrame {
   }
   //设置新等级状态
   _systemNewLevel() {
-    // document.onkeydown = null;
-    // document.onkeyup = null;
-    if(this._lastSystemState===GFrame.state.STATE_GAME_PLAY)this.game.clear();
+    if (this._lastSystemState === GFrame.state.STATE_GAME_PLAY) this.game.clear();
     this.game.newLevel();
     this._switchSystemState(GFrame.state.STATE_LEVEL_IN);
   }
@@ -191,10 +244,8 @@ class GFrame {
   }
   //结束界面状态
   _systemGameOver() {
-    // document.onkeydown = null;
-    // document.onkeyup = null;
     this.game.clear();
-    // stage.removeAllChildren();
+    stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
     this.okButton = this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
@@ -236,16 +287,24 @@ GFrame.style = {
   TITLE_TEXT_SIZE: 36,
   TITLE_TEXT_COLOR: "#FF0000",
   SIDE_BUFFWIDTH: 10,
-  SCORE_TEXT_SIZE: 32,
   SCORE_TEXT_COLOR: "#FFFFFF",
+  // SCORE_BUFF: 160,
+  //分数板样式
+  SCORE_TEXT_SIZE: 36,
+  SCORE_BUFF: 2,
   SCOREBOARD_HEIGHT: 70,
-  SCORE_BUFF: 160
+  SCOREBOARD_WIDTH: 750,
+  SCOREBOARD_COLOR: "#333",
+  SCOREBOARD_FONTFAMILY: "Calibri"
+  // "Microsoft YaHei"
+
 };
 GFrame.event = {
   GAME_OVER: "gameover",
   NEW_LEVEL: "newlevel",
   WAIT_COMPLETE: "waitcomplete",
   OK_BUTTON: "okbutton",
+  PAUSE: "pause"
 };
 GFrame.state = {
   STATE_WAIT_FOR_CLOSE: "statewaitforclose",
@@ -263,7 +322,7 @@ GFrame.state = {
 class BasicScreen extends createjs.Container {
   constructor() {
     super();
-    this.displayText=new createjs.Text();
+    this.displayText = new createjs.Text();
   }
   /**创建显示文本
    * 
@@ -272,7 +331,7 @@ class BasicScreen extends createjs.Container {
    * @param {number} ypos 文本y坐标
    */
   createDisplayText(text, xpos, ypos) {
-    this.displayText.text=text;
+    this.displayText.text = text;
     this.displayText.x = xpos;
     this.displayText.y = ypos;
     this.displayText.textAlign = "center";
@@ -307,103 +366,156 @@ class BasicScreen extends createjs.Container {
 class SideBysideScore extends createjs.Container {
   constructor(labeText, valText) {
     super();
-    this._label = new createjs.Text(labeText + ' ' + ':', GFrame.style.SCORE_TEXT_SIZE + 'px Microsoft YaHei', GFrame.style.SCORE_TEXT_COLOR);
-    this._value = new createjs.Text(valText, GFrame.style.SCORE_TEXT_SIZE + 'px Microsoft YaHei', GFrame.style.SCORE_TEXT_COLOR);
-    this._value.y = 2;
+    this._label = new createjs.Text(labeText + ':', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+    this._value = new createjs.Text(valText, GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+    this._value.y = 1;
     this._label.x = 0;
-    this._value.x = GFrame.style.SIDE_BUFFWIDTH + this._label.getBounds().width;
+    this._value.x = GFrame.style.SCORE_BUFF + this._label.getMeasuredWidth();
     this.addChild(this._label, this._value);
   }
-  setValText(str) {
-    this._value.text = str;
+  setValText(val) {
+    this._value.text = val;
+  }
+}
+class SideBysideScoreBitmap extends createjs.Container {
+  /**
+   * 
+   * @param {*} key 引索也是label
+   * @param {*} value 
+   * @param {*} map 图片资源
+   * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
+   * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
+   */
+  constructor(key, val, map) {
+    super();
+    this.sheet = map.valsheet;
+    this.value = new createjs.BitmapText(val, this.sheet);
+    this.offsetY = this.value.getBounds().height / 2;
+    if (map.labsheet) {
+      this.label = new createjs.Sprite(map.labsheet, map.labani);
+      // this.label.paused=true;
+      this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
+      this.valueypos = this.label.getBounds().height / 2;
+    } else if (map.labid) {
+      this.label = new createjs.Bitmap(queue.getResult(map.labid));
+      this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
+      this.valueypos = this.label.getBounds().height / 2;
+    } else {
+      this.label = new createjs.Text(key + ' :', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+      this.valuexpos = this.label.getMeasuredWidth() + GFrame.style.SCORE_BUFF;
+      this.valueypos = this.label.getMeasuredHeight() / 2;
+    }
+    this.value.x = this.valuexpos;
+    this.value.y = this.valueypos - this.offsetY;
+    this.addChild(this.label, this.value);
+  }
+  setValText(val) {
+    this.removeChild(this.value);
+    this.value = new createjs.BitmapText(val.toString(), this.sheet);
+    this.value.x = this.valuexpos;
+    this.value.y = this.valueypos - this.offsetY;
+    this.value.letterSpacing = 4;
+    this.addChild(this.value);
+    // this.value.scaleX=this.value.scaleY=0.5;
   }
 }
 
 class ScoreBoard extends createjs.Container {
-  constructor() {
+  /**
+   * 分数板
+   * @param {*} xpos 
+   * @param {*} ypos 
+   * @param {*} bg 背景图
+   * 可选：默认"shape" 
+   * {sheet:spritesheet, ani:sprite的animation}
+   * {id:bitmap的id}
+   * null
+   */
+  constructor(xpos = 0, ypos = 0, bg = "shape") {
     super();
+    this.x = xpos;
+    this.y = ypos;
     this._textElements = {};
+    if (!bg) {
+      return;
+    } else if (bg == "shape") {
+      this.scoreBar = new createjs.Shape();
+      this.scoreBar.graphics.beginFill(GFrame.style.SCOREBOARD_COLOR)
+        .drawRect(0, 0, GFrame.style.SCOREBOARD_WIDTH, GFrame.style.SCOREBOARD_HEIGHT);
+      this.addChild(this.scoreBar);
+    } else if (bg.sheet) {
+      this.addChild(this.scoreBar);
+      this.scoreBar = new createjs.Sprite(bg.sheet, bg.ani);
+      this.addChild(this.scoreBar);
+    } else {
+      this.scoreBar = new createjs.Bitmap(queue.getResult(bg.id));
+      this.addChild(this.scoreBar);
+    }
+
   }
-  /**创建背景色
-   * 
-   * @param {number} width 宽度
-   * @param {number} height 高度
-   * @param {string} color 颜色
+  /**
+   * 创建分数元素
+   * @param {String} key 
+   * @param {String} value 
+   * @param {*} xpos 
+   * @param {*} ypos 
+   * @param {{}} map 图片资源
+   * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
+   * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
    */
-  createBG(width, height, color) {
-    let board = new createjs.Shape();
-    board.graphics.beginFill(color).drawRect(0, 0, width, height);
-    board.cache(0, 0, width, height);
-    this.addChildAt(board, 0);
-  }
-  /**创建分数元素
-   * 
-   * @param {string} key 分数引索
-   * @param {SideBysideScore} obj 
-   * @param {number} xpos 分数元素x坐标
-   * @param {number} ypos 分数元素y坐标
-   */
-  creatTextElement(key, val, xpos, ypos) {
-    let obj = new SideBysideScore(key, val);
+  createTextElement(key, val, xpos, ypos, map) {
+    if (map) {
+      var obj = new SideBysideScoreBitmap(key, val, map);
+    } else {
+      var obj = new SideBysideScore(key, val);
+    }
     this._textElements[key] = obj;
-    obj.x = xpos || (this.getBounds() ? this.getBounds().width + GFrame.style.SCORE_BUFF : 20);
-    obj.y = ypos || 20;
+    obj.x = xpos;
+    obj.y = ypos;
     this.addChild(obj);
-
   }
-  /**闪烁分数
-   * 
-   * @param {array} key 索引数组
+  /**
+   * 跟新分数板
+   * @param {*} key 
+   * @param {*} val 
    */
-  flicker(key) {
-    setInterval(() => {
-      key.forEach((item) => {
-        this._textElements[item].alpha = this._textElements[item].alpha === 1 ? 0 : 1;
-      })
-    }, 800);
-
-  }
-
   update(key, val) {
     this._textElements[key].setValText(val);
   }
 }
 /***************************************游戏基类****************************** */
 const SCORE = "score",
-      LEVEL = "level";
+  LEVEL = "level",
+  LIEVES="lieves"
 class Game {
   constructor() {
-    this.initScreen();
     this.buildElement();
+    this.initScreen();
   }
   initScreen() {
     let width = stage.canvas.width,
       height = stage.canvas.height;
-
-    mc.style.fontSize = 40; //按钮label字体大小
-
+      // height = document.documentElement.clientHeight;
+    mc.style.fontSize = 40; //mc组件字体大小
     this.titleScreen = new BasicScreen();
-    this.titleScreen.createDisplayText('开始界面5', width / 2, 300);
-    this.titleScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'start', 300, 60);
+    this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
+    this.titleScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'start', 300, 60);
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
 
     this.instructionScreen = new BasicScreen();
-    this.instructionScreen.createDisplayText('介绍界面', width / 2, 300);
-    this.instructionScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'ok', 300, 60);
+    this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
+    this.instructionScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'ok', 300, 60);
 
     this.levelInScreen = new BasicScreen();
     this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
 
     this.gameOverScreen = new BasicScreen();
-    this.gameOverScreen.createDisplayText('结束界面', width / 2, 300);
-    this.gameOverScreen.createOkButton((width - 300) / 2, height / 2 + 100, 'gameover', 300, 60);
+    this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
+    this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'gameover', 300, 60);
 
-    this.scoreBoard = new ScoreBoard();
-    // this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
-    this.scoreBoard.creatTextElement(SCORE, '0');
-    this.scoreBoard.creatTextElement(LEVEL, '0');
-    this.scoreBoard.createBG(width, GFrame.style.SCOREBOARD_HEIGHT, '#333');
-    // this.scoreBoard.flicker([PAUSE]);//闪烁分数版元素
+    // this.scoreBoard = new ScoreBoard();
+    // this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
+    // this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
   }
   newGame() {
 
@@ -424,14 +536,13 @@ class Game {
 
   }
   clear() {
-    stage.removeAllChildren();
     
   }
-  updateScoreBoard(key,val){
-    this.scoreBoard.update(key,val);        
+  updateScoreBoard(key, val) {
+    this.scoreBoard.update(key, val);
   }
-  updateLevelInScreen(val){
-    this.levelInScreen.setText("level: "+val);
+  updateLevelInScreen(val) {
+    this.levelInScreen.setText("level: " + val);
   }
   onkey() {
     document.onkeyup = (e) => {
@@ -450,6 +561,7 @@ class Game {
           break;
         case 32:
           createjs.Ticker.paused = !createjs.Ticker.paused;
+          model.dispatchEvent(GFrame.event.PAUSE);
           break;
         default:
       }
@@ -484,5 +596,5 @@ class Game {
       }
     };
   }
-  
+
 }

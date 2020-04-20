@@ -1,23 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载手动********** */
-//     // g.preload(PlaySound,[{
-//     //     id: "butterfly",
-//     //     src: "assets/butterfly.png"
-//     // }]);
-
-//     /*********animate加载*******/
-//     g.preload(PlaySound);
-//     /*********不加载********** */
-//     // g.initGame(PlaySound)
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;
@@ -36,6 +16,7 @@
             /**
              * 使用interrupt_any时，要再预加载lib里设置data:"1"：一个声音只能再一个通道里播放。
              */
+            mc.style.fontSize=38;
             btn1 = new PushButton(null, "button", ()=>{
                 sound=createjs.Sound.play('p',{interrupt:createjs.Sound.INTERRUPT_ANY});
             }, 100, 200,150,60);
@@ -46,8 +27,12 @@
              */
             //sound是AbstractSoundInstance类，是具体的声音控制
             btn2=new PushButton(null,"music",function(){
-                if(sound) sound.destroy();
-                sound=createjs.Sound.play("p",{interrupt:createjs.Sound.INTERRUPT_ANY});
+                if(sound) 
+                {sound.destroy();
+                
+                    console.log(sound);//destroy后sound依然存在。所以错误警告
+                }
+                // sound=createjs.Sound.play("p",{interrupt:createjs.Sound.INTERRUPT_ANY});
                     
             },100,300,150,60);
 
@@ -67,6 +52,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL,level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             stage.addChild(btn1,btn2,btn3);

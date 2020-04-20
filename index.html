@@ -4,17 +4,17 @@
   <meta charset="utf-8">
 
   <!-- 手机宽带自适应，width=750为设计宽度,不用adapt -->
-  <!-- <meta name="viewport" content="width=750,user-scalable=no"/> -->
+  <meta name="viewport" content="width=750,user-scalable=no,initial-scale=1"/>
   
 
   <!-- 设置高度自适应，居中等，需要adapt() -->
-  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
   
   <!-- <meta name="apple-mobile-web-app-capable" content="no"> -->
   <style>
     * {
       margin: 0;
-      padding: 0;
+      /* padding: 0; */
     }
      select{
       width: auto;
@@ -22,6 +22,10 @@
       padding:0 2% ;
        background: #eebeb3; 
     } 
+    select:focus option:hover{
+      color: white;
+      background-image: linear-gradient(#726512,#6d621e);
+    }
     /* .open_btn{
       color: #000000;
       font-size: 50px;
@@ -50,23 +54,27 @@
   <script src="lib.js"></script>
   <script src="assets/ma.js"></script>
   
-  <script src="include/main.js"></script>
-  <script src="include/0move.js"></script>
-  <script src="include/0playSound.js"></script>
-  <script src="include/0sprite.js"></script>
-  <script src="include/0withDom.js"></script>
-  <script src="include/1bitmapText.js"></script>
-  <script src="include/1bounce.js"></script>
-  <script src="include/1colordrop.js"></script>
-  <script src="include/1match.js"></script>
-  <script src="include/1puzzle.js"></script>
-  <script src="include/1superClick.js"></script>
+  <script src="include/0aMove.js"></script>
+  <script src="include/0bPlaySound.js"></script>
+  <script src="include/0cDomTest.js"></script>
+  <script src="include/0dBitmapText.js"></script>
+  <script src="include/0eSprite.js"></script>
+  <script src="include/1aSuperClick.js"></script>
+  <script src="include/1bColordrop.js"></script>
+  <script src="include/1cBounce.js"></script>
+  <script src="include/1dPuzzle.js"></script>
+  <script src="include/1eMatch.js"></script>
+  <script src="include/1fFakezee.js"></script>
+  <script src="include/2aCannon.js"></script>
+  <script src="include/2bMakeThingsMove.js"></script>
+
   <!-- <script src="plugin/flashaudioplugin.min.js"></script> -->
 </head>
 
 <body style="background-color:#333">
   
   <div id="game" style="position: absolute">
+    <!-- fps -->
     <p id="fps" style="font-size: 32px;font-family: Arial;color: #030303 ;"></p>
     
     <!-- 加入dom到舞台 -->
@@ -77,32 +85,24 @@
     <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
     <input type="text" id="inputText" class="input_text" placeholder="请输入姓名" style="display: none;width: 170px;height: 50px;font-size: 30px">
 
-
-    <!-- canvas width,height (750,1206) -->
-    <canvas id="canvas" width="750" height="980" style="background-color:#d39b8d;">
+    <!-- 菜单选项 -->
+    <select id="select1" size="8" style="display:none;font-size: 48px;border: 4px solid #6d6314;background: transparent;width: 300px">
+      <option value="Move">缓动测试</option>
+      <option value="PlaySound">声音测试</option>
+      <option value="DomTest">dom协作</option>
+      <option value="BitmapText">位图文本</option>
+      <option value="Sprite">sprite测试</option>
+      <option value="SuperClick">超级点击</option>
+      <option value="Colordrop">颜色拖动</option>
+      <option value="Bounce">弹球游戏</option>
+      <option value="Puzzle">拼图游戏</option>
+      <option value="Match">记忆翻牌</option>
+      <option value="Fakezee">投骰子</option>
+    </select>
+    
+    <canvas id="canvas" width="750" height="1206" style="background-color:#d39b8d;">
     </canvas>
-    <select id="select1" size="1">
-      <option value="0">base</option>
-      <option value="1">move</option>
-      <option value="2">sound</option>
-      <option value="3">sprite</option>
-      <option value="4">withdom</option>
-      <option value="5">bmText</option>
-      <option value="6">bounce</option>
-      <option value="7">colorDrop</option>
-      <option value="8">match</option>
-      <option value="9">pazzle</option>
-      <option value="10">spclick</option>
-    </select>
-    <select id="select2">
-      <option value="01">base1</option>
-      <option value="11">move1</option>
-      <option value="21">sound1</option>
-      <option value="31">sprite1</option>
-      <option value="41">withdom1</option>
-      <option value="51">bmText1</option>
-      <option value="61">bounce1</option>
-    </select>
+    
   </div>
   
 </body>

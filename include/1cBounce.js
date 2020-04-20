@@ -1,15 +1,3 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********不加载********** */
-//     g.initGame(Bounce);
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;
@@ -34,7 +22,7 @@
         constructor() {
             super();
             this.titleScreen.setText("弹球游戏");
-            this.scoreBoard.creatTextElement(LIVES,"5");
+            this.scoreBoard.createTextElement(LIVES,"5",600,14);
             this.scoreBoard.y = stage.canvas.height - GFrame.style.SCOREBOARD_HEIGHT;
         }
         /**建立游戏元素游戏初始化
@@ -61,6 +49,7 @@
         newLevel() {
             level++;
             this.updateScoreBoard(LEVEL, level);
+            this.updateLevelInScreen(level);
         }
         waitComplete() {
             let w = stage.canvas.width;
