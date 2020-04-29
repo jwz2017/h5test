@@ -1,8 +1,10 @@
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
-    var score, level;
-    const PUZZLE_COLUMNS = 5,
+    var level;
+    const 
+      LEVEL = "level",
+    PUZZLE_COLUMNS = 5,
         PUZZLE_ROWS = 4,
         PUZZLE_SIZE = 150;
     var selectedPieces = [],
@@ -12,6 +14,10 @@
         constructor() {
             super();
             this.titleScreen.setText("拼图游戏");
+        }
+        createScoreBoard(){
+            this.scoreBoard = new ScoreBoard(0,0,null);
+            this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
         }
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
@@ -73,8 +79,6 @@
             selectedPieces = [];
         }
         newGame() {
-            score = 0;
-            this.updateScoreBoard(SCORE, score);
             level = 0;
             selectedPieces=[];
             pieces=[];

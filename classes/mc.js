@@ -42,66 +42,7 @@ mc.style = {
   }
 };
 //---------------------------------------------------图形----------------------------------------------------------------------
-class Ball extends createjs.Shape {
-  /**
-   * 
-   * @param {[string]} color #ff0000
-   * @param {[number]} radius 15
-   */
-  constructor(color = "#ff0000", radius = 15) {
-    super();
-    this.color = color;
-    this.cursor = "pointer";
-    this.radius = radius;
-    this.vx = this.vy = 0;
-    this._redraw();
-    this.setBounds(-this.radius - mc.style.strokeStyle, -this.radius - mc.style.strokeStyle, 2 * this.radius + 2 * mc.style.strokeStyle, 2 * this.radius + 2 * mc.style.strokeStyle);
-  }
-  _redraw() {
-    this.graphics.clear();
-    this.graphics.setStrokeStyle(mc.style.strokeStyle).beginStroke('#ffffff').beginFill(this.color)
-      // .beginRadialGradientFill(["#f00","#00f"],[0,1],-20,0,0,-10,0,this.radius)
-      .drawCircle(0, 0, this.radius).endFill();
-  }
-}
-//飞船
-class Ship extends createjs.Shape {
-  /**
-   *飞船
-   * @param {[number]} radius 10
-   * @param {[string]} color "#000000"
-   */
-  constructor(radius, color) {
-    super();
-    this.radius = radius || 10;
-    this.color = color || mc.style.borderColor;
-    this._showFlame = false;
-    this._redraw();
-  }
 
-  _redraw() {
-    this.graphics.clear();
-    this.graphics.setStrokeStyle(1).beginStroke(this.color).moveTo(this.radius, 0)
-      .lineTo(-this.radius, this.radius).lineTo(-this.radius / 2, 0).lineTo(-this.radius, -this.radius)
-      .lineTo(this.radius, 0);
-    if (this._showFlame) {
-      this.graphics.moveTo(-this.radius * 0.75, -this.radius / 2)
-        .lineTo(-this.radius * 1.5, 0)
-        .lineTo(-this.radius * 0.75, this.radius / 2);
-    }
-  }
-  get showFlame() {
-    return this._showFlame;
-  }
-  /**
-   * 设置尾巴
-   * val:boolen
-   */
-  set showFlame(val) {
-    this._showFlame = val;
-    this._redraw();
-  }
-}
 //进度条
 class LoaderBar extends createjs.Container {
   /**
@@ -126,7 +67,7 @@ class LoaderBar extends createjs.Container {
     this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
     this.titleText.textAlign="center";
     this.titleText.x=width/2;
-    this.titleText.y=-35;
+    this.titleText.y=-45;
     //数字
     this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
     this.text.textAlign="center";
@@ -148,27 +89,12 @@ class LoaderBar extends createjs.Container {
   startLoad(percentLoaded) {
     this.percentLoaded=percentLoaded;
     if (this.percentLoaded >= 1) {
-      // console.log(this.percentLoaded,this.parent);
       this.percentLoaded=1;
-      // this.parent.removeChild(this);
     }
     this._redraw();
   }
 }
-//墙
-class Wall extends createjs.Shape {
-  constructor(thickness) {
-    super();
-    this._thickness = thickness;
-    this._redraw();
-  }
-  _redraw() {
-    this.graphics.clear();
-    this.graphics.beginFill('#333').drawRect(0, 0, this._thickness, stage.canvas.height).endFill();
-    this.graphics.beginFill('#333').drawRect(stage.canvas.width - this._thickness, 0, this._thickness, stage.canvas.height).endFill();
-    this.graphics.beginFill('#333').drawRect(0, 0, stage.canvas.width, this._thickness).endFill();
-  }
-}
+
 //---------------------------------------------------Graphics---------------------------------------------------------------
 class Rect extends createjs.Graphics {
   constructor() {
@@ -434,8 +360,8 @@ class PushButtonShape extends ButtonShape {
 class ArrowButtonShape extends PushButtonShape {
   constructor(parent, handle, width = 20, height = 20, arrowRotation = 0, GClass) {
     super(parent, handle, width, height, GClass)
-    this.arrowWidth = 10;
-    this.arrowHeight = 5;
+    this.arrowWidth = width/2;
+    this.arrowHeight = height/4;
     this.arrowRotation = arrowRotation;
   }
   redraw() {
@@ -452,6 +378,7 @@ class ArrowButtonShape extends PushButtonShape {
       [0, -this.arrowHeight / 2],
       [this.arrowWidth / 2, this.arrowHeight / 2],
       [-this.arrowWidth / 2, this.arrowHeight / 2],
+      [0,-this.arrowHeight/2]
     ]);
   }
   get arrowRotation() {
@@ -469,7 +396,7 @@ class CheckBoxShape extends ButtonShape {
    * 
    * @param {Container} parent 容器
    * @param {Function} handle 点击事件
-   * @param {boolen} selected 选择状态
+   * @param {boolen} selected =false选择状态
    * @param {number} width =15 宽度
    * @param {*} height 
    * @param {*} GClass 
@@ -726,8 +653,8 @@ class CheckBox extends Component {
     this._positionLabel();
   }
   _positionLabel() {
-    this._label.x = this.shape.width + 5;
-    this._label.y = this.shape.height / 2 - 2;
+    this._label.x = this.shape.width + 8;
+    this._label.y = this.shape.height / 2 +1;
   }
   get selected() {
     return this.shape.selected;
@@ -814,12 +741,14 @@ class Slider extends Component {
   _positionLabel() {
     if (this.shape._isVSlider) {
       this._label.x = this.shape.width / 2;
-      this._label.y = this.shape.height;
+      this._label.y = this.shape.height+8;
       this._valueLabel.x = this.shape.width / 2;
+      this._valueLabel.y=-8;
     } else {
-      this._label.y = this.shape.height / 2 - 2;
-      this._valueLabel.x = this.shape.width;
-      this._valueLabel.y = this.shape.height / 2;
+      this._label.y = this.shape.height / 2+3 ;
+      this._label.x=-8;
+      this._valueLabel.x = this.shape.width+8;
+      this._valueLabel.y = this.shape.height / 2+3;
     }
   }
   get value() {
@@ -1023,16 +952,16 @@ class ScrollBar extends createjs.Container {
 class ScrollContainer extends createjs.Container {
   /**
    * [constructor description]
-   * @param {[string]} canvas [description]
+   * @param {[string]} canvas [stage]
    */
-  constructor(canvas,parent,x,y,width=400,height=400) {
+  constructor(canvas,parent,x,y,width=400,height=400,containerWidth=0,containerHeight=0) {
     super();
     if (parent) parent.addChild(this);
     this.x=x;
     this.y=y;
 
     this.container = new createjs.Container();
-    this.container.setBounds(0,0,0,0);
+    this.container.setBounds(0,0,containerWidth,containerHeight);
     this.addChild(this.container)
 
     this.scrollBarV = new ScrollBar(this,0,0,0,mc.style.SCROLL_BAR_SIZE,true);
@@ -1061,7 +990,6 @@ class ScrollContainer extends createjs.Container {
     this.addChild = child => {
       this.container.addChild(child)
     }
-
     this.setSize(width,height);
   }
 
@@ -1097,12 +1025,12 @@ class ScrollContainer extends createjs.Container {
     this.container.setBounds(0, 0, size.width, size.height)
     this.scrollBarH.contentLength = size.width
     this.scrollBarV.contentLength = size.height
-    if (size.width<this.getBounds().width-mc.style.SCROLL_BAR_SIZE) {
+    if (size.width<=this.getBounds().width-mc.style.SCROLL_BAR_SIZE) {
       this.scrollBarH.visible=false;
     }else{
       this.scrollBarH.visible=true;
     }
-    if (size.height<this.getBounds().height-mc.style.SCROLL_BAR_SIZE) {
+    if (size.height<=this.getBounds().height-mc.style.SCROLL_BAR_SIZE) {
       this.scrollBarV.visible=false;
     }else{
       this.scrollBarV.visible=true;
@@ -1112,8 +1040,8 @@ class ScrollContainer extends createjs.Container {
   setSize(width,height){
     this.setBounds(0,0,width,height);
     this.contentSize={
-      width: Math.max(width-mc.style.SCROLL_BAR_SIZE, this.contentSize.width),
-      height: Math.max(height-mc.style.SCROLL_BAR_SIZE, this.contentSize.height)
+      width: Math.max(width-mc.style.SCROLL_BAR_SIZE,this.container.getBounds().width),
+      height: Math.max(height-mc.style.SCROLL_BAR_SIZE, this.container.getBounds().height)
     };
     
     this.container.mask = new createjs.Shape;

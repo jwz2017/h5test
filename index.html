@@ -1,65 +1,109 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
-  <!-- 设置高度自适应，居中等，需要adapt() -->
-  <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  
+  <!-- 自适应-->
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   <style>
     * {
       margin: 0;
     }
-    select:focus option:hover{
+
+    /* 抖动 */
+    /* body{
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    } */
+    /* 抖动元素 */
+    #testTxt {
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    #select1:focus option:hover {
       color: white;
-      background-image: linear-gradient(#726512,#6d621e);
+      background-image: linear-gradient(#726512, #6d621e);
+      font-weight: bold;
+    }
+
+    #select1 {
+      display: none;
+      font-family: serif;
+      font-size: 20px;
+      border: 1px solid #6d6314;
+      background: transparent;
+      width: 200px;
+      cursor: pointer;
+    }
+
+    #testTxt{
+      display: none;
+      width: 200px;
+      height: 300px;
+      color: #ff0000;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    #inputText{
+      display: none;
+      width: 170px;
+      height: 50px;
+      font-size: 30px;
+    }
+
+    #canvas {
+      display: none;
+      background-color: #9eb195;
     }
   </style>
 
   <title>h5Test</title>
   <script src="classes/createjs.min.js"></script>
+  <script src="classes/GraphicsUtils.js"></script>
   <script src="classes/gframe.js"></script>
   <script src="classes/mc.js"></script>
   <script src="classes/FPS.js"></script>
   <script src="classes/easing.js"></script>
   <script src="classes/BasePeople.js"></script>
   <script src="classes/utils.js"></script>
+  <script src="classes/ScaleBitmap.js"></script>
   <script src="lib.js"></script>
-  <script src="assets/ma.js"></script>
+  <script src="assets/move/ma.js"></script>
   
-  <script src="include/0aMove.js"></script>
-  <script src="include/0bPlaySound.js"></script>
-  <script src="include/0cDomTest.js"></script>
-  <script src="include/0dBitmapText.js"></script>
-  <script src="include/0eSprite.js"></script>
+  <script src="include/0aBase.js"></script>
+  <script src="include/0sprite.js"></script>
   <script src="include/1aSuperClick.js"></script>
   <script src="include/1bColordrop.js"></script>
   <script src="include/1cBounce.js"></script>
   <script src="include/1dPuzzle.js"></script>
   <script src="include/1eMatch.js"></script>
   <script src="include/1fFakezee.js"></script>
-  <script src="include/2aCannon.js"></script>
-  <script src="include/2bMakeThingsMove.js"></script>
+  <script src="include/2aMove.js"></script>
+  <script src="include/2bCannon.js"></script>
 </head>
 
-<body style="background-color:#333">
-  <div id="game" style="position: absolute">
-    <!-- fps -->
-    <p id="fps" style="font-size: 32px;font-family: Arial;color: #030303 ;"></p>
-    
-    <!-- 加入dom到舞台 -->
-    <p id="testTxt" style="width:200px;color: #ff0000;display: none;cursor: pointer">CreateJS是基于HTML5开发的一套模块化的库和工具。
-    基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
-    
-    <!-- 加入dom到animate -->
-    <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-    <input type="text" id="inputText" class="input_text" placeholder="请输入姓名" style="display: none;width: 170px;height: 50px;font-size: 30px">
+<body style="background-color:#333;">
+  <!-- 菜单选项 -->
+  <div id="dom" style="position: absolute">
+    <div id="game" style="position: absolute;">
+      <!-- 加入dom到舞台随舞台缩放 -->
+      <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
+        基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
 
-    <!-- 菜单选项 -->
-    <select id="select1" size="8" style="display:none;font-size: 48px;border: 4px solid #6d6314;background: transparent;width: 300px">
-      <option value="Move">缓动测试</option>
-      <option value="PlaySound">声音测试</option>
-      <option value="DomTest">dom协作</option>
-      <option value="BitmapText">位图文本</option>
+      <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
+      
+      <input type="text" id="inputText" placeholder="请输入姓名">
+
+      <canvas id="canvas" width="750" height="1206">
+      </canvas>
+    </div>
+    <!-- 放置不缩放的dom -->
+    <select id="select1" size="10">
+      <option value="Base">基础类测试</option>
       <option value="Sprite">sprite测试</option>
       <option value="SuperClick">超级点击</option>
       <option value="Colordrop">颜色拖动</option>
@@ -67,13 +111,9 @@
       <option value="Puzzle">拼图游戏</option>
       <option value="Match">记忆翻牌</option>
       <option value="Fakezee">投骰子</option>
+      <option value="Move">运动计算</option>
     </select>
-    
-    <canvas id="canvas" width="750" height="1206" style="background-color:#d39b8d;">
-    </canvas>
-    
   </div>
-  
 </body>
 
 </html>

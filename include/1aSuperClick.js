@@ -2,7 +2,9 @@
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
     var score, level;
-    const LIVES = "lives",
+    const SCORE = "score",
+      LEVEL = "level",
+        LIVES = "lives",
         CLICKS = "clicks",
         NEEDED = "needed",
         ACHIEVE = "achieve";

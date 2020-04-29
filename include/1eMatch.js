@@ -1,19 +1,8 @@
-// window.onload = function () {
-//     "use strict";
-//     /*************初始化 整个游戏入口*****/
-//     var g = new GFrame('canvas');
-//     /**********自适应************* */
-//     g.adapt();
-//     /*********预加载********** */
-//     g.preload(Match);
-//     /***********fps********** */
-//     FPS.startFPS(stage);
-// };
-
 (function () {
     "use strict";
     //游戏变量;
-    var score, level;
+    var  level;
+    const LEVEL = "level";
     var faces, cards, selectedCards, matches;
     class Match extends Game {
         constructor() {
@@ -21,6 +10,10 @@
             this.titleScreen.setText("查找游戏");
             
         }
+        createScoreBoard() {
+            this.scoreBoard = new ScoreBoard(0,0,null);
+            this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
+          }
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
          */
@@ -28,8 +21,6 @@
             // this.onkey()
         }
         newGame() {
-            score = 0;
-            this.updateScoreBoard(SCORE, score);
             level = 0;
             selectedCards = [];
             matches = 0;
@@ -51,6 +42,7 @@
             for (let i = 0; i < faces.length; i++) {
                 face = faces[i],
                     card1 = new Card(face),
+                    // card2=card1.clone(true);
                     card2 = new Card(face);
                 card1.key = card2.key = faces[i];
                 cards.push(card1, card2);
@@ -143,28 +135,28 @@
     Match.loaded=false;
     Match.loadItem=[{
         id: "back",
-        src: "assets/back.png"
+        src: "assets/match/back.png"
     }, {
         id: "card",
-        src: "assets/card.png"
+        src: "assets/match/card.png"
     }, {
         id: "garlic",
-        src: "assets/garlic.png"
+        src: "assets/match/garlic.png"
     }, {
         id: "onion",
-        src: "assets/onion.png"
+        src: "assets/match/onion.png"
     }, {
         id: "pepper",
-        src: "assets/pepper.png"
+        src: "assets/match/pepper.png"
     }, {
         id: "potato",
-        src: "assets/potato.png"
+        src: "assets/match/potato.png"
     }, {
         id: "spinach",
-        src: "assets/spinach.png"
+        src: "assets/match/spinach.png"
     }, {
         id: "tomato",
-        src: "assets/tomato.png"
+        src: "assets/match/tomato.png"
     }];
     window.Match = Match;
 

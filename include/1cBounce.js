@@ -3,7 +3,9 @@
     //游戏变量;
     var score, level,lives;
 
-    const LIVES="lives";
+    const SCORE = "score",
+      LEVEL = "level",
+    LIVES="lives";
 
     var wall,
     paddleHits = 0,
@@ -15,15 +17,21 @@
         PUCK_RADIUS = 5,
         PUCK_SPEED = 5,
         PADDLE_WIDTH = 100,
-        PADDLE_HEIGHT = 10,
+        PADDLE_HEIGHT = 20,
         PADDLE_SPEED = 15,
         PADDLE_HITS_MAX = 7;
     class Bounce extends Game {
         constructor() {
             super();
             this.titleScreen.setText("弹球游戏");
-            this.scoreBoard.createTextElement(LIVES,"5",600,14);
             this.scoreBoard.y = stage.canvas.height - GFrame.style.SCOREBOARD_HEIGHT;
+        }
+        createScoreBoard(){
+            GFrame.style.SCOREBOARD_COLOR="#555";
+            this.scoreBoard = new ScoreBoard();
+            this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
+            this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
+            this.scoreBoard.createTextElement(LIVES,"5",600,14);
         }
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
@@ -34,7 +42,7 @@
             paddle = new createjs.Shape();
             paddle.graphics.beginFill('#006600').drawRect(0, 0, PADDLE_WIDTH, PADDLE_HEIGHT);
             puck = new createjs.Shape();
-            puck.graphics.beginFill('#ffffff').drawCircle(0, 0, PUCK_RADIUS);
+            puck.graphics.beginFill('#000000').drawCircle(0, 0, PUCK_RADIUS);
             this.brick = new Brick();
         }
         newGame() {
@@ -251,3 +259,17 @@ class Brick {
         this.bricks.splice(0, this.bricks.length);
     }
 }
+//墙
+class Wall extends createjs.Shape {
+    constructor(thickness) {
+      super();
+      this._thickness = thickness;
+      this._redraw();
+    }
+    _redraw() {
+      this.graphics.clear();
+      this.graphics.beginFill('#555').drawRect(0, 0, this._thickness, stage.canvas.height).endFill();
+      this.graphics.beginFill('#555').drawRect(stage.canvas.width - this._thickness, 0, this._thickness, stage.canvas.height).endFill();
+      this.graphics.beginFill('#555').drawRect(0, 0, stage.canvas.width, this._thickness).endFill();
+    }
+  }

@@ -3,12 +3,10 @@ FPS.time = 0;
 FPS.FPS = 0;
 FPS.startFPS = function (stage)
 {
-    FPS.txt = document.getElementById("fps");
-    let txt = new createjs.DOMElement(FPS.txt);
-    FPS.txt.style.display = "block";
-    stage.addChild(txt);
-    txt.x=6;
-    txt.y=120;
+    FPS.txt=new createjs.Text("0","32px Microsoft YaHei","#030303");
+    stage.addChild(FPS.txt);
+    FPS.txt.x=6;
+    FPS.txt.y=120;
     createjs.Ticker.addEventListener("tick", FPS.TickerFPS);
 }
 FPS.TickerFPS = function (event)
@@ -20,5 +18,5 @@ FPS.TickerFPS = function (event)
         FPS.FPS = Math.ceil(1000/(FPS.currentTime -  FPS.time));
     }
     FPS.time = FPS.currentTime;
-    FPS.txt.innerText = "FPS: "+FPS.FPS;
+    FPS.txt.text = "FPS: "+FPS.FPS;
 }

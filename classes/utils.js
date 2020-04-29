@@ -56,32 +56,6 @@ utils.checkBounds = function (obj, left = 0, top = 0, right = 750, bottom = 980,
         obj.vy *= bounce;
     }
 }
-/**旋转坐标(逆)
- * 
- * @param {*} xpos 
- * @param {*} ypos 
- * @param {*} cos 
- * @param {*} sin 
- */
-utils.rotateP1 = function (xpos, ypos, cos, sin) {
-    return {
-        x: cos * xpos + sin * ypos,
-        y: cos * ypos - sin * xpos
-    };
-}
-/**旋转回去（顺）
- * 
- * @param {}} xpos 
- * @param {*} ypos 
- * @param {*} cos 
- * @param {*} sin 
- */
-utils.rotateP2 = function (xpos, ypos, cos, sin) {
-    return {
-        x: cos * xpos - sin * ypos,
-        y: cos * ypos + sin * xpos
-    };
-}
 /**
  * 绘制图形
  * @param {*} g 
@@ -98,7 +72,7 @@ utils.drawPoints = function (g, mat, points) {
         } else {
             g.lineTo(p.x, p.y)
         }
-    })
+    });
 }
 /**
  * Array随机排序

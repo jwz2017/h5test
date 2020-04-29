@@ -2,7 +2,9 @@
     "use strict";
     //游戏变量;
     var score, level;
-    const colors=["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ewe0ee"];
+    const SCORE = "score",
+      LEVEL = "level",
+    colors=["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ewe0ee"];
     var slots , shapes ;
     class Colordrop extends Game {
         constructor() {
@@ -12,6 +14,11 @@
         /**建立游戏元素游戏初始化
          * 在构造函数内建立
          */
+        createScoreBoard(){
+            this.scoreBoard = new ScoreBoard(0,0,null);
+             this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
+            this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
+        }
         buildElement() {
             // this.onkey()
             slots=[];

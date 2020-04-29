@@ -76,14 +76,8 @@ lib.tfontAvailable = function(family, totalTypekitCount) {
 p.nominalBounds = new cjs.Rectangle(0,0,592,451);
 
 
-(lib.Butterfly = function() {
-	this.initialize(img.Butterfly);
-}).prototype = p = new cjs.Bitmap();
-p.nominalBounds = new cjs.Rectangle(0,0,200,138);
-
-
-(lib.enterBtn2 = function() {
-	this.initialize(img.enterBtn2);
+(lib.Button = function() {
+	this.initialize(img.Button);
 }).prototype = p = new cjs.Bitmap();
 p.nominalBounds = new cjs.Rectangle(0,0,166,56);// helper functions:
 
@@ -102,31 +96,6 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 	prototype.frameBounds = frameBounds;
 	return prototype;
 	}
-
-
-(lib.prizecon = function(mode,startPosition,loop) {
-	this.initialize(mode,startPosition,loop,{});
-
-	// 图层 1
-	this.shape = new cjs.Shape();
-	this.shape.graphics.f("rgba(37,180,218,0.008)").s().p("EgmqAQBMAAAggBMBNVAAAMAAAAgBg");
-	this.shape.setTransform(247.5,102.5);
-
-	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
-
-}).prototype = getMCSymbolPrototype(lib.prizecon, new cjs.Rectangle(0,0,495,205), null);
-
-
-(lib.元件1 = function(mode,startPosition,loop) {
-	this.initialize(mode,startPosition,loop,{});
-
-	// 图层 1
-	this.instance = new lib.enterBtn2();
-	this.instance.parent = this;
-
-	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
-
-}).prototype = getMCSymbolPrototype(lib.元件1, new cjs.Rectangle(0,0,166,56), null);
 
 
 (lib.btn = function(mode,startPosition,loop) {
@@ -173,6 +142,77 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 
 }).prototype = p = new cjs.MovieClip();
 p.nominalBounds = new cjs.Rectangle(-1,-1,202,42);
+
+
+(lib.prizecon = function(mode,startPosition,loop) {
+	this.initialize(mode,startPosition,loop,{});
+
+	// 图层 1
+	this.shape = new cjs.Shape();
+	this.shape.graphics.f("rgba(37,180,218,0.008)").s().p("EgmqAQBMAAAggBMBNVAAAMAAAAgBg");
+	this.shape.setTransform(247.5,102.5);
+
+	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
+
+}).prototype = getMCSymbolPrototype(lib.prizecon, new cjs.Rectangle(0,0,495,205), null);
+
+
+(lib.元件1 = function(mode,startPosition,loop) {
+	this.initialize(mode,startPosition,loop,{});
+
+	// 图层 1
+	this.instance = new lib.Button();
+	this.instance.parent = this;
+
+	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
+
+}).prototype = getMCSymbolPrototype(lib.元件1, new cjs.Rectangle(0,0,166,56), null);
+
+
+(lib.Title = function(mode,startPosition,loop) {
+	this.initialize(mode,startPosition,loop,{});
+
+	// timeline functions:
+	this.frame_0 = function() {
+		this.stop();
+		this.btn1.addEventListener("click", ()=> {
+			//console.log(this);	
+			this.dispatchEvent(GFrame.event.OK_BUTTON, false);
+		});
+	}
+
+	// actions tween:
+	this.timeline.addTween(cjs.Tween.get(this).call(this.frame_0).wait(1));
+
+	// 图层 1
+	this.shape = new cjs.Shape();
+	this.shape.graphics.f("#FFFFFF").s().p("AjIA5QAAh2gChEIAgARIBrAAQASgyAHgsIiNAAQggAAgYAHIgUgUIG0AAIAjghIAoAuIkRAAIAgASIgUAGQgbAmgRAgIDVAAIAPgVIAjAaIgPAPQAADEADCDIgiAQIAAgsIlSAAIAAAeIggAQQAChNAAh3gABIDCIBgAAIAAkkIhgAAgAgvDCIBbAAIAAhhIhbAAgAiqDCIBfAAIAAkkIhfAAgAgvBUIBbAAIAAhWIhbAAgAgvgPIBbAAIAAhTIhbAAg");
+	this.shape.setTransform(450.7,283.3);
+
+	this.shape_1 = new cjs.Shape();
+	this.shape_1.graphics.f("#FFFFFF").s().p("AjoDyQBPgfAkgrQAkgqAHhpQhAA5htAaIgDgJQCRgwA7hqIhWAAIAAAPIgeANQACg2AAg2QAAg2gCg0IAjAUID9AAIARgWIAkAeIgWAQQAABgACA3IgfANIAAgWIhVAAQAnA0AwAVQAxAWBHAJIAAAGQgcAFgLAaQg5gUgugfQgtgfgfg7IgpAAQgfAwghAeIAuATIgRANQgPBpgtAjQgtAjhTAWgAAKhIIB2AAIAAhCIh2AAgAiEhIIByAAIAAhCIhyAAgAAKiXIB2AAIAAg9Ih2AAgAiEiXIByAAIAAg9IhyAAgAA+CEQAAg7gCgyIAuAUIgPAPQAAB6ACAzIghAPQACg3AAg7g");
+	this.shape_1.setTransform(395.3,283.8);
+
+	this.shape_2 = new cjs.Shape();
+	this.shape_2.graphics.f("#FFFFFF").s().p("Aj0D6QBNg+AkhEQg2geglgOQAahWAYheIgEAAQgdAAgYAGIgTgTIBPAAQAVheAFgnIAyAYIgUAMQgIAdgSBEIBEAAIAPgTIAjAcIgSANQgYCCgeBKQAqAXAIALQAJAKAAASQAAAKgCAKQgCAKgDAAQgGAAgLgRQgUgdgagVQg3BPhQArgAjBBJQAnANAgANQAhhLAUiAIhIAAIg0CxgAALCJQAAhSgCgqIAgAUICNAAIAPgWIAlAcIgRAQQAACZACAYIghAPIAAgrIiRAAIAAAiIggAOQACghAAhSgAApC+ICRAAIAAiQIiRAAgAgXg8QAXgJAcgyQAbgzAXhVIAxAfIgUAKQhDB7gbAfIC+gHQgWgqgkgnIAGgGQBXA7AGAPQAGAQgBALQAAAOgJAMQgIALgEgBQgFAAgCgIIgNgfQhfAHgvAJQguALgSAPg");
+	this.shape_2.setTransform(338.1,283);
+
+	this.shape_3 = new cjs.Shape();
+	this.shape_3.graphics.f("#FFFFFF").s().p("Aj2DwQBIgvAlg7QAmg6AChiIhWAAQgcAAgYAGIgUgTICeAAIAAikIg3AAQgcAAgYAHIgUgVIF1AAIAhggIAuAuIh9AAIAACkIBGAAIAjgjIAwAwIiZAAIAACpQAAAqACAnIglAOQAChCAAguIAAiYIiHAAQgCBdgnA/QgoA9hdAzgAhBgjICHAAIAAikIiHAAg");
+	this.shape_3.setTransform(282.7,284);
+
+	this.btn1 = new lib.btn();
+	this.btn1.parent = this;
+	this.btn1.setTransform(264.3,649.6);
+	new cjs.ButtonHelper(this.btn1, 0, 1, 2, false, new lib.btn(), 3);
+
+	this.shape_4 = new cjs.Shape();
+	this.shape_4.graphics.f("#666666").s().p("Eg6lBMkMAAAiZHMB1LAAAMAAACZHg");
+	this.shape_4.setTransform(375,490);
+
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_4},{t:this.btn1},{t:this.shape_3},{t:this.shape_2},{t:this.shape_1},{t:this.shape}]}).wait(1));
+
+}).prototype = getMCSymbolPrototype(lib.Title, new cjs.Rectangle(0,0,750,980), null);
 
 
 (lib.popwin = function(mode,startPosition,loop) {
@@ -253,52 +293,6 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,202,42);
 p.nominalBounds = new cjs.Rectangle(222,169.1,148.3,113);
 
 
-(lib.Title = function(mode,startPosition,loop) {
-	this.initialize(mode,startPosition,loop,{});
-
-	// timeline functions:
-	this.frame_0 = function() {
-		this.stop();
-		this.btn1.addEventListener("click", ()=> {
-			//console.log(this);	
-			this.dispatchEvent(GFrame.event.OK_BUTTON, false);
-		});
-	}
-
-	// actions tween:
-	this.timeline.addTween(cjs.Tween.get(this).call(this.frame_0).wait(1));
-
-	// 图层 1
-	this.shape = new cjs.Shape();
-	this.shape.graphics.f("#FFFFFF").s().p("AjIA5QAAh2gChEIAgARIBrAAQASgyAHgsIiNAAQggAAgYAHIgUgUIG0AAIAjghIAoAuIkRAAIAgASIgUAGQgbAmgRAgIDVAAIAPgVIAjAaIgPAPQAADEADCDIgiAQIAAgsIlSAAIAAAeIggAQQAChNAAh3gABIDCIBgAAIAAkkIhgAAgAgvDCIBbAAIAAhhIhbAAgAiqDCIBfAAIAAkkIhfAAgAgvBUIBbAAIAAhWIhbAAgAgvgPIBbAAIAAhTIhbAAg");
-	this.shape.setTransform(450.7,283.3);
-
-	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f("#FFFFFF").s().p("AjoDyQBPgfAkgrQAkgqAHhpQhAA5htAaIgDgJQCRgwA7hqIhWAAIAAAPIgeANQACg2AAg2QAAg2gCg0IAjAUID9AAIARgWIAkAeIgWAQQAABgACA3IgfANIAAgWIhVAAQAnA0AwAVQAxAWBHAJIAAAGQgcAFgLAaQg5gUgugfQgtgfgfg7IgpAAQgfAwghAeIAuATIgRANQgPBpgtAjQgtAjhTAWgAAKhIIB2AAIAAhCIh2AAgAiEhIIByAAIAAhCIhyAAgAAKiXIB2AAIAAg9Ih2AAgAiEiXIByAAIAAg9IhyAAgAA+CEQAAg7gCgyIAuAUIgPAPQAAB6ACAzIghAPQACg3AAg7g");
-	this.shape_1.setTransform(395.3,283.8);
-
-	this.shape_2 = new cjs.Shape();
-	this.shape_2.graphics.f("#FFFFFF").s().p("Aj0D6QBNg+AkhEQg2geglgOQAahWAYheIgEAAQgdAAgYAGIgTgTIBPAAQAVheAFgnIAyAYIgUAMQgIAdgSBEIBEAAIAPgTIAjAcIgSANQgYCCgeBKQAqAXAIALQAJAKAAASQAAAKgCAKQgCAKgDAAQgGAAgLgRQgUgdgagVQg3BPhQArgAjBBJQAnANAgANQAhhLAUiAIhIAAIg0CxgAALCJQAAhSgCgqIAgAUICNAAIAPgWIAlAcIgRAQQAACZACAYIghAPIAAgrIiRAAIAAAiIggAOQACghAAhSgAApC+ICRAAIAAiQIiRAAgAgXg8QAXgJAcgyQAbgzAXhVIAxAfIgUAKQhDB7gbAfIC+gHQgWgqgkgnIAGgGQBXA7AGAPQAGAQgBALQAAAOgJAMQgIALgEgBQgFAAgCgIIgNgfQhfAHgvAJQguALgSAPg");
-	this.shape_2.setTransform(338.1,283);
-
-	this.shape_3 = new cjs.Shape();
-	this.shape_3.graphics.f("#FFFFFF").s().p("Aj2DwQBIgvAlg7QAmg6AChiIhWAAQgcAAgYAGIgUgTICeAAIAAikIg3AAQgcAAgYAHIgUgVIF1AAIAhggIAuAuIh9AAIAACkIBGAAIAjgjIAwAwIiZAAIAACpQAAAqACAnIglAOQAChCAAguIAAiYIiHAAQgCBdgnA/QgoA9hdAzgAhBgjICHAAIAAikIiHAAg");
-	this.shape_3.setTransform(282.7,284);
-
-	this.btn1 = new lib.btn();
-	this.btn1.parent = this;
-	this.btn1.setTransform(264.3,649.6);
-	new cjs.ButtonHelper(this.btn1, 0, 1, 2, false, new lib.btn(), 3);
-
-	this.shape_4 = new cjs.Shape();
-	this.shape_4.graphics.f("#666666").s().p("Eg6lBMkMAAAiZHMB1LAAAMAAACZHg");
-	this.shape_4.setTransform(375,490);
-
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_4},{t:this.btn1},{t:this.shape_3},{t:this.shape_2},{t:this.shape_1},{t:this.shape}]}).wait(1));
-
-}).prototype = getMCSymbolPrototype(lib.Title, new cjs.Rectangle(0,0,750,980), null);
-
-
 // stage content:
 (lib._lib = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
@@ -316,8 +310,7 @@ lib.properties = {
 	webfonts: {},
 	manifest: [
 		{src:"images/Bitmap4.png", id:"Bitmap4"},
-		{src:"images/Butterfly.png", id:"Butterfly"},
-		{src:"images/enterBtn2.png", id:"enterBtn2"},
+		{src:"images/Button.png", id:"Button"},
 		{src:"sounds/p.mp3", id:"p",data:"1"},
 		{src:"sounds/woosh.mp3", id:"woosh"}
 	],

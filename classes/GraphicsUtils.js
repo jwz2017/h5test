@@ -5,7 +5,7 @@ var GraphicsUtils = {};//图形工具类
  * @param {point} end 结束点
  * @param {point} start ={x:0,y:0} 开始点
  * @param {number} dash =10  间隔
- * @param {number} dashStart =0 开始点间隔
+ * @param {number} dashStart =0 从该点开始画
  */
 GraphicsUtils.drawLine = function(target, end, start={x:0,y:0} , dash=10, dashStart=0)
 {

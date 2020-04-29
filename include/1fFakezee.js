@@ -1,7 +1,6 @@
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
-    // var score, level;
     const SECTION1 = "Section1Score",
         SECTION2 = "Section2Score",
         BONUS="BonusScore";
@@ -46,32 +45,11 @@
         constructor() {
             super();
         }
-        initScreen() {
-            let width = stage.canvas.width,
-                height = stage.canvas.height;
+        createScoreBoard(){
             var padding = 7;
             var sec1XPos = 12;
             var sec2XPos = 145;
             var bounsXPos=288;
-
-            mc.style.fontSize = 40; //按钮label字体大小
-
-            this.titleScreen = new BasicScreen();
-            this.titleScreen.createDisplayText('Fakezee', width / 2, height / 3);
-            this.titleScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'start', 300, 60);
-            // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-            this.instructionScreen = new BasicScreen();
-            this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
-            this.instructionScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'ok', 300, 60);
-
-            this.levelInScreen = new BasicScreen();
-            this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-            this.gameOverScreen = new BasicScreen();
-            this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
-            this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'gameover', 300, 60);
-            
             GFrame.style.SCORE_TEXT_SIZE=16;
             this.scoreBoard = new ScoreBoard(SCOREBOARD_POSITION.x, SCOREBOARD_POSITION.y, {
                 sheet:spritesheet,
@@ -233,7 +211,6 @@
 
         }
         rollDice(e) {
-            console.log('btnclick');
             var rollBtn=e.currentTarget;
             var rollsTxt=rollBtn.getChildByName('rollsTxt');
             this.enableDice(false);
@@ -266,6 +243,7 @@
         }
         stopDice(){
             var diceValues=[];
+            
             for (let i = 0; i < NUM_DICE; i++) {
                 const die = diceTray.getChildByName('die'+i);
                 die.stop();
@@ -320,16 +298,6 @@
             label.x=btn.x+labelXOffset;
             label.y=btn.y+labelYOffset;
             scoreCard.addChild(label);
-        }
-        newGame() {
-            // score = 0;
-            // this.updateScoreBoard(SCORE, score);
-            // level = 0;
-        }
-        newLevel() {
-            // level++;
-            // this.updateScoreBoard(LEVEL, level);
-            // this.updateLevelInScreen(level);
         }
         waitComplete() {
             createjs.Tween.get(this)
@@ -395,13 +363,13 @@
     Fakezee.loaded = false;
     Fakezee.loadItem = [{
         id: "bg",
-        src: "assets/bg.jpg"
+        src: "assets/fakezee/bg.jpg"
     },{
         id: "fakezeeSpritesheet",
-        src: "assets/fakezee.png"
+        src: "assets/fakezee/fakezee.png"
     }, {
         id: "fakezeeSpritesheetData",
-        src: "assets/fakezee.json"
+        src: "assets/fakezee/fakezee.json"
     }];
     window.Fakezee = Fakezee;
 

@@ -1,33 +1,41 @@
-var stage, queue, model, lib;
+var stage, queue, model, lib, stageScale = 1;
 window.onload = function () {
   "use strict";
   /*************初始化 整个游戏入口*****/
   var g = new GFrame('canvas');
   /**********自适应************* */
   g.adapt();
-  /*********加载（没菜单时开启）********** */
-  // g.preload(PlaySound);
+  /****************选择菜单或直接加载游戏******************* */
+  mainlist();
 
-  /****************选择菜单******************* */
-  var text = new createjs.Text("游戏菜单", '58px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
-  text.x = 250;
-  text.y = 250;
-  var select = document.getElementById("select1");
-  var domElement = new createjs.DOMElement(select);
-  domElement.x = 220;
-  domElement.y = 350;
-  select.style.display = "block";
-  stage.addChild(domElement, text);
-  select.focus();
-  select.onchange = function () {
-    select.style.display = "none";
-    stage.removeChild(domElement, text);
-    let index = select.selectedIndex;
-    g.preload(eval(select.options[index].value));
+  function mainlist(game) {
+    if (!game) {
+      let text = new createjs.Text("游戏菜单", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+      text.regX = text.getBounds().width / 2;
+      text.x = stage.canvas.width / 2;
+      text.y = 250;
+      var select = document.getElementById("select1");
+      var domElement = new createjs.DOMElement(select);
+      //parseInt去掉数字后的px
+      domElement.x = (stage.canvas.width * stageScale - parseInt(getComputedStyle(select, null).width)) / 2;
+      domElement.y = text.y * stageScale + 60;
+      select.style.display = "block";
+      stage.addChild(domElement, text);
+      select.focus();
+      select.onchange = function () {
+        select.style.display = "none";
+        stage.removeChild(domElement, text);
+        let index = select.selectedIndex;
+        g.preload(eval(select.options[index].value));
+      }
+    } else {
+      g.preload(game);
+    }
   }
 
   /***********fps********** */
-  FPS.startFPS(stage);
+  // FPS.startFPS(stage);
+
 };
 
 /*************************GFrame************************************************************************ */
@@ -55,7 +63,7 @@ class GFrame {
 
   /********************自适应*********************
    * 
-   * @param {boolean} h =true,是否高度适应
+   * 
    */
   adapt() {
     var stageWidth = window.innerWidth;
@@ -70,15 +78,18 @@ class GFrame {
       }
     }
     var gameDiv = document.getElementById("game"),
+      dom = document.getElementById("dom"),
       width = stage.canvas.width,
-      height = stage.canvas.height,
-      stageScale = 1;
+      height = stage.canvas.height;
     //0.665  高度自适应
     if (stageWidth / stageHeight > 0.665) {
-      stageScale = stageHeight / height;
-      gameDiv.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+      stageScale = Math.floor(stageHeight / height * 100) / 100; //.toFixed(2);
+      // stageScale =stageHeight / height;//.toFixed(2);
+      dom.style.left = (stageWidth - width * stageScale) / 2 + 'px';
+      // stage.canvas.style.height=stageHeight+"px";
     } else { //宽度自适应
-      stageScale = stageWidth / width;
+      stageScale = stageWidth / width; //.toFixed(2);四舍五入
+      // stage.canvas.style.width=stageWidth+'px';
     }
     gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
@@ -91,27 +102,28 @@ class GFrame {
    * @param {*} compid 
    */
   preload(GClass) {
-    if (!GClass.loadItem) {
+    if (!GClass.loadItem && !GClass.id) {
       this.initGame(GClass);
       return;
     }
-    if (!queue) {
-      queue = new createjs.LoadQueue();
-      queue.installPlugin(createjs.Sound); //注册声音插件
-      this.loaderBar = new LoaderBar();
-      this.loaderBar.x = (stage.canvas.width - this.loaderBar.getBounds().width) / 2;
-      this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
-    }
+
+    queue = new createjs.LoadQueue();
+    queue.installPlugin(createjs.Sound); //注册声音插件
+    this.loaderBar = new LoaderBar();
+    this.loaderBar.x = (stage.canvas.width - this.loaderBar.getBounds().width) / 2;
+    this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
     stage.addChild(this.loaderBar);
 
-    if (GClass.loadItem instanceof Array) {
-      queue.loadManifest(GClass.loadItem);
-    } else if (typeof GClass.loadItem === "string") {
-      let comp = AdobeAn.getComposition(GClass.loadItem);
+    if (GClass.id) {
+      let comp = AdobeAn.getComposition(GClass.id);
       queue.on('fileload', this.onFileLoad, this, false, comp);
       lib = comp.getLibrary();
       queue.loadManifest(lib.properties.manifest);
     }
+    if (GClass.loadItem) {
+      queue.loadManifest(GClass.loadItem);
+    }
+
     queue.on('complete', function onComplete(e) {
       queue.removeAllEventListeners();
       stage.removeChild(this.loaderBar);
@@ -203,14 +215,14 @@ class GFrame {
   //标题状态
   _systemTitle() {
     stage.addChild(this.game.titleScreen);
-    this.okButton = this.game.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.game.titleScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_INSTRUCTION;
   }
   //介绍界面状态
   _systemInstruction() {
     stage.addChild(this.game.instructionScreen);
-    this.okButton = this.game.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.game.instructionScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_NEW_GAME;
   }
@@ -222,7 +234,6 @@ class GFrame {
     stage.addEventListener(GFrame.event.GAME_OVER, () => {
       this._switchSystemState(GFrame.state.STATE_GAME_OVER);
     });
-    stage.on(GFrame.event.WAIT_COMPLETE, this.game.waitComplete, this.game);
     this.game.newGame();
     this._switchSystemState(GFrame.state.STATE_NEW_LEVEL);
   }
@@ -244,7 +255,7 @@ class GFrame {
     // stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
-    this.okButton = this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
+    this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
     this._nextSystemState = GFrame.state.STATE_TITLE;
   }
@@ -265,7 +276,7 @@ class GFrame {
         case GFrame.state.STATE_LEVEL_IN:
           stage.addChild(this.game.scoreBoard);
           stage.removeChild(this.game.levelInScreen);
-          stage.dispatchEvent(GFrame.event.WAIT_COMPLETE); //等待完成发送事件
+          this.game.waitComplete();
           break;
       }
       this._switchSystemState(this._nextSystemState);
@@ -280,27 +291,27 @@ class GFrame {
 }
 /*******************************************静态变量****************************************** */
 GFrame.style = {
-  TITLE_TEXT_SIZE: 36,
+  TITLE_TEXT_SIZE: 54,
+  TITLE_FONTFAMILY: "Microsoft YaHei",
   TITLE_TEXT_COLOR: "#FF0000",
-  SIDE_BUFFWIDTH: 10,
-  SCORE_TEXT_COLOR: "#FFFFFF",
   //分数板样式
   SCORE_TEXT_SIZE: 36,
   SCORE_BUFF: 2,
   SCOREBOARD_HEIGHT: 70,
   SCOREBOARD_WIDTH: 750,
-  SCOREBOARD_COLOR: "#333",
-  SCOREBOARD_FONTFAMILY: "Calibri"
+  SCOREBOARD_FONTFAMILY: "Calibri",
+  SCORE_TEXT_COLOR: "#FFFFFF",
+  SCOREBOARD_COLOR: "#333"
   // "Microsoft YaHei"
 
 };
 GFrame.event = {
   GAME_OVER: "gameover",
   NEW_LEVEL: "newlevel",
-  WAIT_COMPLETE: "waitcomplete",
   OK_BUTTON: "okbutton",
   PAUSE: "pause"
 };
+
 GFrame.state = {
   STATE_WAIT_FOR_CLOSE: "statewaitforclose",
   STATE_TITLE: "statetitle",
@@ -331,7 +342,7 @@ class BasicScreen extends createjs.Container {
     this.displayText.y = ypos;
     this.displayText.textAlign = "center";
     this.displayText.textBaseline = "middle";
-    this.displayText.font = GFrame.style.TITLE_TEXT_SIZE + "px Microsoft YaHei";
+    this.displayText.font = GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY;
     this.displayText.color = GFrame.style.TITLE_TEXT_COLOR;
     this.addChild(this.displayText);
   }
@@ -346,7 +357,7 @@ class BasicScreen extends createjs.Container {
   createOkButton(xpos, ypos, label, width, height) {
     let button = new PushButton(this, label, () => {
       this.dispatchEvent(GFrame.event.OK_BUTTON, false);
-    }, xpos, ypos, width, height);
+    }, xpos, ypos, width, height, new Star(6, 0.5));
   }
   /**设置文本内容
    * 
@@ -380,38 +391,37 @@ class SideBysideScoreBitmap extends createjs.Container {
    * @param {*} map 图片资源
    * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
    * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
+   * map. scale:缩放
    */
   constructor(key, val, map) {
     super();
     this.sheet = map.valsheet;
     this.value = new createjs.BitmapText(val, this.sheet);
-    this.offsetY = this.value.getBounds().height / 2;
+    this.value.regY = this.value.getBounds().height / 2;
+    this._scale = map.scale || 1;
+    this.value.scaleX = this.value.scaleY = this._scale;
     if (map.labsheet) {
       this.label = new createjs.Sprite(map.labsheet, map.labani);
-      // this.label.paused=true;
-      this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
-      this.valueypos = this.label.getBounds().height / 2;
     } else if (map.labid) {
       this.label = new createjs.Bitmap(queue.getResult(map.labid));
-      this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
-      this.valueypos = this.label.getBounds().height / 2;
     } else {
       this.label = new createjs.Text(key + ' :', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
-      this.valuexpos = this.label.getMeasuredWidth() + GFrame.style.SCORE_BUFF;
-      this.valueypos = this.label.getMeasuredHeight() / 2;
     }
+    this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
+    this.valueypos = this.label.getBounds().height / 2;
     this.value.x = this.valuexpos;
-    this.value.y = this.valueypos - this.offsetY;
+    this.value.y = this.valueypos;
     this.addChild(this.label, this.value);
   }
   setValText(val) {
     this.removeChild(this.value);
     this.value = new createjs.BitmapText(val.toString(), this.sheet);
+    this.value.regY = this.value.getBounds().height / 2
+    this.value.scaleX = this.value.scaleY = this._scale;
     this.value.x = this.valuexpos;
-    this.value.y = this.valueypos - this.offsetY;
+    this.value.y = this.valueypos;
     this.value.letterSpacing = 4;
     this.addChild(this.value);
-    // this.value.scaleX=this.value.scaleY=0.5;
   }
 }
 
@@ -439,7 +449,6 @@ class ScoreBoard extends createjs.Container {
         .drawRect(0, 0, GFrame.style.SCOREBOARD_WIDTH, GFrame.style.SCOREBOARD_HEIGHT);
       this.addChild(this.scoreBar);
     } else if (bg.sheet) {
-      this.addChild(this.scoreBar);
       this.scoreBar = new createjs.Sprite(bg.sheet, bg.ani);
       this.addChild(this.scoreBar);
     } else {
@@ -479,41 +488,54 @@ class ScoreBoard extends createjs.Container {
   }
 }
 /***************************************游戏基类****************************** */
-const SCORE = "score",
-  LEVEL = "level",
-  LIEVES = "lieves"
 class Game {
   constructor() {
-    this.buildElement();
+    mc.style.fontSize = 40; //mc组件字体大小
+    this.initSprite();
     this.initScreen();
   }
-  initScreen() {
-    let width = stage.canvas.width,
-      height = stage.canvas.height;
-    mc.style.fontSize = 40; //mc组件字体大小
-    this.titleScreen = new BasicScreen();
-    this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
-    this.titleScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'start', 300, 60);
-    // this.titleScreen=new lib.Title();//协作animate使用-------------------1
-
-    this.instructionScreen = new BasicScreen();
-    this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
-    this.instructionScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'ok', 300, 60);
-
-    this.levelInScreen = new BasicScreen();
-    this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2, LEVEL);
-
-    this.gameOverScreen = new BasicScreen();
-    this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
-    this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'gameover', 300, 60);
-
-    this.createScoreBoard();
+  initSprite() {
 
   }
+  initScreen() {
+    this.createTitleScreen();
+    this.createInstructionScreen();
+    this.createLevelInScreen();
+    this.createGameOverScreen();
+    this.createScoreBoard();
+    this.buildElement();
+  }
+  buildElement() {
+
+  }
+  createTitleScreen() {
+    let width = stage.canvas.width,
+      height = stage.canvas.height;
+    this.titleScreen = new BasicScreen();
+    this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
+    this.titleScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'start', 250, 250); //300,60
+    // this.titleScreen=new lib.Title();//协作animate使用-------------------1
+  }
+  createInstructionScreen() {
+    let width = stage.canvas.width,
+      height = stage.canvas.height;
+    this.instructionScreen = new BasicScreen();
+    this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
+    this.instructionScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'ok', 250, 250);
+  }
+  createLevelInScreen() {
+    this.levelInScreen = new BasicScreen();
+    this.levelInScreen.createDisplayText('level:0', (stage.canvas.width) / 2, stage.canvas.height / 2);
+  }
+  createGameOverScreen() {
+    let width = stage.canvas.width,
+      height = stage.canvas.height;
+    this.gameOverScreen = new BasicScreen();
+    this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
+    this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'over', 250, 250);
+  }
   createScoreBoard() {
-    this.scoreBoard = new ScoreBoard(0,0,null);
-    this.scoreBoard.createTextElement(SCORE, '0', 20, 14);
-    this.scoreBoard.createTextElement(LEVEL, '0', 320, 14);
+
   }
   newGame() {
 
