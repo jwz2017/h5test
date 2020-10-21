@@ -10,7 +10,7 @@ window.onload = function () {
 
   function mainlist(game) {
     if (!game) {
-      let text = new createjs.Text("游戏菜单1", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+      let text = new createjs.Text("游戏菜单01", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
       text.regX = text.getBounds().width / 2;
       text.x = stage.canvas.width / 2;
       text.y = stageHeight/4;
