@@ -1,4 +1,4 @@
-var stage, queue, model, lib,stageWidth,stageHeight, stageScale = 1;
+var stage, queue, model, lib,width,height;// stageScale = 1;
 window.onload = function () {
   "use strict";
   /*************初始化 整个游戏入口*****/
@@ -10,7 +10,7 @@ window.onload = function () {
 
   function mainlist(game) {
     if (!game) {
-      let text = new createjs.Text("游戏菜单01", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+      let text = new createjs.Text("游戏菜单02", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
       text.regX = text.getBounds().width / 2;
       text.x = stage.canvas.width / 2;
       text.y = stageHeight/4;
@@ -67,8 +67,8 @@ class GFrame {
    * 
    */
   adapt() {
-    stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight;
+    var stageWidth = window.innerWidth;
+    var stageHeight = window.innerHeight;
     if (typeof stageWidth != "number") {
       if (document.compatMode == 'CSS1Compat') {
         stageWidth = document.documentElement.clientWidth;
@@ -91,6 +91,7 @@ class GFrame {
     } else { //宽度自适应
       stageScale = stageWidth / width; //.toFixed(2);四舍五入
       // stage.canvas.style.width=stageWidth+'px';
+      height*=stageScale;
     }
     gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
