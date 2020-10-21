@@ -1,4 +1,4 @@
-var stage, queue, model, lib,width,height;// stageScale = 1;
+var stage, queue, model, lib,width,height, stageScale = 1;
 window.onload = function () {
   "use strict";
   /*************初始化 整个游戏入口*****/
@@ -13,13 +13,12 @@ window.onload = function () {
       let text = new createjs.Text("游戏菜单02", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
       text.regX = text.getBounds().width / 2;
       text.x = stage.canvas.width / 2;
-      text.y = stageHeight/4;
+      text.y = height*stageScale/4;
       var select = document.getElementById("select1");
       var domElement = new createjs.DOMElement(select);
       //parseInt去掉数字后的px
-      domElement.x = (stage.canvas.width * stageScale - parseInt(getComputedStyle(select, null).width)) / 2;
-      // domElement.y = text.y * stageScale + 60;
-      domElement.y=stageHeight/3;
+      domElement.x = (width*stageScale- parseInt(getComputedStyle(select, null).width)) / 2;
+      domElement.y=height*stageScale/3;
       select.style.display = "block";
       stage.addChild(domElement, text);
       select.focus();
@@ -78,10 +77,10 @@ class GFrame {
         stageHeight = document.body.clientHeight;
       }
     }
+    width = stage.canvas.width;
+    height = stage.canvas.height;
     var gameDiv = document.getElementById("game"),
-      dom = document.getElementById("dom"),
-      width = stage.canvas.width,
-      height = stage.canvas.height;
+      dom = document.getElementById("dom");
     //0.665  高度自适应
     if (stageWidth / stageHeight > 0.665) {
       stageScale = Math.floor(stageHeight / height * 100) / 100; //.toFixed(2);
