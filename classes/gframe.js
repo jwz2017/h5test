@@ -1,4 +1,4 @@
-var stage, queue, model, lib, stageScale = 1;
+var stage, queue, model, lib,stageWidth,stageHeight, stageScale = 1;
 window.onload = function () {
   "use strict";
   /*************初始化 整个游戏入口*****/
@@ -10,15 +10,16 @@ window.onload = function () {
 
   function mainlist(game) {
     if (!game) {
-      let text = new createjs.Text("游戏菜单", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+      let text = new createjs.Text("游戏菜单1", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
       text.regX = text.getBounds().width / 2;
       text.x = stage.canvas.width / 2;
-      text.y = 250;
+      text.y = stageHeight/4;
       var select = document.getElementById("select1");
       var domElement = new createjs.DOMElement(select);
       //parseInt去掉数字后的px
       domElement.x = (stage.canvas.width * stageScale - parseInt(getComputedStyle(select, null).width)) / 2;
-      domElement.y = text.y * stageScale + 60;
+      // domElement.y = text.y * stageScale + 60;
+      domElement.y=stageHeight/3;
       select.style.display = "block";
       stage.addChild(domElement, text);
       select.focus();
@@ -66,8 +67,8 @@ class GFrame {
    * 
    */
   adapt() {
-    var stageWidth = window.innerWidth;
-    var stageHeight = window.innerHeight;
+    stageWidth = window.innerWidth;
+    stageHeight = window.innerHeight;
     if (typeof stageWidth != "number") {
       if (document.compatMode == 'CSS1Compat') {
         stageWidth = document.documentElement.clientWidth;
@@ -513,7 +514,7 @@ class Game {
       height = stage.canvas.height;
     this.titleScreen = new BasicScreen();
     this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
-    this.titleScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'start', 250, 250); //300,60
+    this.titleScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'start', 250, 250); //300,60
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
   }
   createInstructionScreen() {
@@ -521,7 +522,7 @@ class Game {
       height = stage.canvas.height;
     this.instructionScreen = new BasicScreen();
     this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
-    this.instructionScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'ok', 250, 250);
+    this.instructionScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'ok', 250, 250);
   }
   createLevelInScreen() {
     this.levelInScreen = new BasicScreen();
@@ -532,7 +533,7 @@ class Game {
       height = stage.canvas.height;
     this.gameOverScreen = new BasicScreen();
     this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
-    this.gameOverScreen.createOkButton((width - 300) / 2, height / 3 * 2, 'over', 250, 250);
+    this.gameOverScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'over', 250, 250);
   }
   createScoreBoard() {
 

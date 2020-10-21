@@ -9,7 +9,7 @@
 
   <style>
     * {
-      margin: 0;
+      margin: 0;padding: 0;
     }
 
     /* 抖动 */
@@ -39,7 +39,7 @@
       cursor: pointer;
     }
 
-    #testTxt{
+    #testTxt {
       display: none;
       width: 200px;
       height: 300px;
@@ -48,7 +48,7 @@
       font-size: 18px;
     }
 
-    #inputText{
+    #inputText {
       display: none;
       width: 170px;
       height: 50px;
@@ -73,7 +73,7 @@
   <script src="classes/ScaleBitmap.js"></script>
   <script src="lib.js"></script>
   <script src="assets/move/ma.js"></script>
-  
+
   <script src="include/0aBase.js"></script>
   <script src="include/0sprite.js"></script>
   <script src="include/1aSuperClick.js"></script>
@@ -88,31 +88,32 @@
 
 <body style="background-color:#333;">
   <!-- 菜单选项 -->
-  <div id="dom" style="position: absolute">
+  <div id="dom" style="position:relative">
     <div id="game" style="position: absolute;">
       <!-- 加入dom到舞台随舞台缩放 -->
       <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
         基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
 
       <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-      
+
       <input type="text" id="inputText" placeholder="请输入姓名">
 
       <canvas id="canvas" width="750" height="1206">
       </canvas>
     </div>
-    <!-- 放置不缩放的dom -->
-    <select id="select1" size="10">
-      <option value="Base">基础类测试</option>
-      <option value="Sprite">sprite测试</option>
-      <option value="SuperClick">超级点击</option>
-      <option value="Colordrop">颜色拖动</option>
-      <option value="Bounce">弹球游戏</option>
-      <option value="Puzzle">拼图游戏</option>
-      <option value="Match">记忆翻牌</option>
-      <option value="Fakezee">投骰子</option>
-      <option value="Move">运动计算</option>
-    </select>
+      <!-- 放置不缩放的dom -->
+      <select id="select1" size="10">
+        <option value="Base">基础类测试</option>
+        <option value="Sprite">sprite测试</option>
+        <option value="SuperClick">超级点击</option>
+        <option value="Colordrop">颜色拖动</option>
+        <option value="Bounce">弹球游戏</option>
+        <option value="Puzzle">拼图游戏</option>
+        <option value="Match">记忆翻牌</option>
+        <option value="Fakezee">投骰子</option>
+        <option value="Move">运动计算</option>
+      </select>
+      
   </div>
 </body>
 
