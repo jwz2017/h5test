@@ -10,15 +10,16 @@ window.onload = function () {
 
   function mainlist(game) {
     if (!game) {
-      let text = new createjs.Text("游戏菜单02", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
+      let text = new createjs.Text("游戏菜单03", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
       text.regX = text.getBounds().width / 2;
       text.x = stage.canvas.width / 2;
-      text.y = height*stageScale/4;
+      text.y = height/5;
       var select = document.getElementById("select1");
       var domElement = new createjs.DOMElement(select);
       //parseInt去掉数字后的px
       domElement.x = (width*stageScale- parseInt(getComputedStyle(select, null).width)) / 2;
-      domElement.y=height*stageScale/3;
+      domElement.y=height/3*stageScale;
+      console.log(text.y,domElement.y,height);
       select.style.display = "block";
       stage.addChild(domElement, text);
       select.focus();
@@ -90,7 +91,7 @@ class GFrame {
     } else { //宽度自适应
       stageScale = stageWidth / width; //.toFixed(2);四舍五入
       // stage.canvas.style.width=stageWidth+'px';
-      height*=stageScale;
+      height=stageHeight/stageScale;
     }
     gameDiv.style.transformOrigin = '0 0';
     gameDiv.style.transform = 'scale(' + stageScale + ')';
