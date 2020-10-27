@@ -1,37 +1,29 @@
-var stage, queue, model, lib,width,height, stageScale = 1;
+var stage, queue, model, lib, width, height, stageScale = 1;
 window.onload = function () {
   "use strict";
   /*************初始化 整个游戏入口*****/
   var g = new GFrame('canvas');
   /**********自适应************* */
   g.adapt();
+  window.onresize = function () {
+    g.adapt();
+  }
   /****************选择菜单或直接加载游戏******************* */
-  mainlist();
+  mainlist();//菜单选择
+  // g.preload();//直接加载游戏
 
-  function mainlist(game) {
-    if (!game) {
-      let text = new createjs.Text("游戏菜单03", GFrame.style.TITLE_TEXT_SIZE + 'px ' + GFrame.style.TITLE_FONTFAMILY, GFrame.style.TITLE_TEXT_COLOR);
-      text.regX = text.getBounds().width / 2;
-      text.x = stage.canvas.width / 2;
-      text.y = height/5;
-      var select = document.getElementById("select1");
-      var domElement = new createjs.DOMElement(select);
-      //parseInt去掉数字后的px
-      domElement.x = (width*stageScale- parseInt(getComputedStyle(select, null).width)) / 2;
-      domElement.y=height/3*stageScale;
-      console.log(text.y,domElement.y,height);
-      select.style.display = "block";
-      stage.addChild(domElement, text);
+  function mainlist() {
+      var select = document.getElementById("select");
+      var mainlist=document.getElementById("mainlist");
+      var game=document.getElementById("game");
       select.focus();
       select.onchange = function () {
-        select.style.display = "none";
-        stage.removeChild(domElement, text);
+        mainlist.style.display = "none";
+        game.style.display="block";
         let index = select.selectedIndex;
         g.preload(eval(select.options[index].value));
       }
-    } else {
-      g.preload(game);
-    }
+    
   }
 
   /***********fps********** */
@@ -46,7 +38,6 @@ class GFrame {
     this.waitCount = 40;
     this._systemFunction = this._systemWaitForClose;
     this._setupStage(canvasId);
-
     /*********接收animate影片剪辑播放过程发出的事件。***/
     model = new createjs.EventDispatcher();
     model.addEventListener(GFrame.event.PAUSE, () => {
@@ -66,9 +57,9 @@ class GFrame {
    * 
    * 
    */
-  adapt() {
-    var stageWidth = window.innerWidth;
-    var stageHeight = window.innerHeight;
+  adapt(bool) {
+    let stageWidth = window.innerWidth,
+      stageHeight = window.innerHeight;
     if (typeof stageWidth != "number") {
       if (document.compatMode == 'CSS1Compat') {
         stageWidth = document.documentElement.clientWidth;
@@ -78,23 +69,29 @@ class GFrame {
         stageHeight = document.body.clientHeight;
       }
     }
-    width = stage.canvas.width;
-    height = stage.canvas.height;
-    var gameDiv = document.getElementById("game"),
-      dom = document.getElementById("dom");
-    //0.665  高度自适应
-    if (stageWidth / stageHeight > 0.665) {
-      stageScale = Math.floor(stageHeight / height * 100) / 100; //.toFixed(2);
-      // stageScale =stageHeight / height;//.toFixed(2);
-      dom.style.left = (stageWidth - width * stageScale) / 2 + 'px';
-      // stage.canvas.style.height=stageHeight+"px";
-    } else { //宽度自适应
-      stageScale = stageWidth / width; //.toFixed(2);四舍五入
-      // stage.canvas.style.width=stageWidth+'px';
-      height=stageHeight/stageScale;
+
+    let body = document.getElementById("body"),
+      game = document.getElementById("game");
+    //宽度自适应
+    if (stageWidth<=750) {
+      stageScale = (stageWidth / width); //.toFixed(2);//四舍五入
+      let h = stageHeight / stageScale,
+        h1 = stage.canvas.height;
+      height = h > h1 ? h1 : h;
     }
-    gameDiv.style.transformOrigin = '0 0';
-    gameDiv.style.transform = 'scale(' + stageScale + ')';
+    //高度自适应
+    else if (bool) {
+      stageScale=stageHeight/height;
+      body.style.width = width * stageScale + 'px';
+    } 
+    //不缩放
+    else {
+      stageScale = 1;
+      let h = stageHeight / stageScale,
+      h1 = stage.canvas.height;
+      height = h > h1 ? h1 : h;
+    }
+    game.style.transform = 'scale(' + stageScale + ')';
   }
 
   /*********************预加载****************************
@@ -112,8 +109,8 @@ class GFrame {
     queue = new createjs.LoadQueue();
     queue.installPlugin(createjs.Sound); //注册声音插件
     this.loaderBar = new LoaderBar();
-    this.loaderBar.x = (stage.canvas.width - this.loaderBar.getBounds().width) / 2;
-    this.loaderBar.y = (stage.canvas.height - this.loaderBar.getBounds().height) / 2;
+    this.loaderBar.x = (width - this.loaderBar.getBounds().width) / 2;
+    this.loaderBar.y = (height - this.loaderBar.getBounds().height) / 2;
     stage.addChild(this.loaderBar);
 
     if (GClass.id) {
@@ -162,8 +159,9 @@ class GFrame {
    */
   _setupStage(canvasId) {
     stage = new createjs.Stage(canvasId);
-    stage.canvas.style.display = "block"; //显示canvas
     stage.enableMouseOver(); //开启鼠标经过事件
+    width = stage.canvas.width;
+    height = stage.canvas.height;
     createjs.Touch.enable(stage, true, false); //开启触摸
 
     //createjs.MotionGuidePlugin.install(); //使用引导层必须
@@ -511,27 +509,21 @@ class Game {
 
   }
   createTitleScreen() {
-    let width = stage.canvas.width,
-      height = stage.canvas.height;
     this.titleScreen = new BasicScreen();
     this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
     this.titleScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'start', 250, 250); //300,60
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
   }
   createInstructionScreen() {
-    let width = stage.canvas.width,
-      height = stage.canvas.height;
     this.instructionScreen = new BasicScreen();
     this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
     this.instructionScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'ok', 250, 250);
   }
   createLevelInScreen() {
     this.levelInScreen = new BasicScreen();
-    this.levelInScreen.createDisplayText('level:0', (stage.canvas.width) / 2, stage.canvas.height / 2);
+    this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2);
   }
   createGameOverScreen() {
-    let width = stage.canvas.width,
-      height = stage.canvas.height;
     this.gameOverScreen = new BasicScreen();
     this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
     this.gameOverScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'over', 250, 250);

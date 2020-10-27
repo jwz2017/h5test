@@ -81,7 +81,7 @@
             stage.addChild(this.people);
         }
         runGame() {
-
+            this.people.animation();
         }
         onkey() {
             //左 37 ，右39，上38，下，40

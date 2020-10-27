@@ -1,0 +1,63 @@
+@import "common";
+
+body {
+  /* box-sizing: border-box;    css3盒子样式 */
+  padding: 0;
+  min-width: 320px;
+  width: 15rem;
+  margin: 0 auto;
+  line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  background: #f2f2f2;
+  overflow: hidden;
+  // border: 1px solid #f00;
+}
+
+#mainlist {
+  margin-top: 1.5rem;
+}
+
+#select {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-size: 0.8rem;
+  border: 1px solid #6d6314;
+  background: transparent;
+  width: 40%;
+  cursor: pointer;
+}
+
+#select:focus option:hover {
+  color: white;
+  background-image: linear-gradient(#726512, #6d621e);
+  font-weight: bold;
+}
+
+#testTxt {
+  display: none;
+  width: 200px;
+  height: 300px;
+  color: #ff0000;
+  cursor: pointer;
+  font-size: 18px;
+  // 抖动元素 
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+#inputText {
+  display: none;
+  width: 170px;
+  height: 50px;
+  font-size: 30px;
+}
+
+#game {
+  transform-origin: 0 0;
+  display: none;
+}
+
+#canvas {
+  background-color: #9eb195;
+}

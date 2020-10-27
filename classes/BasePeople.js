@@ -14,9 +14,6 @@ class BasePeople extends createjs.Container {
     this._jumpheight = this.walkHeight;
     this.animation = this.standing;
     if(data) this.initData(data);
-    this.addEventListener('tick', () => {
-      this.animation();
-    });
   }
   initData(data) {
     this.spriteSheet = new createjs.SpriteSheet(data);

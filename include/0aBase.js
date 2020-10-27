@@ -137,7 +137,6 @@
              */
             // button = new createjs.ScaleBitmap(queue.getResult("button"), new createjs.Rectangle(80, 25, 6, 6));
             button.setDrawSize(200, 56);
-            console.log(button.drawWidth);
             this.ma1.x = 200;
             this.ma1.y = 500;
             button.x = 250;
@@ -402,7 +401,7 @@
             var textTxt = document.getElementById("testTxt");
             this.domElement = new createjs.DOMElement(textTxt);
             this.domElement.x = 280;
-            this.domElement.y = 950;
+            this.domElement.y = 700;
             this.domElement.regX = 100;
             this.domElement.regY = 100;
             textTxt.style.display = "block";
@@ -438,7 +437,7 @@
          */
         createScoreBoard() {
             GFrame.style.SCOREBOARD_COLOR = "#555"
-            this.scoreBoard = new ScoreBoard(0, stage.canvas.height - GFrame.style.SCOREBOARD_HEIGHT);
+            this.scoreBoard = new ScoreBoard(0, height- GFrame.style.SCOREBOARD_HEIGHT);
             // this.scoreBoard.createTextElement(SCORE,'0',10,14,{valsheet:spriteSheetLetter,scale:0.7});
             this.scoreBoard.createTextElement(SCORE, '0', 10, 14, {
                 valsheet: spriteSheetLetter,

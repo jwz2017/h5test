@@ -3,64 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-  <!-- 自适应-->
   <meta name="viewport"
     content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
-  <style>
-    * {
-      margin: 0;padding: 0;
-    }
-
-    /* 抖动 */
-    /* body{
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    } */
-    /* 抖动元素 */
-    #testTxt {
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-    }
-
-    #select1:focus option:hover {
-      color: white;
-      background-image: linear-gradient(#726512, #6d621e);
-      font-weight: bold;
-    }
-
-    #select1 {
-      display: none;
-      font-family: serif;
-      font-size: 20px;
-      border: 1px solid #6d6314;
-      background: transparent;
-      width: 200px;
-      cursor: pointer;
-    }
-
-    #testTxt {
-      display: none;
-      width: 200px;
-      height: 300px;
-      color: #ff0000;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    #inputText {
-      display: none;
-      width: 170px;
-      height: 50px;
-      font-size: 30px;
-    }
-
-    #canvas {
-      display: none;
-      background-color: #9eb195;
-    }
-  </style>
-
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/normlize.css">
+  <link rel="stylesheet" href="css/index.css">
   <title>h5Test</title>
   <script src="classes/createjs.min.js"></script>
   <script src="classes/GraphicsUtils.js"></script>
@@ -86,35 +33,36 @@
   <script src="include/2bCannon.js"></script>
 </head>
 
-<body style="background-color:#333;">
-  <!-- 菜单选项 -->
-  <div id="dom" style="position:relative">
-    <div id="game" style="position: absolute;">
-      <!-- 加入dom到舞台随舞台缩放 -->
-      <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
-        基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
-
-      <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-
-      <input type="text" id="inputText" placeholder="请输入姓名">
-
-      <canvas id="canvas" width="750" height="1206">
-      </canvas>
-    </div>
-      <!-- 放置不缩放的dom -->
-      <select id="select1" size="10">
-        <option value="Base">基础类测试</option>
-        <option value="Sprite">sprite测试</option>
-        <option value="SuperClick">超级点击</option>
-        <option value="Colordrop">颜色拖动</option>
-        <option value="Bounce">弹球游戏</option>
-        <option value="Puzzle">拼图游戏</option>
-        <option value="Match">记忆翻牌</option>
-        <option value="Fakezee">投骰子</option>
-        <option value="Move">运动计算</option>
-      </select>
-      
+<body id="body">
+  <!-- 菜单页-->
+  <div id="mainlist">
+    <h2 style="color: rgb(250,58,58);">游戏菜单</h2>
+    <select id="select" size="1" onchange="">
+      <option value="Base">基础测试</option>
+      <option value="Sprite">sprite测试</option>
+      <option value="SuperClick">超级点击</option>
+      <option value="Colordrop">颜色拖动</option>
+      <option value="Bounce">弹球游戏</option>
+      <option value="Puzzle">拼图游戏</option>
+      <option value="Match">记忆翻牌</option>
+      <option value="Fakezee">投骰子</option>
+      <option value="Move">运动计算</option>
+    </select>
   </div>
+  <!-- 游戏界面 -->
+  <div id="game">
+    <!-- 加入dom到舞台随舞台缩放 -->
+    <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
+      基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
+    <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
+    <!-- dom组件 -->
+    <input type="text" id="inputText" placeholder="请输入姓名">
+
+    <canvas id="canvas" width="750" height="1206">
+    </canvas>
+  </div>
+  <!-- 加入dom元素 -->
+
 </body>
 
 </html>
