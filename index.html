@@ -33,37 +33,38 @@
   <script src="include/2bCannon.js"></script>
 </head>
 
-<body id="body">
-  <!-- 菜单页-->
-  <div id="mainlist">
-    <h2 style="color: rgb(250,58,58);">游戏菜单</h2>
-    <select id="select" size="1" onchange="">
-      <option value="0">选择游戏</option>
-      <option value="Base">基础测试</option>
-      <option value="Sprite">sprite测试</option>
-      <option value="SuperClick">超级点击</option>
-      <option value="Colordrop">颜色拖动</option>
-      <option value="Bounce">弹球游戏</option>
-      <option value="Puzzle">拼图游戏</option>
-      <option value="Match">记忆翻牌</option>
-      <option value="Fakezee">投骰子</option>
-      <option value="Move">运动计算</option>
-    </select>
-  </div>
-  <!-- 游戏界面 -->
-  <div id="game">
-    <!-- 加入dom到舞台随舞台缩放 -->
-    <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
-      基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
-    <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-    <!-- dom组件 -->
-    <input type="text" id="inputText" placeholder="请输入姓名">
+<body>
+  <div class="container">
+    <!-- 菜单页-->
+    <div id="mainlist">
+      <h2>游戏菜单</h2>
+      <select id="select" size="1" onchange="">
+        <option value="0">选择游戏</option>
+        <option value="Base">基础测试</option>
+        <option value="Sprite">sprite测试</option>
+        <option value="SuperClick">超级点击</option>
+        <option value="Colordrop">颜色拖动</option>
+        <option value="Bounce">弹球游戏</option>
+        <option value="Puzzle">拼图游戏</option>
+        <option value="Match">记忆翻牌</option>
+        <option value="Fakezee">投骰子</option>
+        <option value="Move">运动计算</option>
+      </select>
+    </div>
+    <!-- 游戏界面 -->
+    <div id="game">
+      <!-- 随舞台缩放 dom-->
+      <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
+        基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
+      <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
+      <!-- dom组件 -->
+      <input type="text" id="inputText" placeholder="请输入姓名">
 
-    <canvas id="canvas" width="750" height="1206">
-    </canvas>
+      <canvas id="canvas" width="750" height="1206">
+      </canvas>
+    </div>
+    <!-- 不随舞台缩放 dom -->
   </div>
-  <!-- 加入dom元素 -->
-
 </body>
 
 </html>

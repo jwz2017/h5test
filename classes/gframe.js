@@ -1,29 +1,40 @@
 var stage, queue, model, lib, width, height, stageScale = 1;
 window.onload = function () {
   "use strict";
-  /*************初始化 整个游戏入口*****/
+  /*************游戏入口*****/
   var g = new GFrame('canvas');
-  /**********自适应************* */
-  g.adapt();
-  window.onresize = function () {
-    g.adapt();
-  }
   /****************选择菜单或直接加载游戏******************* */
-  mainlist();//菜单选择
-  // g.preload();//直接加载游戏
+  mainlist(); //菜单方式
+  //直接加载游戏方式
+  // g.adapt();//可加true参数在pc端高度自适应
+  // g.preload();//参数为具体游戏
 
   function mainlist() {
-      var select = document.getElementById("select");
-      var mainlist=document.getElementById("mainlist");
-      var game=document.getElementById("game");
-      select.focus();
-      select.onchange = function () {
-        mainlist.style.display = "none";
-        game.style.display="block";
-        let index = select.selectedIndex;
-        g.preload(eval(select.options[index].value));
+    var select = document.getElementById("select");
+    var mainlist = document.getElementById("mainlist");
+    var game = document.getElementById("game");
+    select.focus();
+    select.onchange = function () {
+      mainlist.style.display = "none";
+      game.style.width=100+'%';
+      game.style.display = "block";
+      let index = select.selectedIndex;
+      let sgame = eval(select.options[index].value);
+      //选择>750高度自适应游戏
+      if (index === 1) {
+        g.adapt(true);
+      } else {
+        g.adapt();
       }
-    
+      //检查是否已加载过
+      if (!sgame.preload) {
+        g.preload(sgame);
+      } else {
+        g.initGame(sgame);
+      }
+      sgame.isloaded = true;
+    }
+
   }
 
   /***********fps********** */
@@ -69,26 +80,24 @@ class GFrame {
         stageHeight = document.body.clientHeight;
       }
     }
-
-    let body = document.getElementById("body"),
-      game = document.getElementById("game");
+    let game = document.getElementById("game");
     //宽度自适应
-    if (stageWidth<=750) {
+    if (stageWidth <= 750) {
       stageScale = (stageWidth / width); //.toFixed(2);//四舍五入
       let h = stageHeight / stageScale,
         h1 = stage.canvas.height;
       height = h > h1 ? h1 : h;
     }
     //高度自适应
-    else if (bool) {
-      stageScale=stageHeight/height;
-      body.style.width = width * stageScale + 'px';
-    } 
+    else if (stageWidth>=1200&&bool) {
+      stageScale = stageHeight / height;
+      game.style.width=width*stageScale+'px';
+    }
     //不缩放
     else {
       stageScale = 1;
       let h = stageHeight / stageScale,
-      h1 = stage.canvas.height;
+        h1 = stage.canvas.height;
       height = h > h1 ? h1 : h;
     }
     game.style.transform = 'scale(' + stageScale + ')';
@@ -101,28 +110,18 @@ class GFrame {
    * @param {*} compid 
    */
   preload(GClass) {
-    if (!GClass.loadItem && !GClass.id) {
+    if ((!GClass.loadItem && !GClass.id) || GClass.isloaded) {
       this.initGame(GClass);
       return;
     }
-
-    queue = new createjs.LoadQueue();
-    queue.installPlugin(createjs.Sound); //注册声音插件
-    this.loaderBar = new LoaderBar();
-    this.loaderBar.x = (width - this.loaderBar.getBounds().width) / 2;
-    this.loaderBar.y = (height - this.loaderBar.getBounds().height) / 2;
+    if (!queue) {
+      queue = new createjs.LoadQueue();
+      queue.installPlugin(createjs.Sound); //注册声音插件
+      this.loaderBar = new LoaderBar();
+      this.loaderBar.x = (width - this.loaderBar.getBounds().width) / 2;
+      this.loaderBar.y = (height - this.loaderBar.getBounds().height) / 2;
+    }
     stage.addChild(this.loaderBar);
-
-    if (GClass.id) {
-      let comp = AdobeAn.getComposition(GClass.id);
-      queue.on('fileload', this.onFileLoad, this, false, comp);
-      lib = comp.getLibrary();
-      queue.loadManifest(lib.properties.manifest);
-    }
-    if (GClass.loadItem) {
-      queue.loadManifest(GClass.loadItem);
-    }
-
     queue.on('complete', function onComplete(e) {
       queue.removeAllEventListeners();
       stage.removeChild(this.loaderBar);
@@ -134,9 +133,18 @@ class GFrame {
     queue.on('error', () => {
       console.log("loaderror");
     });
+    if (GClass.id) {
+      let comp = AdobeAn.getComposition(GClass.id);
+      queue.on('fileload', this.onFileLoad, this, false, comp);
+      lib = comp.getLibrary();
+      queue.loadManifest(lib.properties.manifest);
+    }
+    if (GClass.loadItem) {
+      queue.loadManifest(GClass.loadItem);
+    }
   }
 
-  /**初始化屏幕元素
+  /**初始化游戏
    * 
    */
   initGame(GClass) {

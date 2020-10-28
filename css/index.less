@@ -1,23 +1,26 @@
 @import "common";
+body{
+  background: #c5c5c5;
+  overflow: hidden;
+}
 
-body {
+.container {
   /* box-sizing: border-box;    css3盒子样式 */
-  padding: 0;
   min-width: 320px;
   width: 15rem;
+  height: 1206px;
   margin: 0 auto;
-  line-height: 1.5;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  background: #f2f2f2;
-  overflow: hidden;
-  // border: 1px solid #f00;
+  background: #FFB89C;
 }
-
 #mainlist {
-  margin-top: 1.5rem;
+  overflow: hidden;
 }
-
+#mainlist h2{
+  margin-top: 1.5rem;
+  color: rgb(250,58,58);
+}
 #select {
   text-align: center;
   margin-top: 1.2rem;
@@ -54,6 +57,8 @@ body {
 }
 
 #game {
+  margin: 0 auto;
+  width: 100%;
   transform-origin: 0 0;
   display: none;
 }
