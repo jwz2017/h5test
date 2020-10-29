@@ -69,17 +69,8 @@ class GFrame {
    * 
    */
   adapt(bool) {
-    let stageWidth = window.innerWidth,
-      stageHeight = window.innerHeight;
-    if (typeof stageWidth != "number") {
-      if (document.compatMode == 'CSS1Compat') {
-        stageWidth = document.documentElement.clientWidth;
+    let stageWidth = document.documentElement.clientWidth,
         stageHeight = document.documentElement.clientHeight;
-      } else {
-        stageWidth = document.body.clientWidth;
-        stageHeight = document.body.clientHeight;
-      }
-    }
     let game = document.getElementById("game");
     //宽度自适应
     if (stageWidth <= 750) {

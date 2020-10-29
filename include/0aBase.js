@@ -155,7 +155,9 @@
             text.x = 160;
             text.y = 150;
             scorecontainer.addChild(text);
-
+            var dd=document.getElementById("aa");
+            var c=new createjs.DOMElement(dd);
+            c.x=c.y=400;
             /**
              * *****************11与dom协作*************************************
              */
@@ -164,7 +166,7 @@
             /**
              * *****************6:交换元素图层************************************
              */
-            stage.addChild(ball, butterfly, scorecontainer);
+            stage.addChild(c,ball, butterfly, scorecontainer);
             stage.swapChildren(butterfly, ball); //交换图层
 
             /**
