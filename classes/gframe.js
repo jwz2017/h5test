@@ -3,6 +3,8 @@ window.onload = function () {
   "use strict";
   /*************游戏入口*****/
   var g = new GFrame('canvas');
+  var c=document.getElementById("container");
+  c.style.height=document.documentElement.clientHeight+'px';
   /****************选择菜单或直接加载游戏******************* */
   mainlist(); //菜单方式
   //直接加载游戏方式
