@@ -52,8 +52,9 @@
             this.titleScreen.setText("基础类测试");
         }
         initSprite() { //sprite:spriteSheet初始
-            spriteSheet = new createjs.SpriteSheet(queue.getResult('spriteData'));
-            spriteSheetLetter = new createjs.SpriteSheet(queue.getResult('lettersData'));
+            spriteSheet=new createjs.SpriteSheet(queue.getResult('spriteData'));
+            spriteSheetLetter=new createjs.SpriteSheet(queue.getResult('lettersData'));
+            this.loaderbarSheet=new createjs.SpriteSheet(queue.getResult('loaderbarData'));
         }
         /**建立游戏元素
          * 在构造函数里建立
@@ -177,26 +178,6 @@
                 butterfly.x = stage.mouseX;
                 butterfly.y = stage.mouseY;
             });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             /**
              * ********************8:createjs缓动********************************************
              * this默认指向get()里的对象     
@@ -213,7 +194,7 @@
         }
         runGame() {
             this.domElement.rotation += 1;
-            score++;
+            score++;;
             this.updateScoreBoard(SCORE, score);
             /**
              * *******************9:运用缓动公式***********************************************
@@ -439,14 +420,16 @@
             GFrame.style.SCOREBOARD_COLOR = "#555"
             this.scoreBoard = new ScoreBoard(0, height- GFrame.style.SCOREBOARD_HEIGHT);
             // this.scoreBoard.createTextElement(SCORE,'0',10,14,{valsheet:spriteSheetLetter,scale:0.7});
-            this.scoreBoard.createTextElement(SCORE, '0', 10, 14, {
-                valsheet: spriteSheetLetter,
-                labid: "scoreLabel",
-                scale: 0.7
-            });
+            // this.scoreBoard.createTextElement(SCORE, '0', 10, 14, {
+            //     valsheet: spriteSheetLetter,
+            //     labid: "scoreLabel",
+            //     scale: 0.7
+            // });
+            this.scoreBoard.createTextElement(SCORE,'0%',10,14,{valsheet:this.loaderbarSheet});
         }
 
     }
+    Base.isloaded=false;
     Base.loadItem = [{
         id: "butterfly1",
         src: "assets/move/butterfly.png"
@@ -468,7 +451,15 @@
     }, {
         id: "scoreLabel",
         src: "assets/move/score.png"
-    }];
+    }
+];
+Base.loadbar=[{
+    id:"loaderbar",
+    src:"assets/loaderbar.png"
+},{
+    id:"loaderbarData",
+    src:"assets/loaderbar.json"
+}]
 
     Base.id = 'A81D833FE7C7754FB5395FF7A6EFA6E1';
     window.Base = Base;

@@ -3,8 +3,9 @@ window.onload = function () {
   "use strict";
   /*************游戏入口*****/
   var g = new GFrame('canvas');
-  var c=document.getElementById("container");
-  c.style.height=document.documentElement.clientHeight+'px';
+  //设置窗口高度
+  var container = document.getElementById("container");
+  container.style.height = document.documentElement.clientHeight + 'px';
   /****************选择菜单或直接加载游戏******************* */
   mainlist(); //菜单方式
   //直接加载游戏方式
@@ -18,7 +19,7 @@ window.onload = function () {
     select.focus();
     select.onchange = function () {
       mainlist.style.display = "none";
-      game.style.width=100+'%';
+      game.style.width = 100 + '%';
       game.style.display = "block";
       let index = select.selectedIndex;
       let sgame = eval(select.options[index].value);
@@ -34,7 +35,6 @@ window.onload = function () {
       } else {
         g.initGame(sgame);
       }
-      sgame.isloaded = true;
     }
 
   }
@@ -72,7 +72,7 @@ class GFrame {
    */
   adapt(bool) {
     let stageWidth = document.documentElement.clientWidth,
-        stageHeight = document.documentElement.clientHeight;
+      stageHeight = document.documentElement.clientHeight;
     let game = document.getElementById("game");
     //宽度自适应
     if (stageWidth <= 750) {
@@ -82,9 +82,9 @@ class GFrame {
       height = h > h1 ? h1 : h;
     }
     //高度自适应
-    else if (stageWidth>=1200&&bool) {
+    else if (stageWidth >= 1200 && bool) {
       stageScale = stageHeight / height;
-      game.style.width=width*stageScale+'px';
+      game.style.width = width * stageScale + 'px';
     }
     //不缩放
     else {
@@ -110,14 +110,27 @@ class GFrame {
     if (!queue) {
       queue = new createjs.LoadQueue();
       queue.installPlugin(createjs.Sound); //注册声音插件
-      this.loaderBar = new LoaderBar();
-      this.loaderBar.x = (width - this.loaderBar.getBounds().width) / 2;
-      this.loaderBar.y = (height - this.loaderBar.getBounds().height) / 2;
+      if (GClass.loadbar) {
+        queue.addEventListener('complete', () => {
+          queue.removeAllEventListeners('complete');
+          this.loaderBar = new LoaderBar1(queue.getResult('loaderbarData'));
+          this._preloadon(GClass);
+        });
+        queue.loadManifest(GClass.loadbar);
+      } else {
+        this.loaderBar = new LoaderBar();
+        this._preloadon(GClass);
+      }
     }
+  }
+  _preloadon(GClass) {
+    this.loaderBar.x = (width - this.loaderBar.getBounds().width) / 2;
+    this.loaderBar.y = (height - this.loaderBar.getBounds().height) / 2;
     stage.addChild(this.loaderBar);
     queue.on('complete', function onComplete(e) {
       queue.removeAllEventListeners();
       stage.removeChild(this.loaderBar);
+      GClass.isloaded=true;
       this.initGame(GClass);
     }, this, true);
     queue.on('progress', (e) => {
@@ -135,6 +148,7 @@ class GFrame {
     if (GClass.loadItem) {
       queue.loadManifest(GClass.loadItem);
     }
+
   }
 
   /**初始化游戏
@@ -398,7 +412,8 @@ class SideBysideScoreBitmap extends createjs.Container {
     super();
     this.sheet = map.valsheet;
     this.value = new createjs.BitmapText(val, this.sheet);
-    this.value.regY = this.value.getBounds().height / 2;
+    this.valueRegY = this.value.getBounds().height / 2;
+    this.value.regY = this.valueRegY;
     this._scale = map.scale || 1;
     this.value.scaleX = this.value.scaleY = this._scale;
     if (map.labsheet) {
@@ -410,6 +425,7 @@ class SideBysideScoreBitmap extends createjs.Container {
     }
     this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
     this.valueypos = this.label.getBounds().height / 2;
+
     this.value.x = this.valuexpos;
     this.value.y = this.valueypos;
     this.addChild(this.label, this.value);
@@ -417,11 +433,11 @@ class SideBysideScoreBitmap extends createjs.Container {
   setValText(val) {
     this.removeChild(this.value);
     this.value = new createjs.BitmapText(val.toString(), this.sheet);
-    this.value.regY = this.value.getBounds().height / 2
+    this.value.regY = this.valueRegY;
     this.value.scaleX = this.value.scaleY = this._scale;
     this.value.x = this.valuexpos;
     this.value.y = this.valueypos;
-    this.value.letterSpacing = 4;
+    this.value.letterSpacing = 2;
     this.addChild(this.value);
   }
 }
@@ -448,14 +464,12 @@ class ScoreBoard extends createjs.Container {
       this.scoreBar = new createjs.Shape();
       this.scoreBar.graphics.beginFill(GFrame.style.SCOREBOARD_COLOR)
         .drawRect(0, 0, GFrame.style.SCOREBOARD_WIDTH, GFrame.style.SCOREBOARD_HEIGHT);
-      this.addChild(this.scoreBar);
     } else if (bg.sheet) {
       this.scoreBar = new createjs.Sprite(bg.sheet, bg.ani);
-      this.addChild(this.scoreBar);
     } else {
       this.scoreBar = new createjs.Bitmap(queue.getResult(bg.id));
-      this.addChild(this.scoreBar);
     }
+    this.addChild(this.scoreBar);
 
   }
   /**

@@ -94,6 +94,63 @@ class LoaderBar extends createjs.Container {
     this._redraw();
   }
 }
+//进度条1
+class LoaderBar1 extends createjs.Container {
+  /**
+   * 进度条
+   * @param {[object]} parent 父级容器
+   * @param {[number]} x 
+   * @param {[number]} y 
+   * @param {[number]} width 
+   * @param {[number]} height 
+   */
+  constructor(dataid,parent, x=0, y=0, width=400, height=20) {
+    super();
+    if (parent) {
+      parent.addChild(this);
+    }
+    this.loaderBar=new createjs.Shape();
+    this.x = x;
+    this.y = y ;
+    this.percentLoaded = 0;
+    this.loaderBar.setBounds(0, 0, width, height);
+    //标题
+    // this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
+    // this.titleText.textAlign="center";
+    this.sheet=new createjs.SpriteSheet(dataid);
+    this.titleText=new createjs.Sprite(this.sheet,"title");
+    // this.titleText.x=width/2;
+    this.titleText.y=-this.titleText.getBounds().height;
+    // console.log(queue.getResult(dataid));
+    //数字
+    this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
+    this.text.textAlign="center";
+    this.text.x=width/2;
+    this.text.y=height+10;
+    this.addChild(this.loaderBar,this.text,this.titleText);
+    this._redraw();
+  }
+  _redraw() {
+    let t=Math.floor(this.percentLoaded*100);
+    this.text.text=t+"%";
+    this.titleText.x=400 * this.percentLoaded-this.titleText.getBounds().width/2;
+    this.loaderBar.graphics.clear();
+    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.loaderBar.getBounds().width-6) * this.percentLoaded, this.loaderBar.getBounds().height-6).endFill();
+    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.loaderBar.getBounds().width, this.loaderBar.getBounds().height).endStroke();
+  }
+  /**
+   * 开始加载
+   */
+  startLoad(percentLoaded) {
+    this.percentLoaded=percentLoaded;
+    if (this.percentLoaded >= 1) {
+      this.percentLoaded=1;
+    }
+    this._redraw();
+  }
+}
+
+
 
 //---------------------------------------------------Graphics---------------------------------------------------------------
 class Rect extends createjs.Graphics {

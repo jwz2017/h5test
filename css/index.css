@@ -104,9 +104,6 @@ body {
   transform-origin: 0 0;
   display: none;
 }
-#game canvas {
-  background-color: #9eb195;
-}
 #game p {
   display: none;
   width: 200px;
@@ -122,4 +119,7 @@ body {
   width: 170px;
   height: 50px;
   font-size: 30px;
+}
+#game canvas {
+  background-color: #9eb195;
 }
