@@ -108,15 +108,16 @@ class GFrame {
       return;
     }
     if (!queue) {
-      queue = new createjs.LoadQueue();
+      //开启false,图片地址为加载后的图像，ture: json数据写成js，
+      // 地址用 getResult()
+      queue = new createjs.LoadQueue(false);
       queue.installPlugin(createjs.Sound); //注册声音插件
-      if (GClass.loadbar) {
-        queue.addEventListener('complete', () => {
-          queue.removeAllEventListeners('complete');
-          this.loaderBar = new LoaderBar1(queue.getResult('loaderbarData'));
+      if (GClass.loaderbar) {
+        queue.loadManifest(GClass.loaderbar);
+        queue.on('complete', () => {
+          this.loaderBar = new LoaderBar1(queue.getResult("loaderbarData"));
           this._preloadon(GClass);
-        });
-        queue.loadManifest(GClass.loadbar);
+        }, this, true);
       } else {
         this.loaderBar = new LoaderBar();
         this._preloadon(GClass);
@@ -130,7 +131,7 @@ class GFrame {
     queue.on('complete', function onComplete(e) {
       queue.removeAllEventListeners();
       stage.removeChild(this.loaderBar);
-      GClass.isloaded=true;
+      GClass.isloaded = true;
       this.initGame(GClass);
     }, this, true);
     queue.on('progress', (e) => {
@@ -148,7 +149,6 @@ class GFrame {
     if (GClass.loadItem) {
       queue.loadManifest(GClass.loadItem);
     }
-
   }
 
   /**初始化游戏
@@ -267,7 +267,6 @@ class GFrame {
   //结束界面状态
   _systemGameOver() {
     this.game.clear();
-    // stage.removeAllChildren();
     stage.removeAllEventListeners();
     stage.addChild(this.game.gameOverScreen);
     this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
@@ -341,17 +340,9 @@ GFrame.state = {
 };
 /*****************************************游戏界面**************************** */
 class BasicScreen extends createjs.Container {
-  constructor() {
+  constructor(text = null, xpos = 0, ypos = 0) {
     super();
-    this.displayText = new createjs.Text();
-  }
-  /**创建显示文本
-   * 
-   * @param {string} text 文本内容
-   * @param {number} xpos 文本x坐标
-   * @param {number} ypos 文本y坐标
-   */
-  createDisplayText(text, xpos, ypos) {
+    this.displayText = new createjs.Text(text);
     this.displayText.text = text;
     this.displayText.x = xpos;
     this.displayText.y = ypos;
@@ -370,7 +361,7 @@ class BasicScreen extends createjs.Container {
    * @param {[number]} height 按钮高度 默认20
    */
   createOkButton(xpos, ypos, label, width, height) {
-    let button = new PushButton(this, label, () => {
+    new PushButton(this, label, () => {
       this.dispatchEvent(GFrame.event.OK_BUTTON, false);
     }, xpos, ypos, width, height, new Star(6, 0.5));
   }
@@ -380,139 +371,114 @@ class BasicScreen extends createjs.Container {
    * @param {string} val 文本内容
    */
   setText(val) {
-    this.displayText.text = val;
+    this.displayText.text = val.toString();
   }
 
 }
 class SideBysideScore extends createjs.Container {
-  constructor(labeText, valText) {
+  /**
+   * 
+   * @param {*} label 引索也是key
+   * @param {*} value 
+   * @param {*} obj 图片资源
+   * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
+   * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
+   * map. scale:缩放
+   */
+  constructor(label, value, obj = null, scale = 1, letterSpacing = 2) {
     super();
-    this._label = new createjs.Text(labeText + ':', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
-    this._value = new createjs.Text(valText, GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+    if (!obj) {
+      this.createScore(label, value);
+    } else {
+      this.createScorePic(label, value, obj, scale, letterSpacing);
+    }
+  }
+  createScore(label, value) {
+    this._label = new createjs.Text(label + ':', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+    this._value = new createjs.Text(value, GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
     this._value.y = 1;
     this._label.x = 0;
     this._value.x = GFrame.style.SCORE_BUFF + this._label.getMeasuredWidth();
     this.addChild(this._label, this._value);
   }
-  setValText(val) {
-    this._value.text = val;
-  }
-}
-class SideBysideScoreBitmap extends createjs.Container {
-  /**
-   * 
-   * @param {*} key 引索也是label
-   * @param {*} value 
-   * @param {*} map 图片资源
-   * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
-   * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
-   * map. scale:缩放
-   */
-  constructor(key, val, map) {
-    super();
-    this.sheet = map.valsheet;
-    this.value = new createjs.BitmapText(val, this.sheet);
-    this.valueRegY = this.value.getBounds().height / 2;
-    this.value.regY = this.valueRegY;
-    this._scale = map.scale || 1;
-    this.value.scaleX = this.value.scaleY = this._scale;
-    if (map.labsheet) {
-      this.label = new createjs.Sprite(map.labsheet, map.labani);
-    } else if (map.labid) {
-      this.label = new createjs.Bitmap(queue.getResult(map.labid));
+  createScorePic(label, value, obj, scale, letterSpacing) {
+    let sheet = obj.valsheet;
+    this._value = new createjs.BitmapText(value, sheet);
+    this._value.regY = this._value.getBounds().height / 2;
+    this._value.scaleX = this._value.scaleY = scale;
+    if (obj.labsheet) {
+      this._label = new createjs.Sprite(obj.labsheet, obj.labani);
+    } else if (obj.labid) {
+      this._label = new createjs.Bitmap(queue.getResult(obj.labid));
     } else {
-      this.label = new createjs.Text(key + ' :', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
+      this._label = new createjs.Text(label + ' :', GFrame.style.SCORE_TEXT_SIZE + 'px ' + GFrame.style.SCOREBOARD_FONTFAMILY, GFrame.style.SCORE_TEXT_COLOR);
     }
-    this.valuexpos = this.label.getBounds().width + GFrame.style.SCORE_BUFF;
-    this.valueypos = this.label.getBounds().height / 2;
-
-    this.value.x = this.valuexpos;
-    this.value.y = this.valueypos;
-    this.addChild(this.label, this.value);
+    let valuexpos = this._label.getBounds().width + GFrame.style.SCORE_BUFF,
+      valueypos = this._label.getBounds().height / 2;
+    this._value.x = valuexpos;
+    this._value.y = valueypos;
+    this._value.letterSpacing = letterSpacing;
+    this.addChild(this._label, this._value);
   }
   setValText(val) {
-    this.removeChild(this.value);
-    this.value = new createjs.BitmapText(val.toString(), this.sheet);
-    this.value.regY = this.valueRegY;
-    this.value.scaleX = this.value.scaleY = this._scale;
-    this.value.x = this.valuexpos;
-    this.value.y = this.valueypos;
-    this.value.letterSpacing = 2;
-    this.addChild(this.value);
+    this._value.text = val.toString();
   }
 }
-
 class ScoreBoard extends createjs.Container {
   /**
    * 分数板
    * @param {*} xpos 
    * @param {*} ypos 
-   * @param {*} bg 背景图
-   * 可选：默认"shape" 
-   * {sheet:spritesheet, ani:sprite的animation}
-   * {id:bitmap的id}
-   * null
+   * @param {*} obj 背景图{(sheet,ani)或id或null 默认“shape”}
    */
-  constructor(xpos = 0, ypos = 0, bg = "shape") {
+  constructor(xpos = 0, ypos = 0,obj="shape") {
     super();
     this.x = xpos;
     this.y = ypos;
     this._textElements = {};
-    if (!bg) {
+    if (!obj) {
       return;
-    } else if (bg == "shape") {
+    } else if (obj.id) {
+      this.scoreBar = new createjs.Bitmap(queue.getResult(obj.id));
+    } else if (obj.sheet) {
+      this.scoreBar = new createjs.Sprite(obj.sheet, obj.ani);
+    } else {
       this.scoreBar = new createjs.Shape();
       this.scoreBar.graphics.beginFill(GFrame.style.SCOREBOARD_COLOR)
         .drawRect(0, 0, GFrame.style.SCOREBOARD_WIDTH, GFrame.style.SCOREBOARD_HEIGHT);
-    } else if (bg.sheet) {
-      this.scoreBar = new createjs.Sprite(bg.sheet, bg.ani);
-    } else {
-      this.scoreBar = new createjs.Bitmap(queue.getResult(bg.id));
     }
     this.addChild(this.scoreBar);
-
   }
   /**
    * 创建分数元素
-   * @param {String} key 
-   * @param {String} value 
+   * @param {*} label 
+   * @param {*} val 
    * @param {*} xpos 
    * @param {*} ypos 
-   * @param {{}} map 图片资源
-   * {valsheet:（必选queue的dataid）,labsheet:(可选 ),labani:有labsheet后必选}
-   * {valsheet:（必选queue的dataid）,labid:(可选 )bitmapid }
+   * @param {*} obj 图片资源 {(labsheet,labani或labid)(valsheet)}
+   * @param {*} scale =1
+   * @param {*} letterSpacing =2
    */
-  createTextElement(key, val, xpos, ypos, map) {
-    if (map) {
-      var obj = new SideBysideScoreBitmap(key, val, map);
-    } else {
-      var obj = new SideBysideScore(key, val);
-    }
-    this._textElements[key] = obj;
-    obj.x = xpos;
-    obj.y = ypos;
-    this.addChild(obj);
+  createTextElement(label, val, xpos, ypos, obj, scale, letterSpacing) {
+    var _obj = new SideBysideScore(label, val, obj, scale, letterSpacing);
+    this._textElements[label] = _obj;
+    _obj.x = xpos;
+    _obj.y = ypos;
+    this.addChild(_obj);
   }
   /**
    * 跟新分数板
-   * @param {*} key 
+   * @param {*} label 
    * @param {*} val 
    */
-  update(key, val) {
-    this._textElements[key].setValText(val);
+  update(label, val) {
+    this._textElements[label].setValText(val);
   }
 }
 /***************************************游戏基类****************************** */
 class Game {
   constructor() {
     mc.style.fontSize = 40; //mc组件字体大小
-    this.initSprite();
-    this.initScreen();
-  }
-  initSprite() {
-
-  }
-  initScreen() {
     this.createTitleScreen();
     this.createInstructionScreen();
     this.createLevelInScreen();
@@ -524,23 +490,19 @@ class Game {
 
   }
   createTitleScreen() {
-    this.titleScreen = new BasicScreen();
-    this.titleScreen.createDisplayText('开始界面5', width / 2, height / 3);
+    this.titleScreen = new BasicScreen('开始界面5', width / 2, height / 3);
     this.titleScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'start', 250, 250); //300,60
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
   }
   createInstructionScreen() {
-    this.instructionScreen = new BasicScreen();
-    this.instructionScreen.createDisplayText('介绍界面', width / 2, height / 3);
+    this.instructionScreen = new BasicScreen('介绍界面', width / 2, height / 3);
     this.instructionScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'ok', 250, 250);
   }
   createLevelInScreen() {
-    this.levelInScreen = new BasicScreen();
-    this.levelInScreen.createDisplayText('level:0', (width) / 2, height / 2);
+    this.levelInScreen = new BasicScreen('level:0', width / 2, height / 2);
   }
   createGameOverScreen() {
-    this.gameOverScreen = new BasicScreen();
-    this.gameOverScreen.createDisplayText('结束界面', width / 2, height / 3);
+    this.gameOverScreen = new BasicScreen('结束界面', width / 2, height / 3);
     this.gameOverScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'over', 250, 250);
   }
   createScoreBoard() {

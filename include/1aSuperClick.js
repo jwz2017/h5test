@@ -144,7 +144,7 @@
                         scaleX: 3,
                         scaleY: 3,
                         alpha: 0
-                    }, 1000).call(this.remove);
+                    }, 500).call(this.remove);
                     balls.splice(i, 1);
                     createjs.Tween.get(ball).to({
                         alpha: 0

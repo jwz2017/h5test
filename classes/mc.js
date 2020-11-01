@@ -37,7 +37,7 @@ mc.style = {
         this.buttonDownColor = "#bbbbbb";
         this.buttonOverColor = "#cccccc";
         this.buttonUpColor = "#ffffff";
-        this.labelColor = "#333333";
+        this.labelColor = "#666666";
     }
   }
 };
@@ -109,34 +109,38 @@ class LoaderBar1 extends createjs.Container {
     if (parent) {
       parent.addChild(this);
     }
+    this.width=width;
+    this.height=height;
     this.loaderBar=new createjs.Shape();
     this.x = x;
     this.y = y ;
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
-    // this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
-    // this.titleText.textAlign="center";
+    this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
+    this.titleText.textAlign="center";
     this.sheet=new createjs.SpriteSheet(dataid);
     this.titleText=new createjs.Sprite(this.sheet,"title");
-    // this.titleText.x=width/2;
     this.titleText.y=-this.titleText.getBounds().height;
-    // console.log(queue.getResult(dataid));
     //数字
-    this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
-    this.text.textAlign="center";
-    this.text.x=width/2;
-    this.text.y=height+10;
-    this.addChild(this.loaderBar,this.text,this.titleText);
+    this.percent=new createjs.BitmapText(this.percentLoaded.toString()+'%',this.sheet);
+    this.percent.x=(width-this.percent.getBounds().width)/2;
+    this.percent.y=this.height+10;
+    this.addChild(this.loaderBar,this.percent,this.titleText);
     this._redraw();
+    //测试图片预加载,,,queue = new createjs.LoadQueue(false)
+    // var a=new Image();
+    // a.src="assets/loaderbar.png";
+    // var b=new createjs.Bitmap("assets/loaderbar.png");
+    // console.log(a.width,b.getBounds().width);
   }
   _redraw() {
     let t=Math.floor(this.percentLoaded*100);
-    this.text.text=t+"%";
-    this.titleText.x=400 * this.percentLoaded-this.titleText.getBounds().width/2;
+    this.percent.text=t.toString()+"%";
+    this.titleText.x=this.width * this.percentLoaded-this.titleText.getBounds().width/2;
     this.loaderBar.graphics.clear();
-    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.loaderBar.getBounds().width-6) * this.percentLoaded, this.loaderBar.getBounds().height-6).endFill();
-    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.loaderBar.getBounds().width, this.loaderBar.getBounds().height).endStroke();
+    this.loaderBar.graphics.beginRadialGradientFill(["#F00","#0F0"], [0, 1], 100, 100, 0,0, 0, 300).drawRoundRect(3, 3, (this.width-6) * this.percentLoaded, this.height-6,7).endFill();
+    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRoundRect(0, 0, this.width, this.height,10).endStroke();
   }
   /**
    * 开始加载
@@ -971,11 +975,11 @@ class ScrollBar extends createjs.Container {
   _handleRedraw() {
     this.handle.graphics.clear();
     if (this.handle.down) {
-      this.handle.graphics.beginFill(mc.style.borderColor);
-    } else if (this.handle.over) {
       this.handle.graphics.beginFill(mc.style.highlightColor);
-    } else {
+    } else if (this.handle.over) {
       this.handle.graphics.beginFill(mc.style.buttonUpColor);
+    } else {
+      this.handle.graphics.beginFill(mc.style.borderColor);
     }
     this.handle.graphics.drawRect(0, 0, this.handle.width, this.handle.height);
   }

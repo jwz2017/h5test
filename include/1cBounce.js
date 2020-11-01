@@ -24,7 +24,7 @@
         constructor() {
             super();
             this.titleScreen.setText("弹球游戏");
-            this.scoreBoard.y = stage.canvas.height - GFrame.style.SCOREBOARD_HEIGHT;
+            this.scoreBoard.y = height - GFrame.style.SCOREBOARD_HEIGHT;
         }
         createScoreBoard(){
             GFrame.style.SCOREBOARD_COLOR="#555";
@@ -63,7 +63,7 @@
             let w = stage.canvas.width;
              stage.addChild(puck, wall, paddle);
              paddle.x = w / 2 - WALL_THICKNESS - PADDLE_WIDTH / 2 + WALL_THICKNESS;
-             paddle.y = stage.canvas.height - PADDLE_HEIGHT - GFrame.style.SCOREBOARD_HEIGHT;
+             paddle.y = height - PADDLE_HEIGHT - GFrame.style.SCOREBOARD_HEIGHT;
              this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, level);
              this.brick.createBrick(WALL_THICKNESS, WALL_THICKNESS, stage.canvas.width - WALL_THICKNESS, level);
              puck.x = w / 2;

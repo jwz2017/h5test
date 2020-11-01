@@ -51,11 +51,6 @@
             super();
             this.titleScreen.setText("基础类测试");
         }
-        initSprite() { //sprite:spriteSheet初始
-            spriteSheet=new createjs.SpriteSheet(queue.getResult('spriteData'));
-            spriteSheetLetter=new createjs.SpriteSheet(queue.getResult('lettersData'));
-            this.loaderbarSheet=new createjs.SpriteSheet(queue.getResult('loaderbarData'));
-        }
         /**建立游戏元素
          * 在构造函数里建立
          */
@@ -63,14 +58,16 @@
             /**
              * *******************1:位图加载************************************
              * 一:直接加载地址，image没有width,要等加载完成后才有width.
-             * 二:bitmap的宽度获取:butterfly.image.width,butterfly.getBounds().width
+             * 二 ：预加载设置为false可以直接用地址创建对象
+             * 三:bitmap的宽度获取:butterfly.image.width,butterfly.getBounds().width
              */
 
+            butterfly = new createjs.Bitmap("assets/move/butterfly.png");
             // A:直接加载地址:
-            // butterfly = new createjs.Bitmap("assets/butterfly.png"); 
 
             //B:预加载
-            butterfly = new createjs.Bitmap(queue.getResult("butterfly1"));
+            // butterfly = new createjs.Bitmap(queue.getResult("butterfly1"));
+            // console.log(butterfly.image.width);
 
             //C:animate库加载        fly和index要在同一目录
             button = new createjs.ScaleBitmap(new lib.Button().image, new createjs.Rectangle(80, 25, 6, 6));
@@ -156,7 +153,7 @@
             text.x = 160;
             text.y = 150;
             scorecontainer.addChild(text);
-            
+
             /**
              * *****************11与dom协作*************************************
              */
@@ -245,6 +242,7 @@
             let xpos = 200,
                 ypos = 137,
                 hgap = 60;
+                spriteSheet = new createjs.SpriteSheet(queue.getResult('spriteData'));
             for (let i = 0; i < NUM_DICE; i++) {
                 const die = new createjs.Sprite(spriteSheet, 'die');
                 die.paused = true;
@@ -382,7 +380,7 @@
             var textTxt = document.getElementById("testTxt");
             this.domElement = new createjs.DOMElement(textTxt);
             this.domElement.x = 280;
-            this.domElement.y = 700;
+            this.domElement.y = 500;
             this.domElement.regX = 100;
             this.domElement.regY = 100;
             textTxt.style.display = "block";
@@ -417,19 +415,22 @@
          * ********************12图片字体bitmapText***************************** 
          */
         createScoreBoard() {
+            spriteSheetLetter = new createjs.SpriteSheet(queue.getResult('lettersData'));
+            let loaderbarSheet = new createjs.SpriteSheet(queue.getResult('loaderbarData'));
             GFrame.style.SCOREBOARD_COLOR = "#555"
-            this.scoreBoard = new ScoreBoard(0, height- GFrame.style.SCOREBOARD_HEIGHT);
+            this.scoreBoard = new ScoreBoard(0, height - GFrame.style.SCOREBOARD_HEIGHT);
             // this.scoreBoard.createTextElement(SCORE,'0',10,14,{valsheet:spriteSheetLetter,scale:0.7});
             // this.scoreBoard.createTextElement(SCORE, '0', 10, 14, {
             //     valsheet: spriteSheetLetter,
-            //     labid: "scoreLabel",
-            //     scale: 0.7
-            // });
-            this.scoreBoard.createTextElement(SCORE,'0%',10,14,{valsheet:this.loaderbarSheet});
+            //     labid: "scoreLabel"
+            // },0.7);
+            this.scoreBoard.createTextElement(SCORE, '0%', 10, 14, {
+                valsheet: loaderbarSheet
+            });
         }
 
     }
-    Base.isloaded=false;
+    Base.isloaded = false;
     Base.loadItem = [{
         id: "butterfly1",
         src: "assets/move/butterfly.png"
@@ -451,16 +452,14 @@
     }, {
         id: "scoreLabel",
         src: "assets/move/score.png"
-    }
-];
-Base.loadbar=[{
-    id:"loaderbar",
-    src:"assets/loaderbar.png"
-},{
-    id:"loaderbarData",
-    src:"assets/loaderbar.json"
-}]
-
+    }];
+    Base.loaderbar = [{
+        id: "loaderbarData",
+        src: "assets/loaderbar.json"
+    },{
+        id:"loaderbarpic",
+        src:"assets/loaderbar.png"
+    }];
     Base.id = 'A81D833FE7C7754FB5395FF7A6EFA6E1';
     window.Base = Base;
 })();

@@ -8,7 +8,11 @@
             this.titleScreen.setText("sprite测试");
             this.instructionScreen.setText("w,a,s,d=上下左右，\n小键盘4756出拳");
         }
-        initSprite() {
+
+        /**建立游戏元素游戏初始化
+         * 在构造函数内建立
+         */
+        buildElement() {
             spriteData = {
                 images: [queue.getResult("woody_0"), "assets/sprite/woody_1.png", queue.getResult("woody_2")],
                 frames: {
@@ -66,12 +70,6 @@
                     }
                 }
             }
-        }
-
-        /**建立游戏元素游戏初始化
-         * 在构造函数内建立
-         */
-        buildElement() {
             this.onkey()
             this.people = new People1(spriteData);
             this.people.x = 200;
