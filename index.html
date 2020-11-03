@@ -34,7 +34,18 @@
 </head>
 
 <body>
-  <div id="container">
+  <div class="container">
+    <!-- 搜索栏 -->
+    <header class="search">
+      <div class="search_box">
+        <a href="#" class="icon_logo"></a>
+        <form action="#">
+          <span class="icon_search"></span>
+          <input type="search" placeholder="基础">
+        </form>
+        <a href="#" class="login">登入</a>
+      </div>
+    </header>
     <!-- 菜单页-->
     <div id="mainlist">
       <h2>游戏菜单04</h2>
@@ -50,20 +61,32 @@
         <option value="Fakezee">投骰子</option>
         <option value="Move">运动计算</option>
       </select>
+      <ul style="text-align: left;margin-top: 40px;">
+        <a style="margin-left: 30px;">Base</a>
+        <a style="margin-left: 30px;border: 1px solid red;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+        <a style="margin-left: 30px;">Sprite</a>
+      </ul>
     </div>
     <!-- 游戏界面 -->
-    <div id="game">
-      <!-- 随舞台缩放 dom-->
-      <!-- dom组件 -->
-      <input type="text" id="inputText" placeholder="请输入姓名">
-      <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-      <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
-        基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
+    <div id="box_game">
+      <div id="game">
+        <!-- 随舞台缩放 dom-->
+        <input type="text" id="inputText" placeholder="请输入姓名">
+        <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
+        <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
+          基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
         <canvas id="canvas" width="750" height="1206">
         </canvas>
       </div>
-      <!-- 不随舞台缩放 dom -->
-      <!-- <a id="aa" style="position: absolute;top:0;">dwerwerer</a> -->
+    </div>
+    <!-- 不随舞台缩放 dom -->
+    <!-- <a id="aa" style="position: absolute;top:0;">dwerwerer</a> -->
   </div>
 </body>
 

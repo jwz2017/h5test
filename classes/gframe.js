@@ -4,23 +4,35 @@ window.onload = function () {
   /*************游戏入口*****/
   var g = new GFrame('canvas');
   //设置窗口高度
-  var container = document.getElementById("container");
-  container.style.height = document.documentElement.clientHeight + 'px';
+  var h=document.documentElement.clientHeight;
+  var mainlist = document.getElementById("mainlist");
+  var box_game=document.getElementById("box_game");
+  // mainlist.style.height = h + 'px';
+  box_game.style.height=h+'px';
   /****************选择菜单或直接加载游戏******************* */
-  mainlist(); //菜单方式
+  mainlist1(); //菜单页
+  function click(e) {
+    
+  }
   //直接加载游戏方式
   // g.adapt();//可加true参数在pc端高度自适应
   // g.preload();//参数为具体游戏
-
-  function mainlist() {
+  
+  function mainlist1() {
     var select = document.getElementById("select");
     var mainlist = document.getElementById("mainlist");
+    var box_game = document.getElementById("box_game");
     var game = document.getElementById("game");
-    select.focus();
-    select.onchange = function () {
-      mainlist.style.display = "none";
+    select.onchange = function (e) {
+      //取消select焦点
+      e.target.blur();
+      //禁止滚动
+      document.getElementsByTagName('body')[0].setAttribute('style', 'position:fixed; width:100%;')
+      //允许滚动
+      // document.getElementsByTagName('body')[0].setAttribute('style', 'position:relative;')
+      mainlist.style.opacity=0.3;
       game.style.width = 100 + '%';
-      game.style.display = "block";
+      box_game.style.display = "block";
       let index = select.selectedIndex;
       let sgame = eval(select.options[index].value);
       //选择>750高度自适应游戏
@@ -85,6 +97,7 @@ class GFrame {
     else if (stageWidth >= 1200 && bool) {
       stageScale = stageHeight / height;
       game.style.width = width * stageScale + 'px';
+      height=stage.canvas.height;
     }
     //不缩放
     else {
@@ -115,7 +128,7 @@ class GFrame {
       if (GClass.loaderbar) {
         queue.loadManifest(GClass.loaderbar);
         queue.on('complete', () => {
-          this.loaderBar = new LoaderBar1(queue.getResult("loaderbarData"));
+          this.loaderBar = new LoaderBarPic(queue.getResult("loaderbarData"));
           this._preloadon(GClass);
         }, this, true);
       } else {

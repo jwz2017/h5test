@@ -58,30 +58,38 @@ class LoaderBar extends createjs.Container {
     if (parent) {
       parent.addChild(this);
     }
+    this.width=width;
+    this.height=height;
     this.loaderBar=new createjs.Shape();
     this.x = x;
     this.y = y ;
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
+    this._createtitle();
+    //数字
+    this._createpercent();
+  }
+  _createtitle(){
     this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
     this.titleText.textAlign="center";
-    this.titleText.x=width/2;
+    this.titleText.x=this.width/2;
     this.titleText.y=-45;
-    //数字
+  }
+  _createpercent(){
     this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
     this.text.textAlign="center";
-    this.text.x=width/2;
-    this.text.y=height+10;
+    this.text.x=this.width/2;
+    this.text.y=this.height+10;
     this.addChild(this.loaderBar,this.text,this.titleText);
     this._redraw();
   }
-  _redraw() {
+   _redraw() {
     let t=Math.floor(this.percentLoaded*100);
     this.text.text=t+"%";
     this.loaderBar.graphics.clear();
-    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.loaderBar.getBounds().width-6) * this.percentLoaded, this.loaderBar.getBounds().height-6).endFill();
-    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.loaderBar.getBounds().width, this.loaderBar.getBounds().height).endStroke();
+    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.width-6) * this.percentLoaded, this.height-6).endFill();
+    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.width, this.height).endStroke();
   }
   /**
    * 开始加载
@@ -95,7 +103,7 @@ class LoaderBar extends createjs.Container {
   }
 }
 //进度条1
-class LoaderBar1 extends createjs.Container {
+class LoaderBarPic extends createjs.Container {
   /**
    * 进度条
    * @param {[object]} parent 父级容器
@@ -104,7 +112,7 @@ class LoaderBar1 extends createjs.Container {
    * @param {[number]} width 
    * @param {[number]} height 
    */
-  constructor(dataid,parent, x=0, y=0, width=400, height=20) {
+  constructor(sheetData,parent, x=0, y=0, width=400, height=20) {
     super();
     if (parent) {
       parent.addChild(this);
@@ -117,13 +125,11 @@ class LoaderBar1 extends createjs.Container {
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
-    this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
-    this.titleText.textAlign="center";
-    this.sheet=new createjs.SpriteSheet(dataid);
-    this.titleText=new createjs.Sprite(this.sheet,"title");
+    var sheet=new createjs.SpriteSheet(sheetData);
+    this.titleText=new createjs.Sprite(sheet,"title");
     this.titleText.y=-this.titleText.getBounds().height;
     //数字
-    this.percent=new createjs.BitmapText(this.percentLoaded.toString()+'%',this.sheet);
+    this.percent=new createjs.BitmapText(this.percentLoaded.toString()+'%',sheet);
     this.percent.x=(width-this.percent.getBounds().width)/2;
     this.percent.y=this.height+10;
     this.addChild(this.loaderBar,this.percent,this.titleText);
