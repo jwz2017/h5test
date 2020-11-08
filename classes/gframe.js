@@ -1,61 +1,4 @@
 var stage, queue, model, lib, width, height, stageScale = 1;
-window.onload = function () {
-  "use strict";
-  /*************游戏入口*****/
-  var g = new GFrame('canvas');
-  //设置窗口高度
-  var h=document.documentElement.clientHeight;
-  var mainlist = document.getElementById("mainlist");
-  var box_game=document.getElementById("box_game");
-  // mainlist.style.height = h + 'px';
-  box_game.style.height=h+'px';
-  /****************选择菜单或直接加载游戏******************* */
-  mainlist1(); //菜单页
-  function click(e) {
-    
-  }
-  //直接加载游戏方式
-  // g.adapt();//可加true参数在pc端高度自适应
-  // g.preload();//参数为具体游戏
-  
-  function mainlist1() {
-    var select = document.getElementById("select");
-    var mainlist = document.getElementById("mainlist");
-    var box_game = document.getElementById("box_game");
-    var game = document.getElementById("game");
-    select.onchange = function (e) {
-      //取消select焦点
-      e.target.blur();
-      //禁止滚动
-      document.getElementsByTagName('body')[0].setAttribute('style', 'position:fixed; width:100%;')
-      //允许滚动
-      // document.getElementsByTagName('body')[0].setAttribute('style', 'position:relative;')
-      mainlist.style.opacity=0.3;
-      game.style.width = 100 + '%';
-      box_game.style.display = "block";
-      let index = select.selectedIndex;
-      let sgame = eval(select.options[index].value);
-      //选择>750高度自适应游戏
-      if (index === 1) {
-        g.adapt(true);
-      } else {
-        g.adapt();
-      }
-      //检查是否已加载过
-      if (!sgame.preload) {
-        g.preload(sgame);
-      } else {
-        g.initGame(sgame);
-      }
-    }
-
-  }
-
-  /***********fps********** */
-  // FPS.startFPS(stage);
-
-};
-
 /*************************GFrame************************************************************************ */
 class GFrame {
   constructor(canvasId) {
@@ -64,7 +7,7 @@ class GFrame {
     this._systemFunction = this._systemWaitForClose;
     this._setupStage(canvasId);
     /*********接收animate影片剪辑播放过程发出的事件。***/
-    model = new createjs.EventDispatcher();
+    model = model || new createjs.EventDispatcher();
     model.addEventListener(GFrame.event.PAUSE, () => {
       if (this._currentSystemState == GFrame.state.STATE_GAME_PLAY) {
         if (createjs.Ticker.paused) {
@@ -97,7 +40,7 @@ class GFrame {
     else if (stageWidth >= 1200 && bool) {
       stageScale = stageHeight / height;
       game.style.width = width * stageScale + 'px';
-      height=stage.canvas.height;
+      height = stage.canvas.height;
     }
     //不缩放
     else {
@@ -120,9 +63,9 @@ class GFrame {
       this.initGame(GClass);
       return;
     }
+    //开启false,图片地址为加载后的图像，ture: json数据写成js，
+    // 地址用 getResult()
     if (!queue) {
-      //开启false,图片地址为加载后的图像，ture: json数据写成js，
-      // 地址用 getResult()
       queue = new createjs.LoadQueue(false);
       queue.installPlugin(createjs.Sound); //注册声音插件
       if (GClass.loaderbar) {
@@ -135,6 +78,8 @@ class GFrame {
         this.loaderBar = new LoaderBar();
         this._preloadon(GClass);
       }
+    } else {
+      this._preloadon(GClass);
     }
   }
   _preloadon(GClass) {
@@ -315,12 +260,16 @@ class GFrame {
     stage.removeChild(e.target);
     this._switchSystemState(this._nextSystemState);
   }
+  clear() {
+    stage.removeAllEventListeners();
+    this.game.clear();
+  }
 }
 /*******************************************静态变量****************************************** */
 GFrame.style = {
-  TITLE_TEXT_SIZE: 54,
+  TITLE_TEXT_SIZE: 40,
   TITLE_FONTFAMILY: "Microsoft YaHei",
-  TITLE_TEXT_COLOR: "#FF0000",
+  TITLE_TEXT_COLOR: "#000000",
   //分数板样式
   SCORE_TEXT_SIZE: 36,
   SCORE_BUFF: 2,
@@ -386,6 +335,11 @@ class BasicScreen extends createjs.Container {
   setText(val) {
     this.displayText.text = val.toString();
   }
+  set fontSize(val){
+    this.displayText.font=val+ 'px ' + GFrame.style.TITLE_FONTFAMILY;
+  }
+    
+  
 
 }
 class SideBysideScore extends createjs.Container {
@@ -444,7 +398,7 @@ class ScoreBoard extends createjs.Container {
    * @param {*} ypos 
    * @param {*} obj 背景图{(sheet,ani)或id或null 默认“shape”}
    */
-  constructor(xpos = 0, ypos = 0,obj="shape") {
+  constructor(xpos = 0, ypos = 0, obj = "shape") {
     super();
     this.x = xpos;
     this.y = ypos;
@@ -491,7 +445,7 @@ class ScoreBoard extends createjs.Container {
 /***************************************游戏基类****************************** */
 class Game {
   constructor() {
-    mc.style.fontSize = 40; //mc组件字体大小
+    mc.style.fontSize = 30; //mc组件字体大小
     this.createTitleScreen();
     this.createInstructionScreen();
     this.createLevelInScreen();
@@ -503,22 +457,29 @@ class Game {
 
   }
   createTitleScreen() {
-    this.titleScreen = new BasicScreen('开始界面5', width / 2, height / 3);
-    this.titleScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'start', 250, 250); //300,60
+    this.titleScreen = new BasicScreen('开始界面5', width / 2, height / 10);
+    this.titleScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'start', 150, 150); //300,60
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
   }
   createInstructionScreen() {
-    this.instructionScreen = new BasicScreen('介绍界面', width / 2, height / 3);
-    this.instructionScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'ok', 250, 250);
+    this.instructionScreen = new BasicScreen('介绍界面', width / 2, height / 10);
+    this.instructionScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'ok', 150, 150);
   }
   createLevelInScreen() {
     this.levelInScreen = new BasicScreen('level:0', width / 2, height / 2);
   }
   createGameOverScreen() {
-    this.gameOverScreen = new BasicScreen('结束界面', width / 2, height / 3);
-    this.gameOverScreen.createOkButton((width - 250) / 2, height / 3 * 2, 'over', 250, 250);
+    this.gameOverScreen = new BasicScreen('结束界面', width / 2, height / 10);
+    this.gameOverScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'over', 150, 150);
   }
   createScoreBoard() {
+
+
+  }
+  /**建立游戏元素
+   * 在构造函数里建立
+   */
+  buildElement() {
 
   }
   newGame() {
@@ -531,12 +492,6 @@ class Game {
     //override
   }
   runGame() {
-
-  }
-  /**建立游戏元素
-   * 在构造函数里建立
-   */
-  buildElement() {
 
   }
   clear() {

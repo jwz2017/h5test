@@ -30,13 +30,18 @@
  * /使用queue,不能clone   使用地址不能用image.width.
  * 加阴影。。。位图直接加阴影在手机上很卡。。可用矢量加阴影
  * 
- * 
- * 
- * 
- * 
- * 
- * 
  */
+window.onload = function () {
+    "use strict";
+    /*************游戏入口*****/
+    var g = new GFrame('canvas');
+    //直接加载游戏方式
+    g.adapt(true);//可加true参数在pc端高度自适应
+    g.preload(Base);//参数为具体游戏
+    /***********fps********** */
+    // FPS.startFPS(stage);
+  };
+  
 (function () {
     "use strict";
     //游戏变量;
@@ -134,7 +139,7 @@
              * ***********************5:ScaleBitmap九宫图*******************************166.56
              */
             // button = new createjs.ScaleBitmap(queue.getResult("button"), new createjs.Rectangle(80, 25, 6, 6));
-            button.setDrawSize(200, 56);
+            button.setDrawSize(180, 56);
             this.ma1.x = 200;
             this.ma1.y = 500;
             button.x = 250;
@@ -430,7 +435,6 @@
         }
 
     }
-    Base.isloaded = false;
     Base.loadItem = [{
         id: "butterfly1",
         src: "assets/move/butterfly.png"
@@ -463,3 +467,69 @@
     Base.id = 'A81D833FE7C7754FB5395FF7A6EFA6E1';
     window.Base = Base;
 })();
+class Ball extends createjs.Shape {
+    /**
+     * @param {[string]} color #ff0000
+     * @param {[number]} radius 15
+     */
+    constructor(color = "#ff0000", radius = 15) {
+        super();
+        this.color = color;
+        this.cursor = "pointer";
+        this.radius = radius;
+        this.vx = this.vy = 0;
+        this._redraw();
+        this.setBounds(-this.radius - mc.style.strokeStyle, -this.radius - mc.style.strokeStyle, 2 * this.radius + 2 * mc.style.strokeStyle, 2 * this.radius + 2 * mc.style.strokeStyle);
+    }
+    _redraw() {
+        this.graphics.clear();
+        this.graphics.setStrokeStyle(1).beginStroke('#ffffff')
+        if (typeof(this.color)=="string") {
+            this.graphics.beginFill(this.color);
+        }else{//渐变
+            this.graphics.beginRadialGradientFill(this.color,[0,1],7,-8,0,0,0,this.radius)
+        }
+        this.graphics.drawCircle(0, 0, this.radius);
+            
+    }
+    
+}
+//飞船
+class Ship extends createjs.Shape {
+    /**
+     *飞船
+     * @param {[number]} radius 10
+     * @param {[string]} color "#000000"
+     */
+    constructor(radius, color) {
+        super();
+        this.radius = radius || 10;
+        this.color = color || mc.style.borderColor;
+        this._showFlame = false;
+        this._redraw();
+    }
+
+    _redraw() {
+        this.graphics.clear();
+        this.graphics.setStrokeStyle(1).beginStroke(this.color).moveTo(this.radius, 0)
+            .lineTo(-this.radius, this.radius).lineTo(-this.radius / 2, 0).lineTo(-this.radius, -this.radius)
+            .lineTo(this.radius, 0);
+        if (this._showFlame) {
+            this.graphics.moveTo(-this.radius * 0.75, -this.radius / 2)
+                .lineTo(-this.radius * 1.5, 0)
+                .lineTo(-this.radius * 0.75, this.radius / 2);
+        }
+    }
+    
+    get showFlame() {
+        return this._showFlame;
+    }
+    /**
+     * 设置尾巴
+     * val:boolen
+     */
+    set showFlame(val) {
+        this._showFlame = val;
+        this._redraw();
+    }
+}

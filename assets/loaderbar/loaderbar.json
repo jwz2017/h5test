@@ -1,5 +1,5 @@
 {
-        "images": ["assets/loaderbar.png"],
+        "images": ["assets/loaderbar/loaderbar.png"],
         "frames": [
 
                 [169, 57, 36, 29],

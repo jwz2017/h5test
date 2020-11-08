@@ -5,11 +5,15 @@
   width: 100%;
   margin: 0 auto;
 }
+main {
+  width: 100%;
+}
 .search {
   position: fixed;
   width: 100%;
   left: 0;
   top: 0;
+  z-index: 999;
 }
 .search .search_box {
   min-width: 320px;
@@ -27,7 +31,8 @@
 .search .search_box .icon_logo {
   width: 60px;
   height: 40px;
-  background: black;
+  background: url("../assets/main/h16.png") no-repeat center center;
+  background-size: 40px 40px;
   left: 0;
 }
 .search .search_box .login {
@@ -54,65 +59,218 @@
 .search .search_box form .icon_search {
   width: 20px;
   height: 20px;
-  background-color: blue;
+  background: url("../assets/main/jd-sprites.png") no-repeat;
+  background-size: 200px 200px;
+  background-position: -81px 2px;
   position: absolute;
   top: 10px;
   left: 70px;
 }
+.banner {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  z-index: 998;
+}
+.banner ul:first-child {
+  width: 1000%;
+  transform: translateX(-10%);
+  -webkit-transform: translateX(-10%);
+}
+.banner ul:first-child li {
+  width: 10%;
+  float: left;
+}
+.banner ul:first-child li a {
+  width: 100%;
+  display: block;
+}
+.banner ul:first-child li a img {
+  width: 100%;
+  display: block;
+}
+.banner ul:last-child {
+  position: absolute;
+  bottom: 5px;
+  width: 134px;
+  left: 50%;
+  margin-left: -67px;
+}
+.banner ul:last-child li {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  border: 2px solid #999;
+  float: left;
+  margin-left: 10px;
+}
+.banner ul:last-child li:first-child {
+  margin-left: 0;
+}
+.banner ul:last-child li.now {
+  background: #d8505c;
+}
+nav {
+  width: 100%;
+  background: #f6f4ec;
+}
+nav ul {
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+nav ul li {
+  width: 25%;
+  float: left;
+}
+nav ul li a {
+  display: block;
+  width: 100%;
+}
+nav ul li a img {
+  width: 40px;
+  height: 40px;
+  display: block;
+  margin: 0 auto;
+}
+nav ul li a p {
+  text-align: center;
+  color: #666;
+  padding: 5px 0;
+  font-size: 12px;
+}
+.product {
+  padding: 0 5px;
+}
+.probox {
+  margin-top: 10px;
+  box-shadow: 0 0 1px #d8d8d8;
+  background: #f6f4ec;
+}
+.probox .protitle {
+  height: 34px;
+  line-height: 34px;
+  border-bottom: 1px solid #ccc;
+}
+.sk_ico {
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin-top: 7px;
+  margin-left: 10px;
+  background: url("../assets/main/jd-sprites.png") no-repeat;
+  background-size: 200px 200px;
+  background-position: -60px 0;
+}
+.sk_text {
+  margin-left: 10px;
+  color: #d8505c;
+  float: left;
+}
+.sk_time {
+  float: left;
+  margin-left: 10px;
+}
+.sk_time span {
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  color: #fff;
+  background: #333;
+  margin-left: 3px;
+  float: left;
+  margin-top: 9px;
+}
+.sk_time span:nth-child(3n) {
+  background: #fff;
+  color: #333;
+  width: 3px;
+}
+.probox .procontant {
+  width: 100%;
+  max-height: 300px;
+  overflow: auto;
+}
+.sk_product {
+  width: 100%;
+  padding: 10px 0;
+  float: left;
+}
+.sk_product li {
+  width: 20%;
+  float: left;
+}
+.sk_product li a {
+  width: 100%;
+  display: block;
+  border-right: 1px solid #ddd;
+}
+.sk_product li:last-child a {
+  border-right: none;
+}
+.sk_product li a img {
+  width: 64%;
+  margin: 0 auto;
+  display: block;
+}
+.sk_product li p {
+  text-align: center;
+  padding-top: 5px;
+}
+.sk_product li .pro_name {
+  color: #666;
+  padding-top: 0;
+}
+#dome {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1000;
+  visibility: hidden;
+}
+#dome #game {
+  width: 100%;
+  margin: 0 auto;
+  transform-origin: 0 0;
+}
+#dome #game canvas {
+  background-color: #9eb195;
+}
+#dome #close {
+  z-index: 1001;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url("../assets/main/jd-sprites.png");
+  background-size: 400px 400px;
+  background-position: -204px 5px;
+}
 #mainlist {
-  height: 1210px;
-  background: #FFB89C;
+  padding: 0 5px;
+  line-height: 34px;
+  box-shadow: 0 0 1px #d8d8d8;
+  background: #FFF;
+  min-height: 200px;
   text-align: center;
   overflow: hidden;
-}
-#mainlist h2 {
-  line-height: 80px;
-  margin-top: 40px;
   color: #fa3a3a;
 }
 #mainlist select {
   text-align: center;
-  margin-top: 1.2rem;
-  font-size: 0.8rem;
-  border: 1px solid #6d6314;
+  font-size: 18px;
+  border: 1px solid #d8505c;
   background: transparent;
-  width: 40%;
+  width: 35%;
   cursor: pointer;
 }
 #mainlist select:focus option:hover {
-  color: white;
-  background-image: linear-gradient(#726512, #6d621e);
+  color: #666;
+  background-image: linear-gradient(#d8505c, #F7DFDD);
   font-weight: bold;
-}
-#box_game {
-  top: 0;
-  position: absolute;
-  width: 100%;
-  margin: 0 auto;
-  display: none;
-  overflow: hidden;
-}
-#game {
-  margin: 0 auto;
-  width: 100%;
-  transform-origin: 0 0;
-}
-#game p {
-  display: none;
-  width: 200px;
-  height: 300px;
-  color: #ff0000;
-  cursor: pointer;
-  font-size: 18px;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-#game input {
-  display: none;
-  width: 170px;
-  height: 50px;
-  font-size: 30px;
-}
-#game canvas {
-  background-color: #9eb195;
 }

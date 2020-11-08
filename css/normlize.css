@@ -32,7 +32,7 @@
     font-size: 14px;
     color: #333;
     font-family: Arial, Helvetica, sans-serif;
-    background: #c5c5c5;
+    background: #e5e5e5;
   }
   ul,ol{
     list-style: none;
@@ -59,7 +59,12 @@
     visibility: hidden;
     clear: both;
   }
-  
+  .m_r10{
+    margin-right: 10px;
+  }
+  .m_l10{
+    margin-left: 10px;
+  }
   
   /**
    * Render the `main` element consistently in IE.

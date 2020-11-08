@@ -401,7 +401,7 @@ class PushButtonShape extends ButtonShape {
    * @param {number} height =20
    * @param {Class} GClass =Rect
    */
-  constructor(parent, handle, width = 100, height = 20, GClass) {
+  constructor(parent, handle, width = 200, height = 40, GClass) {
     super(parent, handle, GClass);
     this.setSize(width, height);
   }
@@ -686,7 +686,7 @@ class PushButton extends Component {
   }
   _positionLabel() {
     this._label.x = this.shape.width / 2;
-    this._label.y = this.shape.height / 2;
+    this._label.y = this.shape.height / 2+2;
   }
   get selected() {
     return this.shape.selected;

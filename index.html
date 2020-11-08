@@ -9,84 +9,197 @@
   <link rel="stylesheet" href="css/normlize.css">
   <link rel="stylesheet" href="css/index.css">
   <title>h5Test</title>
+  <script src="include/index.js"></script>
   <script src="classes/createjs.min.js"></script>
-  <script src="classes/GraphicsUtils.js"></script>
   <script src="classes/gframe.js"></script>
   <script src="classes/mc.js"></script>
   <script src="classes/FPS.js"></script>
-  <script src="classes/easing.js"></script>
-  <script src="classes/BasePeople.js"></script>
-  <script src="classes/utils.js"></script>
-  <script src="classes/ScaleBitmap.js"></script>
   <script src="lib.js"></script>
-  <script src="assets/move/ma.js"></script>
+  <script src="assets/loadsprite/ma.js"></script>
 
-  <script src="include/0aBase.js"></script>
-  <script src="include/0sprite.js"></script>
-  <script src="include/1aSuperClick.js"></script>
-  <script src="include/1bColordrop.js"></script>
-  <script src="include/1cBounce.js"></script>
-  <script src="include/1dPuzzle.js"></script>
-  <script src="include/1eMatch.js"></script>
-  <script src="include/1fFakezee.js"></script>
-  <script src="include/2aMove.js"></script>
-  <script src="include/2bCannon.js"></script>
+  <script src="classes/ScaleBitmap.js"></script>
+  <script src="include/0LoadBitmap.js"></script>
+  <script src="include/0LoadSprite.js"></script>
 </head>
 
 <body>
   <div class="container">
-    <!-- 搜索栏 -->
-    <header class="search">
-      <div class="search_box">
-        <a href="#" class="icon_logo"></a>
-        <form action="#">
-          <span class="icon_search"></span>
-          <input type="search" placeholder="基础">
-        </form>
-        <a href="#" class="login">登入</a>
+    <main id="main">
+      <!-- 搜索栏 -->
+      <header class="search">
+        <div class="search_box">
+          <a href="#" class="icon_logo"></a>
+          <form action="#">
+            <span class="icon_search"></span>
+            <input type="search" placeholder="基础">
+          </form>
+          <a href="#" class="login">登入</a>
+        </div>
+      </header>
+      <!-- banner轮播图 -->
+      <div class="banner">
+        <ul class="clearfix">
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+          <li><a href="#"><img src="assets/main/banner.jpg" alt=""></a></li>
+        </ul>
+        <ul>
+          <li class="now"></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
       </div>
-    </header>
-    <!-- 菜单页-->
-    <div id="mainlist">
-      <h2>游戏菜单04</h2>
-      <select id="select" size="1" onchange="">
-        <option value="0">选择游戏</option>
-        <option value="Base">基础测试</option>
-        <option value="Sprite">sprite测试</option>
-        <option value="SuperClick">超级点击</option>
-        <option value="Colordrop">颜色拖动</option>
-        <option value="Bounce">弹球游戏</option>
-        <option value="Puzzle">拼图游戏</option>
-        <option value="Match">记忆翻牌</option>
-        <option value="Fakezee">投骰子</option>
-        <option value="Move">运动计算</option>
-      </select>
-      <ul style="text-align: left;margin-top: 40px;">
-        <a style="margin-left: 30px;">Base</a>
-        <a style="margin-left: 30px;border: 1px solid red;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-        <a style="margin-left: 30px;">Sprite</a>
-      </ul>
-    </div>
-    <!-- 游戏界面 -->
-    <div id="box_game">
+      <!-- 导航栏 -->
+      <nav>
+        <ul class="clearfix">
+          <li><a href="#"><img src="assets/main/qq13.png" alt="">
+              <p>主页</p>
+            </a></li>
+          <li><a href="#"><img src="assets/main/qq10.png" alt="">
+              <p>分类</p>
+            </a></li>
+          <li><a href="#"><img src="assets/main/qq1.png" alt="">
+              <p>分类</p>
+            </a></li>
+          <li><a href="#"><img src="assets/main/qq7.png" alt="">
+              <p>简介</p>
+            </a></li>
+          <!-- <li><a href="#">base</a></li>
+          <li><a href="#">base</a></li>
+          <li><a href="#">base</a></li>
+          <li><a href="#">base</a></li> -->
+        </ul>
+      </nav>
+
+      <!-- 商品区域 -->
+      <div class="product">
+        <!-- 第一个 -->
+        <section class="probox">
+          <div class="protitle nb">
+            <div class="f_left">
+              <span class="sk_ico"></span>
+              <span class="sk_text">基础练习</span>
+              <div class="sk_time">
+                <span>0</span>
+                <span>0</span>
+                <span>:</span>
+                <span>0</span>
+                <span>0</span>
+                <span>:</span>
+                <span>0</span>
+                <span>0</span>
+              </div>
+            </div>
+            <div class="f_right"><a href="javascript:void(0)" class="m_r10" id="genduo1"
+                onclick="onclick1(this)">更多></a></div>
+          </div>
+          <div class="procontant clearfix">
+            <ul class="sk_product">
+              <li>
+                <a href="#" title="LoadBitmap" onclick="pclick(this)"><img src="assets/main/loadbitmap.jpg" alt=""></a>
+                <p >资源加载 </p>
+                <p class="pro_name"> animate协作</p>
+              </li>
+              <li>
+                <a href="#" title="LoadSprite" onclick="pclick(this)"><img src="assets/main/loadsprite.jpg" alt=""></a>
+                <p >sprite Tp </p>
+                <p class="pro_name"> sprite ani</p>
+              </li>
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+            </ul>
+            <ul id="pro_con1" class="sk_product" style="display: none;">
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <!-- 第二个 -->
+        <section class="probox">
+          <div class="protitle nb">
+            <div class="f_left">
+              <span class="sk_ico"></span>
+              <span class="sk_text">游戏学习</span>
+            </div>
+            <div class="f_right"><a href="javascript:void(0)" class="m_r10" onclick="onclick2(this)">更多></a></div>
+          </div>
+          <div class="procontant clearfix">
+            <ul class="sk_product">
+              <li>
+                <a href="#"><img src="assets/main/h2.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+            </ul>
+            <ul id="pro_con2" class="sk_product" style="display: none;">
+              <li>
+                <a href="#"><img src="assets/main/h17.png" alt=""></a>
+                <p class="pro_name">基础应用</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <!-- 第三个 -->
+        <section class="probox">
+          <div class="protitle">
+            <h3>总结</h3>
+          </div>
+          <div class="procontant"></div>
+        </section>
+        <!-- 第四个 -->
+        <section class="probox">
+          <div class="protitle"></div>
+          <div class="procontant"></div>
+        </section>
+        <!-- 第五个 -->
+        <section class="probox">
+          <div class="protitle"></div>
+          <div class="procontant"></div>
+        </section>
+      </div>
+    </main>
+    <!-- 弹窗界面-->
+    <div id="dome">
+      <!-- 游戏界面 -->
       <div id="game">
         <!-- 随舞台缩放 dom-->
-        <input type="text" id="inputText" placeholder="请输入姓名">
-        <a id="openBtn" class="open_btn" style="font-size: 32px;display: none;cursor: pointer;">打开弹窗</a>
-        <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
-          基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。</p>
         <canvas id="canvas" width="750" height="1206">
         </canvas>
       </div>
+      <!-- 不随舞台缩放 dom -->
+      <a href="#" id="close" onclick="dclose(this)"></a>
     </div>
-    <!-- 不随舞台缩放 dom -->
-    <!-- <a id="aa" style="position: absolute;top:0;">dwerwerer</a> -->
   </div>
 </body>
 
