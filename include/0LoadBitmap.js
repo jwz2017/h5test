@@ -69,7 +69,7 @@
     }
     LoadBitmap.loadItem = [{
         id: "butterfly",
-        src: "assets/loadbitmap/butterfly.png"
+        src: "assets/loadBitmap/butterfly.png"
     }];
     LoadBitmap.loaderbar = [{
         id: "loaderbarData",
