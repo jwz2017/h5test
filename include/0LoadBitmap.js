@@ -55,7 +55,7 @@
         }
         waitComplete() {
             this.butterfly.x=200;
-            this.butterfly.scaleX=this.butterfly.scaleY=.5;
+            this.butterfly.scaleX=this.butterfly.scaleY=0.5;
             
             stage.addChild(this.butterfly,this.button);
         }
