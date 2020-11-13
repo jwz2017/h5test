@@ -244,46 +244,56 @@ nav ul li a p {
   color: #333;
   width: 3px;
 }
+
 //商品内容
-.probox .procontant{
+.probox .procontant {
   width: 100%;
   max-height: 300px;
   overflow: auto;
 }
-.sk_product{
+
+.sk_product {
   width: 100%;
   padding: 10px 0;
   float: left;
 }
-.sk_product li{
+
+.sk_product li {
   width: 20%;
   float: left;
 }
-.sk_product li a{
+
+.sk_product li a {
   width: 100%;
   display: block;
   border-right: 1px solid #ddd;
 }
-.sk_product li:last-child a{
+
+.sk_product li:last-child a {
   border-right: none;
 }
-.sk_product li a img{
+
+.sk_product li a img {
   width: 64%;
   margin: 0 auto;
   display: block;
+  border-radius: 20%;
 }
-.sk_product li p{
-  // font-size: 1px;
+
+.sk_product li p {
+  font-size: 12px;
+  line-height: 12px;
   text-align: center;
   padding-top: 5px;
 }
-.sk_product li .pro_name{
+
+.sk_product li .pro_name {
   color: #666;
   padding-top: 0;
 }
 
 //dome界面
-#dome{
+#dome {
   width: 100%;
   position: absolute;
   left: 0;
@@ -291,56 +301,75 @@ nav ul li a p {
   height: 100vh;
   overflow: hidden;
   z-index: 1000;
-  visibility: hidden;
+  display: none;
+  background: #c6d6bf;
 }
-#dome #game{
+
+#dome #game {
   width: 100%;
   margin: 0 auto;
   transform-origin: 0 0;
 }
-#dome #game canvas{
+#dome #game #inputText{
+  display: none;
+  width: 170px;
+  height: 50px;
+  font-size: 30px;
+}
+#dome #game #testTxt{
+  display: none;
+  width: 200px;
+  height: 300px;
+}
+
+#dome #game canvas {
   background-color: #9eb195;
 }
+
 #dome #close {
-  z-index: 1001;
-  width: 20px;
+  background: orange;
+  color: red;
+  border-radius: 12px;
+  line-height: 20px;
+  text-align: center;
   height: 20px;
-  position: absolute;
-  top:5px;
-  right:5px;
-  background: url("../assets/main/jd-sprites.png");
-  background-size: 200px 200px;
-  background-position: -102px 2px;
-}
-
-
-
-
-
-#mainlist {
-  // height: 1210px;
-  padding: 0 5px;
-  line-height: 34px;
-  box-shadow: 0 0 1px #d8d8d8;
-  background: #FFF;
-  min-height: 200px;
-  text-align: center;
-  overflow: hidden;
-  color: rgb(250, 58, 58);
-}
-
-#mainlist select {
-  text-align: center;
-  // margin-top: 20px;
+  width: 20px;
   font-size: 18px;
-  border: 1px solid #d8505c;
-  background: transparent;
-  width: 35%;
-  cursor: pointer;
+  padding: 1px;
+  right: 2px;
+  top: 2px;
+  position: absolute;
+  visibility: hidden;
+}
+#dome #close::before{
+  content: "\2716";
 }
 
-#mainlist select:focus option:hover {
-  color: #666;
-  background-image: linear-gradient(#d8505c, #F7DFDD);
-  font-weight: bold;
-}
+
+// #mainlist {
+//   // height: 1210px;
+//   padding: 0 5px;
+//   line-height: 34px;
+//   box-shadow: 0 0 1px #d8d8d8;
+//   background: #FFF;
+//   min-height: 200px;
+//   text-align: center;
+//   overflow: hidden;
+//   color: rgb(250, 58, 58);
+// }
+
+// #mainlist select {
+//   text-align: center;
+//   // margin-top: 20px;
+//   font-size: 18px;
+//   border: 1px solid #d8505c;
+//   background: transparent;
+//   width: 35%;
+//   cursor: pointer;
+// }
+
+// #mainlist select:focus option:hover {
+//   color: #666;
+//   background-image: linear-gradient(#d8505c, #F7DFDD);
+//   font-weight: bold;
+// }

@@ -1,3 +1,11 @@
+window.onload = function () {
+    "use strict";
+    /*************游戏入口*****/
+    var g = new GFrame('canvas');
+    g.adapt();
+    g.preload(SuperClick);
+    // FPS.startFPS(stage);
+};
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
@@ -26,6 +34,7 @@
     class SuperClick extends Game {
         constructor() {
             super();
+            this.titleScreen.setText("super click");
             
         }
         /**建立游戏元素游戏初始化
@@ -99,8 +108,8 @@
                     circle.type = GOOD;
                     numCreated++;
                 }
-                circle.x = Math.random() * (stage.canvas.width-radius*2+radius);
-                circle.y = Math.random()* (stage.canvas.height-100-radius*2)+100+radius;
+                circle.x = Math.random() * (width-radius*2+radius);
+                circle.y = Math.random()* (height-100-radius*2)+100+radius;
                 circle.scaleX = circle.scaleY = 0.5;
                 circle.clicked = false;
                 circle.first = true;

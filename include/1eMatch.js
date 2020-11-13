@@ -1,3 +1,11 @@
+window.onload = function () {
+    "use strict";
+    /*************游戏入口*****/
+    var g = new GFrame('canvas');
+    g.adapt();
+    g.preload(Match);
+    // FPS.startFPS(stage);
+};
 (function () {
     "use strict";
     //游戏变量;
@@ -61,7 +69,7 @@
         }
         deelCards() {
             var xpos = 150,
-                ypos = 250;
+                ypos = 150;
             var count = 0;
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
@@ -166,7 +174,7 @@
             this.back = new createjs.Bitmap(queue.getResult("card")); //使用queue,不能clone   使用地址不能用image.width.要直接用数字
             //加阴影。。。位图直接加阴影在手机上很卡。。可用矢量加阴影
             this.back1=new createjs.Shape();
-            this.back1.graphics.beginFill("#000").drawRect(0,0,this.back.image.width,this.back.image.height);
+            this.back1.graphics.beginFill("#000").drawRoundRect(0,0,this.back.image.width,this.back.image.height,10);
             this.addChild(this.back1);
             this.back1.shadow=new createjs.Shadow("#333",3,3,5);
     

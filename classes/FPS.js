@@ -6,7 +6,7 @@ FPS.startFPS = function (stage)
     FPS.txt=new createjs.Text("0","32px Microsoft YaHei","#030303");
     stage.addChild(FPS.txt);
     FPS.txt.x=6;
-    FPS.txt.y=120;
+    FPS.txt.y=100;
     createjs.Ticker.addEventListener("tick", FPS.TickerFPS);
 }
 FPS.TickerFPS = function (event)

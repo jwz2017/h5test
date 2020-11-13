@@ -9,17 +9,24 @@
   <link rel="stylesheet" href="css/normlize.css">
   <link rel="stylesheet" href="css/index.css">
   <title>h5Test</title>
-  <script src="include/index.js"></script>
   <script src="classes/createjs.min.js"></script>
   <script src="classes/gframe.js"></script>
   <script src="classes/mc.js"></script>
+  <script src="classes/utils.js"></script>
   <script src="classes/FPS.js"></script>
+  <script src="classes/ScaleBitmap.js"></script>
+  <script src="classes/GraphicsUtils.js"></script>
   <script src="lib.js"></script>
   <script src="assets/loadsprite/ma.js"></script>
+  <script src="classes/easing.js"></script>
 
-  <script src="classes/ScaleBitmap.js"></script>
+  <script src="include/index.js"></script>
   <script src="include/0LoadBitmap.js"></script>
   <script src="include/0LoadSprite.js"></script>
+  <script src="include/0Graphics.js"></script>
+  <script src="include/0mcTest.js"></script>
+  <script src="include/0utils.js"></script>
+  <script src="include/0tween.js"></script>
 </head>
 
 <body>
@@ -76,10 +83,6 @@
           <li><a href="#"><img src="assets/main/qq7.png" alt="">
               <p>简介</p>
             </a></li>
-          <!-- <li><a href="#">base</a></li>
-          <li><a href="#">base</a></li>
-          <li><a href="#">base</a></li>
-          <li><a href="#">base</a></li> -->
         </ul>
       </nav>
 
@@ -102,38 +105,42 @@
                 <span>0</span>
               </div>
             </div>
-            <div class="f_right"><a href="javascript:void(0)" class="m_r10" id="genduo1"
-                onclick="onclick1(this)">更多></a></div>
+            <div class="f_right"><a href="javascript:void(0)" class="m_r10" id="genduo1">更多></a></div>
           </div>
           <div class="procontant clearfix">
             <ul class="sk_product">
               <li>
-                <a href="#" title="LoadBitmap" onclick="pclick(this)"><img src="assets/main/loadbitmap.jpg" alt=""></a>
-                <p >资源加载 </p>
-                <p class="pro_name"> animate协作</p>
+                <a href="#"><img title="LoadBitmap" src="assets/main/loadbitmap.jpg" onclick="productClick(this)" alt=""></a>
+                <p>资源协作 </p>
+                <p class="pro_name">sound dom</p>
               </li>
               <li>
-                <a href="#" title="LoadSprite" onclick="pclick(this)"><img src="assets/main/loadsprite.jpg" alt=""></a>
-                <p >sprite Tp </p>
-                <p class="pro_name"> sprite ani</p>
+                <a href="#"><img title="LoadSprite" src="assets/main/loadsprite.jpg" onclick="productClick(this)" alt=""></a>
+                <p>sprite Tp </p>
+                <p class="pro_name">LoadSprite</p>
               </li>
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="#"><img title="Graphics" src="assets/main/graphicsutils.jpg" onclick="productClick(this)" alt=""></a>
+                <p>图形工具</p>
+                <p class="pro_name">Graphics</p>
               </li>
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="#"><img title="Mctest" src="assets/main/mc.jpg" onclick="productClick(this)" alt=""></a>
+                <p>矢量组件</p>
+                <p class="pro_name">Mctest</p>
               </li>
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="#"><img title="Utils" src="assets/main/utils.jpg" onclick="productClick(this)" alt=""></a>
+                <p>工具类</p>
+                <p class="pro_name">utils</p>
               </li>
             </ul>
+            <!-- 扩展 -->
             <ul id="pro_con1" class="sk_product" style="display: none;">
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="#"><img title="Tween" src="assets/main/tween.jpg" onclick="productClick(this)" alt=""></a>
+                <p>缓动应用</p>
+                <p class="pro_name">Tween</p>
               </li>
             </ul>
           </div>
@@ -145,21 +152,29 @@
               <span class="sk_ico"></span>
               <span class="sk_text">游戏学习</span>
             </div>
-            <div class="f_right"><a href="javascript:void(0)" class="m_r10" onclick="onclick2(this)">更多></a></div>
+            <div class="f_right"><a href="javascript:void(0)" class="m_r10" id="genduo2">更多></a></div>
           </div>
           <div class="procontant clearfix">
             <ul class="sk_product">
               <li>
-                <a href="#"><img src="assets/main/h2.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="superClick.html"><img src="assets/main/superclick.jpg" alt=""></a>
+                <p >超级点击</p>
               </li>
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="colordrop.html"><img src="assets/main/colordrop.jpg" alt=""></a>
+                <p>图像拖拽</p>
               </li>
               <li>
-                <a href="#"><img src="assets/main/h17.png" alt=""></a>
-                <p class="pro_name">基础应用</p>
+                <a href="bounce.html"><img src="assets/main/bounce.jpg" alt=""></a>
+                <p>弹球游戏</p>
+              </li>
+              <li>
+                <a href="puzzle.html"><img src="assets/main/puzzle.jpg" alt=""></a>
+                <p>拼图游戏</p>
+              </li>
+              <li>
+                <a href="match.html"><img src="assets/main/match.jpg" alt=""></a>
+                <p>记忆游戏</p>
               </li>
             </ul>
             <ul id="pro_con2" class="sk_product" style="display: none;">
@@ -194,10 +209,15 @@
       <!-- 游戏界面 -->
       <div id="game">
         <!-- 随舞台缩放 dom-->
+        <input type="text" id="inputText" placeholder="请输入姓名">
+        <p id="testTxt">CreateJS是基于HTML5开发的一套模块化的库和工具。
+          基于这些库，<span style="color: #00ff00;font-size: 20px">可以非常快捷地开发出基于HTML5的游戏</span>、动画和交互应用。
+        </p>
         <canvas id="canvas" width="750" height="1206">
         </canvas>
       </div>
       <!-- 不随舞台缩放 dom -->
+      <!-- 关闭按钮 -->
       <a href="#" id="close" onclick="dclose(this)"></a>
     </div>
   </div>

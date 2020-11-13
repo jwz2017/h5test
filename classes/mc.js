@@ -16,29 +16,18 @@ mc.style = {
   CENTER_BOTTOM: "centerbottom",
   RIGHT_MIDDLE: "rightmiddle",
   CENTER_TOP: "centertop",
-  SCROLL_BAR_SIZE:20,
+  SCROLL_BAR_SIZE: 20,
   DARK: "dark",
   /**
    * @param {[string]} val =null [可选：可设置值：mc.style.DARK]
    */
-  setStyle: function (val) {
-    switch (val) {
-      case this.DARK:
-        this.shadowColor = "#999999";
-        this.borderColor = "#555555";
-        this.buttonDownColor = "#444444";
-        this.buttonOverColor = "#999999";
-        this.buttonUpColor = "#666666";
-        this.labelColor = "#cccccc";
-        break;
-      default:
-        this.shadowColor = "#888888";
-        this.borderColor = "#999999";
-        this.buttonDownColor = "#bbbbbb";
-        this.buttonOverColor = "#cccccc";
-        this.buttonUpColor = "#ffffff";
-        this.labelColor = "#666666";
-    }
+  darkStyle: function () {
+    this.shadowColor = "#999999";
+    this.borderColor = "#555555";
+    this.buttonDownColor = "#444444";
+    this.buttonOverColor = "#999999";
+    this.buttonUpColor = "#666666";
+    this.labelColor = "#cccccc";
   }
 };
 //---------------------------------------------------图形----------------------------------------------------------------------
@@ -53,16 +42,16 @@ class LoaderBar extends createjs.Container {
    * @param {[number]} width 
    * @param {[number]} height 
    */
-  constructor(parent, x=0, y=0, width=400, height=20) {
+  constructor(parent, x = 0, y = 0, width = 400, height = 20) {
     super();
     if (parent) {
       parent.addChild(this);
     }
-    this.width=width;
-    this.height=height;
-    this.loaderBar=new createjs.Shape();
+    this.width = width;
+    this.height = height;
+    this.loaderBar = new createjs.Shape();
     this.x = x;
-    this.y = y ;
+    this.y = y;
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
@@ -70,34 +59,34 @@ class LoaderBar extends createjs.Container {
     //数字
     this._createpercent();
   }
-  _createtitle(){
-    this.titleText=new createjs.Text('loading...','36px Stylus BT','#ffffff');
-    this.titleText.textAlign="center";
-    this.titleText.x=this.width/2;
-    this.titleText.y=-45;
+  _createtitle() {
+    this.titleText = new createjs.Text('loading...', '36px Stylus BT', '#ffffff');
+    this.titleText.textAlign = "center";
+    this.titleText.x = this.width / 2;
+    this.titleText.y = -45;
   }
-  _createpercent(){
-    this.text=new createjs.Text(this.percentLoaded+"%", '32px Microsoft YaHei', "#ffffff");
-    this.text.textAlign="center";
-    this.text.x=this.width/2;
-    this.text.y=this.height+10;
-    this.addChild(this.loaderBar,this.text,this.titleText);
+  _createpercent() {
+    this.text = new createjs.Text(this.percentLoaded + "%", '32px Microsoft YaHei', "#ffffff");
+    this.text.textAlign = "center";
+    this.text.x = this.width / 2;
+    this.text.y = this.height + 10;
+    this.addChild(this.loaderBar, this.text, this.titleText);
     this._redraw();
   }
-   _redraw() {
-    let t=Math.floor(this.percentLoaded*100);
-    this.text.text=t+"%";
+  _redraw() {
+    let t = Math.floor(this.percentLoaded * 100);
+    this.text.text = t + "%";
     this.loaderBar.graphics.clear();
-    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.width-6) * this.percentLoaded, this.height-6).endFill();
+    this.loaderBar.graphics.beginFill('#ffffff').drawRect(3, 3, (this.width - 6) * this.percentLoaded, this.height - 6).endFill();
     this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRect(0, 0, this.width, this.height).endStroke();
   }
   /**
    * 开始加载
    */
   startLoad(percentLoaded) {
-    this.percentLoaded=percentLoaded;
+    this.percentLoaded = percentLoaded;
     if (this.percentLoaded >= 1) {
-      this.percentLoaded=1;
+      this.percentLoaded = 1;
     }
     this._redraw();
   }
@@ -112,27 +101,27 @@ class LoaderBarPic extends createjs.Container {
    * @param {[number]} width 
    * @param {[number]} height 
    */
-  constructor(sheetData,parent, x=0, y=0, width=400, height=20) {
+  constructor(sheetData, parent, x = 0, y = 0, width = 400, height = 20) {
     super();
     if (parent) {
       parent.addChild(this);
     }
-    this.width=width;
-    this.height=height;
-    this.loaderBar=new createjs.Shape();
+    this.width = width;
+    this.height = height;
+    this.loaderBar = new createjs.Shape();
     this.x = x;
-    this.y = y ;
+    this.y = y;
     this.percentLoaded = 0;
     this.loaderBar.setBounds(0, 0, width, height);
     //标题
-    var sheet=new createjs.SpriteSheet(sheetData);
-    this.titleText=new createjs.Sprite(sheet,"title");
-    this.titleText.y=-this.titleText.getBounds().height;
+    var sheet = new createjs.SpriteSheet(sheetData);
+    this.titleText = new createjs.Sprite(sheet, "title");
+    this.titleText.y = -this.titleText.getBounds().height;
     //数字
-    this.percent=new createjs.BitmapText(this.percentLoaded.toString()+'%',sheet);
-    this.percent.x=(width-this.percent.getBounds().width)/2;
-    this.percent.y=this.height+10;
-    this.addChild(this.loaderBar,this.percent,this.titleText);
+    this.percent = new createjs.BitmapText(this.percentLoaded.toString() + '%', sheet);
+    this.percent.x = (width - this.percent.getBounds().width) / 2;
+    this.percent.y = this.height + 10;
+    this.addChild(this.loaderBar, this.percent, this.titleText);
     this._redraw();
     //测试图片预加载,,,queue = new createjs.LoadQueue(false)
     // var a=new Image();
@@ -141,20 +130,20 @@ class LoaderBarPic extends createjs.Container {
     // console.log(a.width,b.getBounds().width);
   }
   _redraw() {
-    let t=Math.floor(this.percentLoaded*100);
-    this.percent.text=t.toString()+"%";
-    this.titleText.x=this.width * this.percentLoaded-this.titleText.getBounds().width/2;
+    let t = Math.floor(this.percentLoaded * 100);
+    this.percent.text = t.toString() + "%";
+    this.titleText.x = this.width * this.percentLoaded - this.titleText.getBounds().width / 2;
     this.loaderBar.graphics.clear();
-    this.loaderBar.graphics.beginRadialGradientFill(["#F00","#0F0"], [0, 1], 100, 100, 0,0, 0, 300).drawRoundRect(3, 3, (this.width-6) * this.percentLoaded, this.height-6,7).endFill();
-    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRoundRect(0, 0, this.width, this.height,10).endStroke();
+    this.loaderBar.graphics.beginRadialGradientFill(["#F00", "#0F0"], [0, 1], 100, 100, 0, 0, 0, 300).drawRoundRect(3, 3, (this.width - 6) * this.percentLoaded, this.height - 6, 7).endFill();
+    this.loaderBar.graphics.setStrokeStyle(2).beginStroke('#ffffff').drawRoundRect(0, 0, this.width, this.height, 10).endStroke();
   }
   /**
    * 开始加载
    */
   startLoad(percentLoaded) {
-    this.percentLoaded=percentLoaded;
+    this.percentLoaded = percentLoaded;
     if (this.percentLoaded >= 1) {
-      this.percentLoaded=1;
+      this.percentLoaded = 1;
     }
     this._redraw();
   }
@@ -397,8 +386,8 @@ class PushButtonShape extends ButtonShape {
    * 方形按钮
    * @param {Container} parent 父级容器
    * @param {Function} handle 点击事件
-   * @param {Number} width =100
-   * @param {number} height =20
+   * @param {Number} width =200
+   * @param {number} height =40
    * @param {Class} GClass =Rect
    */
   constructor(parent, handle, width = 200, height = 40, GClass) {
@@ -425,10 +414,9 @@ class PushButtonShape extends ButtonShape {
 }
 //带三角的pushbuttonShape类
 class ArrowButtonShape extends PushButtonShape {
-  constructor(parent, handle, width = 20, height = 20, arrowRotation = 0, GClass) {
+  constructor(parent, handle, width = 40, height = 40, arrowRotation = 0, GClass) {
     super(parent, handle, width, height, GClass)
-    this.arrowWidth = width/2;
-    this.arrowHeight = height/4;
+    this.arrowHeight = height / 4;
     this.arrowRotation = arrowRotation;
   }
   redraw() {
@@ -442,10 +430,10 @@ class ArrowButtonShape extends PushButtonShape {
     }
     const mat = new createjs.Matrix2D().translate(this._width / 2, this._height / 2).rotate(this._arrowRotation);
     utils.drawPoints(this.graphics, mat, [
-      [0, -this.arrowHeight / 2],
-      [this.arrowWidth / 2, this.arrowHeight / 2],
-      [-this.arrowWidth / 2, this.arrowHeight / 2],
-      [0,-this.arrowHeight/2]
+      [0, -this.arrowHeight / 2-1],
+      [this.arrowHeight , this.arrowHeight / 2-1],
+      [-this.arrowHeight, this.arrowHeight / 2-1],
+      [0, -this.arrowHeight / 2-1]
     ]);
   }
   get arrowRotation() {
@@ -613,7 +601,7 @@ class SliderShape extends ButtonShape {
 }
 //-------------------------------------------------组件类--------------------------------------------------------------
 class Component extends createjs.Container {
-  constructor(parent, x=0, y=0) {
+  constructor(parent, x = 0, y = 0) {
     super();
     if (parent) {
       parent.addChild(this);
@@ -673,8 +661,8 @@ class PushButton extends Component {
    * @param {[Function]} handler =null [option:点击事件]
    * @param {[number]} x =0 [option:x坐标]
    * @param {[number]} y =0 [option:y坐标]
-   * @param {[number]} width =100 [长度]
-   * @param {[number]} height =20 [高度]
+   * @param {[number]} width =200 [长度]
+   * @param {[number]} height =40 [高度]
    * @param {[Graphics]} GClass  图形类
    */
   constructor(parent, label, handler, x, y, width, height, GClass) {
@@ -686,7 +674,7 @@ class PushButton extends Component {
   }
   _positionLabel() {
     this._label.x = this.shape.width / 2;
-    this._label.y = this.shape.height / 2+2;
+    this._label.y = this.shape.height / 2 + 2;
   }
   get selected() {
     return this.shape.selected;
@@ -721,7 +709,7 @@ class CheckBox extends Component {
   }
   _positionLabel() {
     this._label.x = this.shape.width + 8;
-    this._label.y = this.shape.height / 2 +1;
+    this._label.y = this.shape.height / 2 + 1;
   }
   get selected() {
     return this.shape.selected;
@@ -808,14 +796,14 @@ class Slider extends Component {
   _positionLabel() {
     if (this.shape._isVSlider) {
       this._label.x = this.shape.width / 2;
-      this._label.y = this.shape.height+8;
+      this._label.y = this.shape.height + 8;
       this._valueLabel.x = this.shape.width / 2;
-      this._valueLabel.y=-8;
+      this._valueLabel.y = -8;
     } else {
-      this._label.y = this.shape.height / 2+3 ;
-      this._label.x=-8;
-      this._valueLabel.x = this.shape.width+8;
-      this._valueLabel.y = this.shape.height / 2+3;
+      this._label.y = this.shape.height / 2 + 3;
+      this._label.x = -8;
+      this._valueLabel.x = this.shape.width + 8;
+      this._valueLabel.y = this.shape.height / 2 + 3;
     }
   }
   get value() {
@@ -852,7 +840,8 @@ class ScrollBar extends createjs.Container {
    * @param {boolean} isVertical =false
    */
   constructor(parent, x = 0, y = 0, barWidth = 150, barHeight = 15, isVertical = false) {
-    super();this.height
+    super();
+    this.height
     if (parent) parent.addChild(this);
     this.x = x;
     this.y = y;
@@ -875,7 +864,7 @@ class ScrollBar extends createjs.Container {
       }
     })
     const rot = this.isVertical ? 0 : -90
-    this.headArrow = new ArrowButtonShape(this, ()=> {
+    this.headArrow = new ArrowButtonShape(this, () => {
       this._changeValue(this.value + this.unitIncrement);
     }, barHeight, barHeight, rot);
 
@@ -965,7 +954,7 @@ class ScrollBar extends createjs.Container {
       this._barHeight * 0.8,
       maxLength * normalize(this._barWidth / this._contentLength)
     ]
-    
+
     const handlePos = [
       (this._barHeight - handleSize[0]) / 2,
       this._barHeight + maxLength * (1 - normalize(this._barWidth / this._contentLength)) * normalize(this.value / this.maxValue)
@@ -985,7 +974,7 @@ class ScrollBar extends createjs.Container {
     } else if (this.handle.over) {
       this.handle.graphics.beginFill(mc.style.buttonUpColor);
     } else {
-      this.handle.graphics.beginFill(mc.style.borderColor);
+      this.handle.graphics.beginFill(mc.style.buttonUpColor);
     }
     this.handle.graphics.drawRect(0, 0, this.handle.width, this.handle.height);
   }
@@ -1021,19 +1010,19 @@ class ScrollContainer extends createjs.Container {
    * [constructor description]
    * @param {[string]} canvas [stage]
    */
-  constructor(canvas,parent,x,y,width=400,height=400,containerWidth=0,containerHeight=0) {
+  constructor(parent, x, y, width = 400, height = 400, containerWidth = 0, containerHeight = 0) {
     super();
     if (parent) parent.addChild(this);
-    this.x=x;
-    this.y=y;
+    this.x = x;
+    this.y = y;
 
     this.container = new createjs.Container();
-    this.container.setBounds(0,0,containerWidth,containerHeight);
+    this.container.setBounds(0, 0, containerWidth, containerHeight);
     this.addChild(this.container)
 
-    this.scrollBarV = new ScrollBar(this,0,0,0,mc.style.SCROLL_BAR_SIZE,true);
+    this.scrollBarV = new ScrollBar(this, 0, 0, 0, mc.style.SCROLL_BAR_SIZE, true);
 
-    this.scrollBarH = new ScrollBar(this,0,0,0,mc.style.SCROLL_BAR_SIZE);
+    this.scrollBarH = new ScrollBar(this, 0, 0, 0, mc.style.SCROLL_BAR_SIZE);
 
     this.scrollBarV.on("change", e => {
       this.container.y = e.target.value
@@ -1045,7 +1034,7 @@ class ScrollContainer extends createjs.Container {
       this.dispatchEvent("scroll")
     })
 
-    canvas.addEventListener("mousewheel", e => {
+    stage.canvas.addEventListener("mousewheel", e => {
       const h = this.contentSize.height - this.getBounds().height
       const w = this.contentSize.width - this.getBounds().width
       this.scrollY += e.wheelDeltaY
@@ -1057,7 +1046,7 @@ class ScrollContainer extends createjs.Container {
     this.addChild = child => {
       this.container.addChild(child)
     }
-    this.setSize(width,height);
+    this.setSize(width, height);
   }
 
   get scrollX() {
@@ -1092,30 +1081,31 @@ class ScrollContainer extends createjs.Container {
     this.container.setBounds(0, 0, size.width, size.height)
     this.scrollBarH.contentLength = size.width
     this.scrollBarV.contentLength = size.height
-    if (size.width<=this.getBounds().width-mc.style.SCROLL_BAR_SIZE) {
-      this.scrollBarH.visible=false;
-    }else{
-      this.scrollBarH.visible=true;
+    if (size.width <= this.getBounds().width - mc.style.SCROLL_BAR_SIZE) {
+      this.scrollBarH.visible = false;
+    } else {
+      this.scrollBarH.visible = true;
     }
-    if (size.height<=this.getBounds().height-mc.style.SCROLL_BAR_SIZE) {
-      this.scrollBarV.visible=false;
-    }else{
-      this.scrollBarV.visible=true;
+    if (size.height <= this.getBounds().height - mc.style.SCROLL_BAR_SIZE) {
+      this.scrollBarV.visible = false;
+    } else {
+      this.scrollBarV.visible = true;
     }
   }
 
-  setSize(width,height){
-    this.setBounds(0,0,width,height);
-    this.contentSize={
-      width: Math.max(width-mc.style.SCROLL_BAR_SIZE,this.container.getBounds().width),
-      height: Math.max(height-mc.style.SCROLL_BAR_SIZE, this.container.getBounds().height)
+  setSize(width, height) {
+    this.setBounds(0, 0, width, height);
+    this.contentSize = {
+      width: Math.max(width - mc.style.SCROLL_BAR_SIZE, this.container.getBounds().width),
+      height: Math.max(height - mc.style.SCROLL_BAR_SIZE, this.container.getBounds().height)
     };
-    
+
     this.container.mask = new createjs.Shape;
     this.container.mask.graphics.beginFill("#efefef").rect(0, 0, width, height);
     this.scrollBarV.x = width - mc.style.SCROLL_BAR_SIZE;
-    this.scrollBarV.setSize(height-mc.style.SCROLL_BAR_SIZE,mc.style.SCROLL_BAR_SIZE);
-    this.scrollBarH.y=height-mc.style.SCROLL_BAR_SIZE;
-    this.scrollBarH.setSize(width-mc.style.SCROLL_BAR_SIZE,mc.style.SCROLL_BAR_SIZE);
+    this.scrollBarV.setSize(height - mc.style.SCROLL_BAR_SIZE, mc.style.SCROLL_BAR_SIZE);
+    this.scrollBarH.y = height - mc.style.SCROLL_BAR_SIZE;
+    this.scrollBarH.setSize(width - mc.style.SCROLL_BAR_SIZE, mc.style.SCROLL_BAR_SIZE);
   }
 }
+

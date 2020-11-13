@@ -126,6 +126,12 @@ class GFrame {
       images[evt.item.id] = evt.result;
     }
   }
+  //清理舞台数据
+  clear() {
+    stage.removeAllEventListeners();
+    this.game.clear();
+  }
+  
   //****************************************私有方法**************************************************** */
   /**建立舞台
    * 
@@ -212,7 +218,9 @@ class GFrame {
   }
   //设置新等级状态
   _systemNewLevel() {
-    if (this._lastSystemState === GFrame.state.STATE_GAME_PLAY) this.game.clear();
+    if (this._lastSystemState === GFrame.state.STATE_GAME_PLAY) {
+      this.game.clear();
+    }
     this.game.newLevel();
     this._switchSystemState(GFrame.state.STATE_LEVEL_IN);
   }
@@ -224,8 +232,7 @@ class GFrame {
   }
   //结束界面状态
   _systemGameOver() {
-    this.game.clear();
-    stage.removeAllEventListeners();
+    this.clear();
     stage.addChild(this.game.gameOverScreen);
     this.game.gameOverScreen.on(GFrame.event.OK_BUTTON, this._okButton, this, true);
     this._switchSystemState(GFrame.state.STATE_WAIT_FOR_CLOSE);
@@ -259,10 +266,6 @@ class GFrame {
   _okButton(e) {
     stage.removeChild(e.target);
     this._switchSystemState(this._nextSystemState);
-  }
-  clear() {
-    stage.removeAllEventListeners();
-    this.game.clear();
   }
 }
 /*******************************************静态变量****************************************** */
@@ -335,11 +338,15 @@ class BasicScreen extends createjs.Container {
   setText(val) {
     this.displayText.text = val.toString();
   }
-  set fontSize(val){
-    this.displayText.font=val+ 'px ' + GFrame.style.TITLE_FONTFAMILY;
+  set fontSize(val) {
+    this.displayText.font = val + 'px ' + GFrame.style.TITLE_FONTFAMILY;
   }
-    
-  
+  setPosition(x,y){
+    this.displayText.x=x;
+    this.displayText.y=y;
+  }
+
+
 
 }
 class SideBysideScore extends createjs.Container {
@@ -457,23 +464,22 @@ class Game {
 
   }
   createTitleScreen() {
-    this.titleScreen = new BasicScreen('开始界面5', width / 2, height / 10);
+    this.titleScreen = new BasicScreen('开始界面5', width / 2, height / 3);
     this.titleScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'start', 150, 150); //300,60
     // this.titleScreen=new lib.Title();//协作animate使用-------------------1
   }
   createInstructionScreen() {
-    this.instructionScreen = new BasicScreen('介绍界面', width / 2, height / 10);
+    this.instructionScreen = new BasicScreen('介绍界面', width / 2, height / 3);
     this.instructionScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'ok', 150, 150);
   }
   createLevelInScreen() {
     this.levelInScreen = new BasicScreen('level:0', width / 2, height / 2);
   }
   createGameOverScreen() {
-    this.gameOverScreen = new BasicScreen('结束界面', width / 2, height / 10);
+    this.gameOverScreen = new BasicScreen('结束界面', width / 2, height / 3);
     this.gameOverScreen.createOkButton((width - 150) / 2, height / 3 * 2, 'over', 150, 150);
   }
   createScoreBoard() {
-
 
   }
   /**建立游戏元素
@@ -503,6 +509,7 @@ class Game {
   updateLevelInScreen(val) {
     this.levelInScreen.setText("level: " + val);
   }
+  //键盘事件
   onkey() {
     document.onkeyup = (e) => {
       switch (e.keyCode) {

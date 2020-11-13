@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/normlize.css">
+    <title>game</title>
+    <script src="classes/createjs.min.js"></script>
+    <script src="classes/gframe.js"></script>
+    <script src="classes/mc.js"></script>
+    <script src="classes/FPS.js"></script>
+    <!-- 修改 -->
+    <script src="include/1eMatch.js"></script>
+    <style>
+        .container {
+            min-width: 320px;
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game {
+            margin: 0 auto;
+            width: 100%;
+            transform-origin: 0 0;
+        }
+
+        #game canvas {
+            background-color: #9eb195;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 游戏界面 -->
+        <div id="game">
+            <!-- 随舞台缩放 dom-->
+
+            <canvas id="canvas" width="750" height="1206">
+            </canvas>
+        </div>
+        <!-- 不随舞台缩放 dom -->
+
+    </div>
+</body>
+
+</html>

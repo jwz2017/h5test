@@ -1,3 +1,11 @@
+window.onload = function () {
+    "use strict";
+    /*************游戏入口*****/
+    var g = new GFrame('canvas');
+    g.adapt();
+    g.preload(Bounce);
+    // FPS.startFPS(stage);
+};
 (function () {
     "use strict";
     //游戏变量;

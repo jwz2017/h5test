@@ -4,10 +4,13 @@
     class LoadSprite extends Game {
         constructor() {
             super();
+            let dom=document.getElementById("close");
+            dom.style.visibility="visible";
+            this.titleScreen.setPosition(width/2,height/10);
             this.titleScreen.fontSize = 24;
             this.titleScreen.setText(
-                "1:animation随机播放速度\r"+
-                "die.framerate=Math.floor(Math.random() * 20) + 20;\r"+ 
+                "1:animation随机播放速度\r" +
+                "die.framerate=Math.floor(Math.random() * 20) + 20;\r" +
                 "die.advance(3000);\r");
             this.instructionScreen.setText("游戏介绍");
         }
@@ -15,9 +18,9 @@
          * 在构造函数里建立
          */
         buildElement() {
-            this.ma=new ma();
-            this.ma.x=180;
-            this.ma.y=400;
+            this.ma = new ma();
+            this.ma.x = 180;
+            this.ma.y = 400;
         }
         newGame() {
 
@@ -27,7 +30,7 @@
         }
         waitComplete() {
             stage.addChild(this.ma);
-            
+
             let xpos = 200,
                 ypos = 137,
                 hgap = 60,
@@ -46,11 +49,11 @@
             this.button = new PushButton(stage, "点击", this.click, 300, 200, );
         }
         click() {
-            this.mouseEnabled=false;
-            this.alpha=0.5;
+            this.mouseEnabled = false;
+            this.alpha = 0.5;
             for (let i = 0; i < 6; i++) {
                 const die = stage.getChildByName('die' + i);
-                die.framerate = Math.floor(Math.random() * 20) + 20; 
+                die.framerate = Math.floor(Math.random() * 20) + 20;
                 die.advance(3000); //随机数字
                 die.play();
             }
@@ -61,7 +64,7 @@
                     console.log(Math.floor(die.currentAnimationFrame)); //获取当前帧
                     //currentFrame     currentAnimation
                 }
-                this.alpha = 1;//this指向pushputtonshape ()=>指向loadsprite
+                this.alpha = 1; //this指向pushputtonshape ()=>指向loadsprite
                 this.mouseEnabled = true;
             }, 1000);
         }
@@ -79,9 +82,9 @@
     }, {
         id: "loadspritepic",
         src: "assets/loadsprite/fakezee.png"
-    },{
-        id:"mapic",
-        src:"assets/loadsprite/ma.png"
+    }, {
+        id: "mapic",
+        src: "assets/loadsprite/ma.png"
     }];
     window.LoadSprite = LoadSprite;
 })();

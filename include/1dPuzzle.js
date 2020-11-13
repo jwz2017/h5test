@@ -1,3 +1,11 @@
+window.onload = function () {
+    "use strict";
+    /*************游戏入口*****/
+    var g = new GFrame('canvas');
+    g.adapt();
+    g.preload(Puzzle);
+    // FPS.startFPS(stage);
+};
 (function () {
     "use strict";
     //游戏变量;定义。。构造内初始化，new game初始化
@@ -150,7 +158,7 @@
     Puzzle.loaded = false;
     Puzzle.loadItem = [{
         id: "puzzle",
-        src: "assets/mam.png"
+        src: "assets/puzzle/mam.png"
     }];
     window.Puzzle = Puzzle;
 
